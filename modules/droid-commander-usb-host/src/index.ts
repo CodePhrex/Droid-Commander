@@ -15,6 +15,21 @@ export type UsbDeviceDescriptor = {
   permissionGranted: boolean;
 };
 
+export type RootStatus = {
+  availability: "unknown" | "unavailable" | "manager-available" | "granted" | "denied";
+  manager?: string;
+  suPath?: string;
+  reason: string;
+};
+
+export type RootGrant = {
+  sessionId: string;
+  targetId: string;
+  scopes: string[];
+  expiresAt: string;
+  manager: string;
+};
+
 type NativeUsbHostModule = {
   addListener(eventName: "onUsbHostEvent", listener: (event: UsbHostEvent) => void): { remove(): void };
   startDiscovery(vendorIds: number[], productIds: number[], interfaceClass: number): Promise<UsbDeviceDescriptor[]>;
@@ -27,6 +42,10 @@ type NativeUsbHostModule = {
   provisionBreakGlassCredential(credentialJson: string): Promise<boolean>;
   hasProvisionedBreakGlassCredential(): Promise<boolean>;
   clearProvisionedBreakGlassCredential(): Promise<void>;
+  detectRoot(): Promise<RootStatus>;
+  requestRootSession(sessionId: string, targetId: string, scopes: string[], durationSeconds: number): Promise<RootGrant | { granted: false; reason: string }>;
+  executeApprovedRootOperation(sessionId: string, operationId: string, parameters: Record<string, string>): Promise<{ ok: boolean; message: string; value?: string }>;
+  closeRootSession(sessionId: string): Promise<void>;
 };
 
 const NativeUsbHost = requireOptionalNativeModule<NativeUsbHostModule>("DroidCommanderUsbHost");
@@ -82,4 +101,20 @@ export function hasProvisionedBreakGlassCredential() {
 
 export function clearProvisionedBreakGlassCredential() {
   return NativeUsbHost?.clearProvisionedBreakGlassCredential() ?? Promise.resolve();
+}
+
+export function detectRoot(): Promise<RootStatus> {
+  return NativeUsbHost?.detectRoot() ?? Promise.resolve({ availability: "unavailable", reason: "The native root-capability module is not available on this platform." });
+}
+
+export function requestRootSession(sessionId: string, targetId: string, scopes: string[], durationSeconds: number) {
+  return NativeUsbHost?.requestRootSession(sessionId, targetId, scopes, durationSeconds) ?? Promise.resolve({ granted: false as const, reason: "The native root-capability module is not available on this platform." });
+}
+
+export function executeApprovedRootOperation(sessionId: string, operationId: string, parameters: Record<string, string> = {}) {
+  return NativeUsbHost?.executeApprovedRootOperation(sessionId, operationId, parameters) ?? Promise.resolve({ ok: false, message: "The native root-capability module is not available on this platform." });
+}
+
+export function closeRootSession(sessionId: string) {
+  return NativeUsbHost?.closeRootSession(sessionId) ?? Promise.resolve();
 }

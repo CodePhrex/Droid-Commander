@@ -123,3 +123,13 @@
 - [x] Manual rollback requires a separate two-party consent request; system patching remains an Android/vendor confirmation handoff rather than a silent in-app update or downgrade.
 - [x] Runner behavior is covered by automated tests and documented in `REMEDIATION_RUNNER.md`.
 - [ ] Bind each production `actionId` to reviewed native implementations and persist the remediation journal in the organization audit system.
+
+## Scoped root capability after explicit consent
+
+- [x] The application can detect whether an already-installed root-manager entry point is available and keeps standard devices in an explicit unavailable state.
+- [x] Root access requests require an exact target, authorization ID, purpose, allow-listed scopes, two-party consent, and a session duration no longer than fifteen minutes.
+- [x] Native root access is requested through the installed root manager; the app does not install a rooting exploit, bypass verified boot, or silently acquire root.
+- [x] Root sessions expire, can be closed explicitly, and expose only fixed reviewed operation IDs rather than arbitrary shell commands.
+- [x] The native bridge currently implements protected-metadata proof and safely reports unsupported application-specific root operations.
+- [x] Root capability behavior is covered by automated tests and documented in `ROOT_CAPABILITY.md`.
+- [ ] Add organization-approved root operation adapters, device-owner policy checks, production audit persistence, and physical rooted-device validation.

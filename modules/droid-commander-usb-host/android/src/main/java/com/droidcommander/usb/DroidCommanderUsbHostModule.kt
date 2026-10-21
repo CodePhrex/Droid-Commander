@@ -7,6 +7,7 @@ import expo.modules.kotlin.modules.ModuleDefinition
 class DroidCommanderUsbHostModule : Module() {
   private var adapter: UsbHostAdapter? = null
   private var breakGlassVerifier: BreakGlassKeystoreVerifier? = null
+  private var rootProvider: RootCapabilityProvider? = null
 
   override fun definition() = ModuleDefinition {
     Name("DroidCommanderUsbHost")
@@ -80,13 +81,31 @@ class DroidCommanderUsbHostModule : Module() {
     }
 
     AsyncFunction("clearProvisionedBreakGlassCredential") {
-      breakGlass().clearProvisionedBreakGlassCredential()
+      breakGlassVerifier?.clearProvisionedBreakGlassCredential()
+    }
+
+    AsyncFunction("detectRoot") {
+      root().detect()
+    }
+
+    AsyncFunction("requestRootSession") { sessionId: String, targetId: String, scopes: List<String>, durationSeconds: Int ->
+      root().requestScopedSession(sessionId, targetId, scopes, durationSeconds)
+        ?: mapOf("granted" to false, "reason" to "Root manager denied or unavailable.")
+    }
+
+    AsyncFunction("executeApprovedRootOperation") { sessionId: String, operationId: String, parameters: Map<String, String> ->
+      root().executeApprovedOperation(sessionId, operationId, parameters)
+    }
+
+    AsyncFunction("closeRootSession") { sessionId: String ->
+      root().closeSession(sessionId)
     }
 
     OnDestroy {
       adapter?.close()
       adapter = null
       breakGlassVerifier = null
+      rootProvider = null
     }
   }
 
@@ -94,5 +113,9 @@ class DroidCommanderUsbHostModule : Module() {
     return breakGlassVerifier ?: BreakGlassKeystoreVerifier(appContext.reactContext ?: error("React context unavailable")).also {
       breakGlassVerifier = it
     }
+  }
+
+  private fun root(): RootCapabilityProvider {
+    return rootProvider ?: RootCapabilityProvider().also { rootProvider = it }
   }
 }
