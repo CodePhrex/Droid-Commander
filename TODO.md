@@ -112,6 +112,8 @@
 - [x] Appends verify the prior hash chain and refuse to extend a corrupted ledger; exports support user disclosure in JSON and JSONL formats.
 - [x] The ledger rejects passwords, PINs, private keys, recovery codes, tokens, secrets, arbitrary shell commands, and private payloads.
 - [x] Ledger tests cover chained events, disclosure exports, tamper detection, append refusal, denied/failed retention, and secret rejection; documentation is in `PRIVILEGED_ACTION_LEDGER.md`.
+- [x] `privileged:ledger report` formats the verified ledger into a human-readable Markdown disclosure or an explicit PDF conversion, including integrity status, event summaries, implementation/handoff descriptions, modifications, and hash-chain evidence.
+- [x] Invalid-chain reports are visibly marked `INVALID` and are never presented as complete disclosures.
 - [ ] Connect all native privileged-operation completion callbacks and the production audit sink to this ledger.
 
 ## USB packet framing and binary command serialization

@@ -42,6 +42,26 @@ pnpm privileged:ledger -- export \
   --output user-disclosure.json
 ```
 
-An intact ledger proves what Droid Commander recorded; it does not prove that an OEM or external tool completed an action unless an explicit completion or handoff event with corresponding evidence was recorded. Failed, denied, cancelled, and no-change events are retained rather than hidden.
+Generate a human-readable Markdown report:
 
-Implementation: `lib/privileged-action-ledger.ts` and `scripts/privileged-ledger-cli.ts`. Tests: `tests/privileged-action-ledger.test.ts`.
+```bash
+pnpm privileged:ledger -- report \
+  --ledger .droidcmd-audit/privileged.jsonl \
+  --format markdown \
+  --output user-disclosure.md
+```
+
+Generate a PDF disclosure using the installed Markdown-to-PDF converter:
+
+```bash
+pnpm privileged:ledger -- report \
+  --ledger .droidcmd-audit/privileged.jsonl \
+  --format pdf \
+  --output user-disclosure.pdf
+```
+
+The report includes the ledger integrity result, event counts, event metadata, user-readable summaries, implementation or handoff descriptions, recorded modifications, consent/ticket references, and hash-chain values. If the ledger is invalid, the report clearly marks it `INVALID` and tells the reader not to rely on it as a complete disclosure; it does not hide or silently repair the problem. PDF conversion uses the generated Markdown as its sole source, so Markdown remains available as the inspectable disclosure source.
+
+An intact ledger proves what Droid Commander recorded; it does not prove that an OEM or external laboratory tool completed an action unless an explicit completion or handoff event with corresponding evidence was recorded. Failed, denied, cancelled, and no-change events are retained rather than hidden.
+
+Implementation: `lib/privileged-action-ledger.ts`, `lib/privileged-action-report.ts`, and `scripts/privileged-ledger-cli.ts`. Tests: `tests/privileged-action-ledger.test.ts` and `tests/privileged-action-report.test.ts`.

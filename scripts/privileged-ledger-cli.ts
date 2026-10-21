@@ -1,8 +1,11 @@
 #!/usr/bin/env node
-import { existsSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 
 import { appendPrivilegedAction, exportPrivilegedLedger, readPrivilegedLedger, verifyPrivilegedLedger, type PrivilegedActionResult, type PrivilegedActionType } from "../lib/privileged-action-ledger";
+import { renderPrivilegedDisclosureMarkdown } from "../lib/privileged-action-report";
 
 const args = process.argv.slice(2).filter((value) => value !== "--");
 if (args.includes("--help") || args.includes("-h") || args.length === 0) {
@@ -11,6 +14,7 @@ if (args.includes("--help") || args.includes("-h") || args.length === 0) {
   pnpm privileged:ledger -- verify --ledger PATH [--json]
   pnpm privileged:ledger -- inspect --ledger PATH [--json]
   pnpm privileged:ledger -- export --ledger PATH --format json|jsonl --output PATH
+  pnpm privileged:ledger -- report --ledger PATH --format markdown|pdf --output PATH [--json]
 
 The ledger is append-only and hash-chained. It records requests, approvals, handoffs, completions, failures, cancellations, and system modifications. It rejects credentials, private keys, passwords, PINs, recovery codes, tokens, and secret material.`);
   process.exit(0);
@@ -72,6 +76,25 @@ function main() {
     const outputPath = required(options, "output");
     writeFileSync(resolve(outputPath), exported, { mode: 0o600 });
     output({ output: resolve(outputPath), format, integrity: verifyPrivilegedLedger(ledger) }, json);
+    return;
+  }
+  if (command === "report") {
+    const format = options.format === "pdf" ? "pdf" : "markdown";
+    const events = existsSync(ledger) ? readPrivilegedLedger(ledger) : [];
+    const integrity = verifyPrivilegedLedger(ledger);
+    const markdown = renderPrivilegedDisclosureMarkdown(events, integrity);
+    const outputPath = resolve(required(options, "output"));
+    if (format === "markdown") {
+      writeFileSync(outputPath, markdown, { mode: 0o600 });
+    } else {
+      const tempDir = mkdtempSync(`${tmpdir()}/droidcmd-report-`);
+      const sourcePath = resolve(tempDir, "disclosure.md");
+      writeFileSync(sourcePath, markdown, { mode: 0o600 });
+      const conversion = spawnSync("manus-md-to-pdf", [sourcePath, outputPath], { encoding: "utf8" });
+      if (conversion.error || conversion.status !== 0) throw new Error(`PDF conversion failed. Markdown source retained at ${sourcePath}. ${conversion.stderr ?? conversion.error?.message ?? ""}`.trim());
+    }
+    output({ output: outputPath, format, integrity, entries: events.length }, json);
+    if (!integrity.valid) process.exitCode = 2;
     return;
   }
   throw new Error(`Unknown command: ${command}. Use --help.`);
