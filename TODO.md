@@ -85,3 +85,11 @@
 - [x] The command channel requires an injected 16-byte session authenticator, transmits only typed allow-listed actions over the native bridge, and parses only matching-session action-result frames.
 - [x] Command-channel tests cover authenticated send, sequence increments, tag rejection, native send rejection, response parsing, wrong-session rejection, malformed base64/frames, and post-close behavior.
 - [ ] Native stream reassembly, authentication-tag verification, and physical transport tests are implemented.
+
+## Break-glass administrator recovery
+
+- [x] A fail-closed break-glass guard requires an organization-signed recovery credential, trusted issuer, validity window, explicit reason, incident ticket, recorded vendor/device authentication issue, and target consent when a target is referenced.
+- [x] Recovery capabilities are fixed to authentication diagnostics, confirmation retry, provider refresh, audit export, and controlled session close; they cannot authorize targets, bypass USB permission, override device/vendor authentication, send active commands, install packages, execute code, or bypass a lock screen.
+- [x] The guard records every attempt, fails closed on verifier errors, resets failed-attempt state after successful activation, and temporarily locks after repeated failures.
+- [x] Break-glass behavior and tests are documented in `BREAK_GLASS_ADMIN.md` and `tests/break-glass-admin.test.ts`.
+- [ ] Android Keystore-backed signature verification, secure credential provisioning, and a production audit sink are connected.
