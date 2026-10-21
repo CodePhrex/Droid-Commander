@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
   Modal,
   Pressable,
@@ -10,7 +10,10 @@ import {
 } from "react-native";
 
 import { ScreenContainer } from "@/components/screen-container";
-import { assessments, palette, type AssessmentStatus } from "@/constants/commander";
+import { HostInformation } from "@/components/host-information";
+import { palette, type AssessmentStatus } from "@/constants/commander";
+import { useLocalAssessment } from "@/hooks/use-local-assessment";
+import { hostIdentity } from "@/lib/local-assessment";
 
 const statusColors: Record<AssessmentStatus, { text: string; fill: string }> = {
   critical: { text: palette.red, fill: "#FCECEB" },
@@ -20,7 +23,9 @@ const statusColors: Record<AssessmentStatus, { text: string; fill: string }> = {
 };
 
 export default function CommandCenterScreen() {
-  const [assessmentComplete, setAssessmentComplete] = useState(false);
+  const { report, phase, error, storageWarning, cached, runAssessment } = useLocalAssessment();
+  const running = phase === "running";
+  const assessments = report?.checks ?? [];
   const [expandedFinding, setExpandedFinding] = useState<string | null>("security-patch");
   const [usbExpanded, setUsbExpanded] = useState(false);
   const [scopeOpen, setScopeOpen] = useState(false);
@@ -28,7 +33,7 @@ export default function CommandCenterScreen() {
   const [authorizedBy, setAuthorizedBy] = useState("");
   const [sessionAuthorized, setSessionAuthorized] = useState(false);
 
-  const posture = useMemo(() => (assessmentComplete ? 78 : 72), [assessmentComplete]);
+  const coverage = report ? Math.round(report.summary.observed / report.checks.length * 100) : 0;
   const canCreateScope = scopeName.trim().length > 2 && authorizedBy.trim().length > 2;
 
   return (
@@ -55,43 +60,45 @@ export default function CommandCenterScreen() {
               A consent-first field instrument for learning how device posture can be measured and improved.
             </Text>
           </View>
-          <Text style={styles.buildTag}>FIELD BUILD{`\n`}0.1</Text>
+          <Text style={styles.buildTag}>HOST SCAN{`\n`}{report?.host.appVersion ?? "LOCAL"}</Text>
         </View>
 
         <View style={styles.postureCard}>
           <View style={styles.postureTopRow}>
-            <Text style={styles.postureLabel}>CURRENT POSTURE</Text>
-            <Text style={styles.postureStamp}>{assessmentComplete ? "JUST VERIFIED" : "BASELINE"}</Text>
+            <Text style={styles.postureLabel}>LOCAL EVIDENCE COVERAGE</Text>
+            <Text style={styles.postureStamp}>{running ? "READING" : report ? cached ? "CACHED" : "COLLECTED" : "NOT ASSESSED"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <View style={styles.scoreBlock}>
-              <Text style={styles.score}>{posture}</Text>
-              <Text style={styles.scoreDenominator}>/ 100</Text>
+              <Text style={styles.score}>{report ? report.summary.observed : "—"}</Text>
+              <Text style={styles.scoreDenominator}>/ {report?.checks.length ?? "—"}</Text>
             </View>
             <View style={styles.scoreCopy}>
-              <Text style={styles.scoreTitle}>Needs attention</Text>
+              <Text style={styles.scoreTitle}>{hostIdentity(report?.host)}</Text>
               <Text style={styles.scoreDetail}>
-                {assessmentComplete
-                  ? "Verification improved one observable signal. Two boundaries still need review."
-                  : "Two observable signals need review before a training exercise starts."}
+                {report
+                  ? `Actual check coverage, not a security score. Collected ${report.collectedAt}.`
+                  : "Run the scan to collect this device's actual Android readings. No USB target is needed."}
               </Text>
             </View>
           </View>
           <View style={styles.scoreBarTrack}>
-            <View style={[styles.scoreBarFill, { width: `${posture}%` }]} />
+            <View style={[styles.scoreBarFill, { width: `${coverage}%` }]} />
           </View>
           <View style={styles.scoreMetaRow}>
-            <Text style={styles.scoreMeta}>2 review</Text>
-            <Text style={styles.scoreMeta}>1 clear</Text>
-            <Text style={styles.scoreMeta}>1 limited</Text>
+            <Text style={styles.scoreMeta}>{report?.summary.review ?? "—"} review</Text>
+            <Text style={styles.scoreMeta}>{report?.summary.clear ?? "—"} policy checks clear</Text>
+            <Text style={styles.scoreMeta}>{report?.summary.unknown ?? "—"} unknown</Text>
           </View>
         </View>
 
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={assessmentComplete ? "Assessment verified" : "Run local assessment"}
-          accessibilityHint="Uses observable, permission-compliant signals"
-          onPress={() => setAssessmentComplete(true)}
+          accessibilityLabel={running ? "Reading local host" : "Run local host scan"}
+          accessibilityHint="Collects actual read-only Android API observations"
+          accessibilityState={{ disabled: running, busy: running }}
+          disabled={running}
+          onPress={() => void runAssessment()}
           style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed]}
         >
           <View style={styles.primaryButtonIcon}>
@@ -99,19 +106,23 @@ export default function CommandCenterScreen() {
           </View>
           <View style={styles.primaryButtonCopy}>
             <Text style={styles.primaryButtonTitle}>
-              {assessmentComplete ? "Assessment verified" : "Run local assessment"}
+              {running ? "Reading actual host data…" : report ? "Refresh local host scan" : "Run local host scan"}
             </Text>
-            <Text style={styles.primaryButtonDetail}>Uses only observable, permission-compliant signals</Text>
+            <Text style={styles.primaryButtonDetail}>Read-only · no root grant · no target required</Text>
           </View>
           <Text style={styles.primaryArrow}>›</Text>
         </Pressable>
 
+        {error ? <Text accessibilityRole="alert" style={styles.footerNote}>{error}</Text> : null}
+        {storageWarning ? <Text accessibilityRole="alert" style={styles.footerNote}>{storageWarning}</Text> : null}
+        <HostInformation report={report} />
+
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Signal review</Text>
-          <Text style={styles.sectionMeta}>04 CHECKS</Text>
+          <Text style={styles.sectionMeta}>{assessments.length} ACTUAL CHECKS</Text>
         </View>
 
-        {assessments.slice(0, 3).map((item, index) => {
+        {assessments.map((item, index) => {
           const colors = statusColors[item.status];
           const expanded = expandedFinding === item.id;
           return (
@@ -131,7 +142,7 @@ export default function CommandCenterScreen() {
                     <Text style={[styles.statusText, { color: colors.text }]}>{item.status.toUpperCase()}</Text>
                   </View>
                 </View>
-                {expanded ? <Text style={styles.findingDetail}>{item.detail}</Text> : null}
+                {expanded ? <Text style={styles.findingDetail}>{item.value}{`\n`}{item.detail}{`\n`}Source: {item.source}{`\n`}Limit: {item.limitation}</Text> : null}
                 <Text style={styles.findingAction}>{expanded ? item.action : "Tap to inspect evidence"}</Text>
               </View>
               <Text style={styles.findingChevron}>{expanded ? "⌃" : "⌄"}</Text>
@@ -154,11 +165,11 @@ export default function CommandCenterScreen() {
           <View style={styles.transportIcon}><Text style={styles.transportIconText}>↕</Text></View>
           <View style={styles.transportBody}>
             <View style={styles.findingTopRow}>
-              <Text style={styles.findingTitle}>No target connected</Text>
+              <Text style={styles.findingTitle}>{report ? report.host.usbDeviceCount === null ? "USB inventory unavailable" : `${report.host.usbDeviceCount} USB device(s) enumerated` : "USB inventory not checked"}</Text>
               <View style={styles.neutralPill}><Text style={styles.neutralPillText}>BEST EFFORT</Text></View>
             </View>
             <Text style={styles.transportDetail}>
-              Connect a compatible OTG path, then confirm the owner-approved protocol on both devices.
+              {report ? `Host feature: ${report.host.usbHostSupported === null ? "unknown" : report.host.usbHostSupported ? "declared" : "not declared"}. Enumeration is not a compatible or authenticated target session.` : "Run a host scan first. Use USB Link to inspect attachment and companion compatibility separately."}
             </Text>
             {usbExpanded ? (
               <View style={styles.transportChecklist}>
@@ -176,27 +187,27 @@ export default function CommandCenterScreen() {
           <View style={styles.scopeTopRow}>
             <View style={styles.scopeMark}><Text style={styles.scopeMarkText}>{sessionAuthorized ? "✓" : "!"}</Text></View>
             <View style={styles.scopeCopy}>
-              <Text style={styles.scopeTitle}>{sessionAuthorized ? "Scope attached" : "Training scope required"}</Text>
+              <Text style={styles.scopeTitle}>{sessionAuthorized ? "Scope draft entered" : "Training scope draft"}</Text>
               <Text style={styles.scopeDetail}>
                 {sessionAuthorized
-                  ? `${scopeName} · authorized by ${authorizedBy}`
-                  : "Create an auditable authorization before any active exercise."}
+                  ? `${scopeName} · declared by ${authorizedBy} · not verified`
+                  : "Active-exercise authorization requires configured identity and consent providers. This form records a draft only."}
               </Text>
             </View>
           </View>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={sessionAuthorized ? "Review authorization" : "Create scoped session"}
+            accessibilityLabel={sessionAuthorized ? "Edit scope draft" : "Enter scope draft"}
             onPress={() => setScopeOpen(true)}
             style={({ pressed }) => [styles.secondaryButton, pressed && styles.pressed]}
           >
-            <Text style={styles.secondaryButtonText}>{sessionAuthorized ? "Review authorization" : "Create scoped session"}</Text>
+            <Text style={styles.secondaryButtonText}>{sessionAuthorized ? "Edit scope draft" : "Enter scope draft"}</Text>
             <Text style={styles.secondaryButtonArrow}>→</Text>
           </Pressable>
         </View>
 
         <Text style={styles.footerNote}>
-          Prototype boundary: findings are representative demo observations. Native Android capability adapters and local persistence are the next milestone.
+          Host findings come from actual local Android readings. Cached reports retain their collection time. USB peer authentication and manufacturer-provider operations remain separate integrations.
         </Text>
       </ScrollView>
 
@@ -204,10 +215,10 @@ export default function CommandCenterScreen() {
         <View style={styles.modalBackdrop}>
           <View style={styles.modalCard}>
             <View style={styles.modalHandle} />
-            <Text style={styles.modalKicker}>AUTHORIZATION RECORD</Text>
+            <Text style={styles.modalKicker}>UNVERIFIED SCOPE DRAFT</Text>
             <Text style={styles.modalTitle}>Define the training scope.</Text>
             <Text style={styles.modalBody}>
-              This record stays attached to the exercise and its report. It does not grant device privileges.
+              This screen keeps a scope draft in memory. It is not a verified owner-consent record and does not grant device privileges or authorize a USB target.
             </Text>
             <Text style={styles.inputLabel}>TARGET SCOPE</Text>
             <TextInput
@@ -237,7 +248,7 @@ export default function CommandCenterScreen() {
                 }}
                 style={[styles.modalPrimary, !canCreateScope && styles.disabledButton]}
               >
-                <Text style={styles.modalPrimaryText}>Attach authorization</Text>
+                <Text style={styles.modalPrimaryText}>Use scope draft</Text>
               </Pressable>
             </View>
           </View>

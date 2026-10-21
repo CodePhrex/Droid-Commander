@@ -7,36 +7,42 @@ import {
   addUsbHostListener,
   close as closeUsbHost,
   connect as connectUsbHost,
+  getUsbDiagnostics,
   isUsbHostAvailable,
   requestPermission as requestUsbPermission,
   startDiscovery,
   type UsbDeviceDescriptor,
+  type UsbDiagnostics,
   type UsbHostEvent,
 } from "expo-droid-commander-usb-host";
+import { recordUsbPermissionEvent, USB_PERMISSION_EVENT_TYPES, type UsbPermissionEventType } from "@/lib/usb-permission-audit";
 import { createNativeUsbCommandChannel } from "@/lib/native-usb-command-channel";
-import { UsbCommandChannel } from "@/lib/usb-command-channel";
+import type { UsbCommandChannel } from "@/lib/usb-command-channel";
+import type { ActionResult } from "@/lib/usb-wire";
+import { DeviceOperationRouter } from "@/lib/device-operation-router";
 import {
   UsbSessionManager,
   type UsbSessionEvent,
   type UsbSessionState,
 } from "@/lib/usb-session";
-import type { ActionResult } from "@/lib/usb-wire";
 
 type LinkState = "idle" | "scanning" | "connected";
 type PermissionState = "not-requested" | "granted";
+type DiagnosticsStatus = "not-checked" | "available" | "unavailable";
+
+type SessionBinding = {
+  authenticate: (unsignedFrame: Uint8Array) => Promise<Uint8Array>;
+  verify: (frame: unknown) => Promise<boolean>;
+};
 
 type UsbDevice = {
   id: string;
+  nativeDeviceId: number;
   name: string;
   descriptor: string;
   interfaceLabel: string;
   permission: PermissionState;
   signal: string;
-};
-
-type SessionBinding = {
-  authenticate: (unsignedFrame: Uint8Array) => Promise<Uint8Array>;
-  verify: (frame: unknown) => Promise<boolean>;
 };
 
 const USB_PROFILE = {
@@ -45,6 +51,7 @@ const USB_PROFILE = {
   productIds: [0x5678],
   interfaceClass: 0xff,
 };
+const USB_PROFILE_CONFIGURED = false;
 
 const SESSION_POLICY = {
   allowedActions: ["read-posture", "read-capabilities", "simulate-remediation", "verify-posture"],
@@ -53,15 +60,22 @@ const SESSION_POLICY = {
   clockSkewMs: 120_000,
 };
 
+// Replace these scaffold identifiers with the authenticated operator and verified
+// organization profile when the identity provider is connected.
+const USB_AUDIT_CONTEXT = {
+  operatorId: "operator.local-session",
+  organizationId: "org.placeholder.configure-me",
+};
+
 function deviceFromDescriptor(descriptor: UsbDeviceDescriptor): UsbDevice {
-  const shortName = descriptor.deviceName.split("/").pop() || descriptor.deviceName;
   return {
     id: descriptor.deviceName,
-    name: shortName,
+    nativeDeviceId: descriptor.deviceId,
+    name: `Approved companion #${descriptor.deviceId}`,
     descriptor: `USB ${descriptor.vendorId.toString(16).padStart(4, "0")}:${descriptor.productId.toString(16).padStart(4, "0")} · native allow-list`,
     interfaceLabel: `${descriptor.interfaceCount} interface${descriptor.interfaceCount === 1 ? "" : "s"} · bulk policy`,
     permission: descriptor.permissionGranted ? "granted" : "not-requested",
-    signal: descriptor.permissionGranted ? "Permission granted" : "Ready",
+    signal: descriptor.permissionGranted ? "Permission granted" : "Permission required to open",
   };
 }
 
@@ -80,13 +94,24 @@ function describeNativeEvent(event: UsbHostEvent) {
   return event.type.replaceAll("-", " ").replace(/^./, (letter) => letter.toUpperCase());
 }
 
+function countLabel(value: number | null) {
+  return value === null ? "—" : value.toString().padStart(2, "0");
+}
+
+function usbId(value: number) {
+  return `0x${value.toString(16).toUpperCase().padStart(4, "0")}`;
+}
+
 export default function UsbLinkScreen() {
   const [nativeAvailable] = useState(isUsbHostAvailable);
   const [linkState, setLinkState] = useState<LinkState>("idle");
   const [devices, setDevices] = useState<UsbDevice[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const [lastEvent, setLastEvent] = useState(nativeAvailable ? "Native USB Host module ready" : "Custom Android build required");
+  const [lastEvent, setLastEvent] = useState(nativeAvailable ? "Host capability not checked · tap Scan to read Android USB Host state" : "Custom Android build required");
+  const [diagnostics, setDiagnostics] = useState<UsbDiagnostics | null>(null);
+  const [diagnosticsStatus, setDiagnosticsStatus] = useState<DiagnosticsStatus>("not-checked");
+  const [auditWarning, setAuditWarning] = useState<string | null>(null);
   const [sessionState, setSessionState] = useState<UsbSessionState>("disconnected");
   const [sessionEvent, setSessionEvent] = useState<UsbSessionEvent | null>(null);
   const [commandReady, setCommandReady] = useState(false);
@@ -94,14 +119,30 @@ export default function UsbLinkScreen() {
 
   const sessionRef = useRef<UsbSessionManager | null>(null);
   const channelRef = useRef<UsbCommandChannel | null>(null);
+  // A production peer verifier and cryptographic binding must populate this
+  // extension point. Native event text alone never establishes authentication.
   const bindingRef = useRef<SessionBinding | null>(null);
   const sessionIdRef = useRef<string | null>(null);
   const sessionBytesRef = useRef<Uint8Array | null>(null);
   const requestIdRef = useRef(1);
 
   const selected = useMemo(() => devices.find((device) => device.id === selectedId) ?? null, [devices, selectedId]);
+  const filteredDiagnostics = useMemo(() => {
+    const approvedIds = new Set(devices.map((device) => device.nativeDeviceId));
+    return diagnostics?.devices?.filter((device) => !approvedIds.has(device.deviceId)) ?? [];
+  }, [devices, diagnostics]);
   const connected = linkState === "connected" && selected !== null;
   const authenticated = sessionState === "established";
+  const hostFeatureLabel = !nativeAvailable
+    ? "NATIVE BUILD REQUIRED"
+    : diagnosticsStatus === "not-checked"
+      ? "NOT CHECKED"
+      : diagnostics?.featureUsbHost === true
+        ? "SUPPORTED"
+        : diagnostics?.featureUsbHost === false
+          ? "UNSUPPORTED"
+          : "UNAVAILABLE";
+  const approvedMatchLabel = USB_PROFILE_CONFIGURED ? countLabel(devices.length) : "—";
 
   const publishSessionEvent = useCallback((event: UsbSessionEvent) => {
     setSessionEvent(event);
@@ -120,9 +161,9 @@ export default function UsbLinkScreen() {
       setSessionState("disconnected");
     }
     sessionRef.current = null;
+    bindingRef.current = null;
     sessionIdRef.current = null;
     sessionBytesRef.current = null;
-    bindingRef.current = null;
   }, [publishSessionEvent]);
 
   const createTransportSession = useCallback(() => {
@@ -153,14 +194,9 @@ export default function UsbLinkScreen() {
     const sessionBytes = sessionBytesRef.current;
     if (!binding || !sessionBytes || sessionRef.current?.state !== "established") {
       setCommandReady(false);
-      setLastEvent("Session established locally, but platform crypto binding is not available; commands remain locked");
       return;
     }
-
-    const channel = createNativeUsbCommandChannel({
-      sessionId: sessionBytes,
-      authenticate: binding.authenticate,
-    });
+    const channel = createNativeUsbCommandChannel({ sessionId: sessionBytes, authenticate: binding.authenticate });
     channel.onResponse((result) => setLastResult(result));
     channel.onError((error) => {
       setCommandReady(false);
@@ -168,7 +204,6 @@ export default function UsbLinkScreen() {
     });
     channelRef.current = channel;
     setCommandReady(true);
-    setLastEvent("Authenticated command channel ready; only typed actions are enabled");
   }, []);
 
   useEffect(() => {
@@ -176,23 +211,44 @@ export default function UsbLinkScreen() {
       const payload = typeof event.payload === "object" && event.payload !== null ? event.payload as Record<string, unknown> : {};
       const deviceName = typeof payload.deviceName === "string" ? payload.deviceName : null;
 
+      if (USB_PERMISSION_EVENT_TYPES.includes(event.type as UsbPermissionEventType) && deviceName) {
+        void recordUsbPermissionEvent({
+          ...USB_AUDIT_CONTEXT,
+          type: event.type as UsbPermissionEventType,
+          deviceName,
+        }).catch(() => {
+          setAuditWarning("USB permission lifecycle event could not be recorded. The displayed permission state is informational; review the audit ledger before relying on it.");
+          setLastEvent("USB event observed, but audit ledger write failed");
+        });
+      }
+
       if (event.type === "permission-granted") {
-        setDevices((current) => current.map((device) => device.id === deviceName || deviceName === null ? { ...device, permission: "granted", signal: "Permission granted" } : device));
+        setDevices((current) => current.map((device) => deviceName !== null && device.id === deviceName ? { ...device, permission: "granted", signal: "Permission granted" } : device));
       }
       if (event.type === "permission-denied" || event.type === "permission-rejected") {
-        setDevices((current) => current.map((device) => device.id === deviceName || deviceName === null ? { ...device, permission: "not-requested", signal: "Permission denied" } : device));
+        setDevices((current) => current.map((device) => deviceName !== null && device.id === deviceName ? { ...device, permission: "not-requested", signal: "Permission denied" } : device));
       }
       if (event.type === "connected") {
         setLinkState("connected");
         createTransportSession();
       }
-      if (event.type === "session-established" && payload.sessionId === sessionIdRef.current) {
+      if (event.type === "session-established") {
+        const binding = bindingRef.current;
         const manager = sessionRef.current;
-        if (manager) {
+        if (!binding || !manager || payload.sessionId !== sessionIdRef.current) {
+          setLastEvent("Peer session claim ignored: matching authenticated verifier and crypto binding unavailable");
+          return;
+        }
+        void binding.verify(payload).then((verified) => {
+          if (!verified || sessionRef.current !== manager || bindingRef.current !== binding) return;
           const established = manager.establish();
           publishSessionEvent(established);
           if (established.state === "established") installCommandChannel();
-        }
+        }).catch(() => {
+          closeProtocol();
+          setLastEvent("Peer-verifier failure; protocol session closed");
+        });
+        return;
       }
       if (event.type === "disconnected" || event.type === "connection-failed" || event.type === "transport-error") {
         closeProtocol();
@@ -212,9 +268,35 @@ export default function UsbLinkScreen() {
       return;
     }
     setLinkState("scanning");
-    setLastEvent("Scanning USB Host inventory…");
+    setLastEvent("Reading Android USB Host capability and unfiltered inventory…");
+    let inventory: UsbDiagnostics | null = null;
+    try {
+      inventory = await getUsbDiagnostics();
+      setDiagnostics(inventory);
+      setDiagnosticsStatus(inventory ? "available" : "unavailable");
+    } catch {
+      setDiagnostics(null);
+      setDiagnosticsStatus("unavailable");
+    }
+
+    if (inventory?.featureUsbHost === false) {
+      setDevices([]);
+      setSelectedId(null);
+      setLastEvent("Android reports USB Host unsupported; approved discovery was not started");
+      setLinkState("idle");
+      return;
+    }
+
     try {
       const found = await startDiscovery(USB_PROFILE);
+      if (!USB_PROFILE_CONFIGURED) {
+        setDevices([]);
+        setSelectedId(null);
+        setLastEvent(inventory?.rawCount === null || inventory?.rawCount === undefined
+          ? "USB profile NOT CONFIGURED · raw inventory could not be read"
+          : `USB profile NOT CONFIGURED · ${inventory.rawCount} device${inventory.rawCount === 1 ? "" : "s"} enumerated; placeholder discovery is not treated as an approved match`);
+        return;
+      }
       const nextDevices = found.map(deviceFromDescriptor);
       setDevices(nextDevices);
       setSelectedId(nextDevices[0]?.id ?? null);
@@ -227,14 +309,14 @@ export default function UsbLinkScreen() {
   };
 
   const requestPermission = async () => {
-    if (!selected || !nativeAvailable) return;
+    if (!selected || !nativeAvailable || !USB_PROFILE_CONFIGURED) return;
     setLastEvent("Waiting for Android owner-permission dialog…");
     const requested = await requestUsbPermission(selected.id);
     if (!requested) setLastEvent("Permission request rejected by native USB Host API");
   };
 
   const connect = async () => {
-    if (!selected || selected.permission !== "granted" || !nativeAvailable) return;
+    if (!selected || selected.permission !== "granted" || !nativeAvailable || !USB_PROFILE_CONFIGURED) return;
     setLastEvent("Opening bounded native USB transport; authenticated session still required…");
     const opened = await connectUsbHost(selected.id);
     if (!opened) setLastEvent("Connection rejected · check permission and interface policy");
@@ -244,18 +326,28 @@ export default function UsbLinkScreen() {
     const manager = sessionRef.current;
     if (!manager || linkState !== "connected") return;
     publishSessionEvent(manager.requireConsent());
-    setLastEvent("Consent scope displayed locally; waiting for a matching peer handshake");
+    setLastEvent("Scope displayed locally. Target cooperative protocol and authentication are unavailable; commands remain locked");
   };
 
   const sendReadPosture = async () => {
-    if (!commandReady || !channelRef.current) return;
-    try {
-      const result = await channelRef.current.sendAction({ requestId: requestIdRef.current, action: "read-posture" });
-      requestIdRef.current += 1;
-      setLastEvent(`Typed read-posture sent · sequence ${result.sequence}; waiting for authenticated result`);
-    } catch (error) {
-      const code = error instanceof Error ? error.message : "unknown channel error";
-      setLastEvent(`Command blocked: ${code}`);
+    const channel = channelRef.current;
+    const device = selected;
+    if (!commandReady || !channel || !device || sessionRef.current?.state !== "established") {
+      setLastEvent("Typed commands require a configured target verifier and platform crypto binding");
+      return;
+    }
+    const router = new DeviceOperationRouter({
+      resolveAdapter: (scope) => scope.kind === "usb-peer" && scope.targetId === device.id && channelRef.current === channel && sessionRef.current?.state === "established" ? {
+        scope: { kind: "usb-peer", targetId: device.id },
+        handlers: { "read-posture": () => channel.sendAction({ requestId: requestIdRef.current++, action: "read-posture" }) },
+      } : undefined,
+    });
+    const result = await router.execute({ scope: { kind: "usb-peer", targetId: device.id }, operationId: "read-posture" });
+    if (result.status === "completed") {
+      const sent = result.data as { sequence: number };
+      setLastEvent(`Authenticated read-posture sent · sequence ${sent.sequence}; awaiting matching response`);
+    } else {
+      setLastEvent(result.reason);
     }
   };
 
@@ -284,28 +376,52 @@ export default function UsbLinkScreen() {
             <View style={styles.hostIcon}><Text style={styles.hostIconText}>↕</Text></View>
             <View style={styles.hostCopy}>
               <Text style={styles.hostLabel}>LOCAL USB HOST</Text>
-              <Text style={styles.hostTitle}>{authenticated ? "Authenticated session active" : connected ? "Transport connected · session locked" : nativeAvailable ? "Ready for a cooperative link" : "Native build required"}</Text>
+              <Text style={styles.hostTitle}>{authenticated ? "Authenticated session active" : connected ? "Transport connected · session locked" : nativeAvailable ? diagnosticsStatus === "not-checked" ? "Host capability not checked" : `USB Host feature ${hostFeatureLabel.toLowerCase()}` : "Native build required"}</Text>
             </View>
-            <View style={styles.readyPill}><Text style={styles.readyPillText}>{authenticated ? "AUTH" : connected ? "LINK" : nativeAvailable ? "READY" : "OFFLINE"}</Text></View>
+            <View style={styles.readyPill}><Text style={styles.readyPillText}>{authenticated ? "AUTH" : connected ? "LINK" : nativeAvailable ? diagnosticsStatus === "not-checked" ? "CHECK" : hostFeatureLabel : "OFFLINE"}</Text></View>
           </View>
           <View style={styles.hostStats}>
-            <View><Text style={styles.statLabel}>TRANSPORT</Text><Text style={styles.statValue}>{connected ? "CONNECTED" : "IDLE"}</Text></View>
-            <View><Text style={styles.statLabel}>SESSION</Text><Text style={styles.statValue}>{authenticated ? "ESTABLISHED" : sessionState.toUpperCase()}</Text></View>
-            <View><Text style={styles.statLabel}>COMMANDS</Text><Text style={styles.statValue}>{commandReady ? "TYPED ONLY" : "LOCKED"}</Text></View>
+            <View><Text style={styles.statLabel}>HOST FEATURE</Text><Text style={styles.statValue}>{hostFeatureLabel}</Text></View>
+            <View><Text style={styles.statLabel}>ENUMERATED</Text><Text style={styles.statValue}>{diagnosticsStatus === "available" ? countLabel(diagnostics?.rawCount ?? null) : "—"}</Text></View>
+            <View><Text style={styles.statLabel}>PROFILE</Text><Text style={styles.statValue}>{USB_PROFILE_CONFIGURED ? "CONFIGURED" : "NOT CONFIGURED"}</Text></View>
           </View>
         </View>
 
         <View style={styles.actionRow}>
-          <Pressable accessibilityRole="button" accessibilityLabel={nativeAvailable ? "Scan for approved USB devices" : "Custom Android build required for USB scanning"} accessibilityState={{ disabled: linkState === "scanning" }} onPress={scan} disabled={linkState === "scanning"} style={({ pressed }) => [styles.scanButton, pressed && styles.pressed, linkState === "scanning" && styles.disabled]}>
-            <Text style={styles.scanButtonText}>{linkState === "scanning" ? "Scanning…" : nativeAvailable ? "Scan for devices" : "Native build required"}</Text>
+          <Pressable accessibilityRole="button" accessibilityLabel={nativeAvailable ? "Read USB Host capability and inventory" : "Custom Android build required for USB scanning"} accessibilityState={{ disabled: linkState === "scanning" }} onPress={scan} disabled={linkState === "scanning"} style={({ pressed }) => [styles.scanButton, pressed && styles.pressed, linkState === "scanning" && styles.disabled]}>
+            <Text style={styles.scanButtonText}>{linkState === "scanning" ? "Scanning…" : nativeAvailable ? "Scan USB Host" : "Native build required"}</Text>
             <Text style={styles.scanButtonArrow}>↗</Text>
           </Pressable>
           <View style={styles.lastEventBox}><Text style={styles.eventLabel}>LAST EVENT</Text><Text style={styles.eventText} numberOfLines={2}>{lastEvent}</Text></View>
         </View>
 
-        <View style={styles.sectionHeader}><Text style={styles.sectionTitle}>Discovered devices</Text><Text style={styles.sectionMeta}>{devices.length.toString().padStart(2, "0")} FOUND</Text></View>
+        {auditWarning ? <View accessibilityRole="alert" style={styles.auditWarning}><Text style={styles.auditWarningLabel}>LIFECYCLE AUDIT WARNING</Text><Text style={styles.auditWarningText}>{auditWarning}</Text></View> : null}
+
+        <View style={styles.diagnosticsCard}>
+          <View style={styles.diagnosticsHeader}><View><Text style={styles.controlKicker}>READ-ONLY HOST ASSESSMENT</Text><Text style={styles.diagnosticsTitle}>{diagnosticsStatus === "not-checked" ? "Scan to check local USB Host" : diagnosticsStatus === "unavailable" ? "Host assessment unavailable" : `USB Host feature ${hostFeatureLabel.toLowerCase()}`}</Text></View><Text style={styles.diagnosticsBadge}>{diagnosticsStatus === "available" ? "READ ONLY" : "PENDING"}</Text></View>
+          <Text style={styles.diagnosticsBody}>{diagnosticsStatus === "not-checked" ? "Module presence is not a hardware result. Scan reads Android's USB Host feature and attached-device inventory without opening a device or requesting permission." : "Android can enumerate attached USB devices before permission. Permission is required only to open an approved transport."}</Text>
+          <View style={styles.diagnosticStats}>
+            <View style={styles.diagnosticStat}><Text style={styles.diagnosticStatLabel}>HOST FEATURE</Text><Text style={styles.diagnosticStatValue}>{hostFeatureLabel}</Text></View>
+            <View style={styles.diagnosticStat}><Text style={styles.diagnosticStatLabel}>ENUMERATED</Text><Text style={styles.diagnosticStatValue}>{diagnosticsStatus === "available" ? countLabel(diagnostics?.rawCount ?? null) : "—"}</Text></View>
+            <View style={styles.diagnosticStat}><Text style={styles.diagnosticStatLabel}>APPROVED MATCHES</Text><Text style={styles.diagnosticStatValue}>{approvedMatchLabel}</Text></View>
+          </View>
+          {!USB_PROFILE_CONFIGURED ? <Text style={styles.profileWarning}>USB PROFILE: NOT CONFIGURED. Placeholder IDs are not treated as a universal or approved profile, so transport discovery and actions remain unavailable.</Text> : null}
+          {diagnosticsStatus === "available" && diagnostics?.rawCount === 0 ? <Text style={styles.inventoryNotice}>No attached USB device was enumerated in this scan. This does not indicate a USB Host hardware failure.</Text> : null}
+          {filteredDiagnostics.length > 0 ? <View style={styles.diagnosticList}>
+            <Text style={styles.diagnosticListTitle}>{USB_PROFILE_CONFIGURED ? "FILTERED FROM APPROVED DISCOVERY" : "UNCONFIGURED INVENTORY"}</Text>
+            {filteredDiagnostics.slice(0, 4).map((device) => <View key={device.deviceId} style={styles.diagnosticEntry}>
+              <View style={styles.diagnosticEntryTop}><Text style={styles.diagnosticEntryId}>LOCAL ID #{device.deviceId}</Text><Text style={styles.diagnosticEntryFlag}>{USB_PROFILE_CONFIGURED ? "FILTERED" : "NOT CONFIGURED"}</Text></View>
+              <Text style={styles.diagnosticEntryMeta}>VID {usbId(device.vendorId)} · PID {usbId(device.productId)} · device class {device.deviceClass}</Text>
+              <Text style={styles.diagnosticEntryMeta}>Interface classes {device.interfaceClasses.length ? device.interfaceClasses.join(", ") : "none"} · bulk IN {device.bulkEndpoints.inputAvailable ? "yes" : "no"} · OUT {device.bulkEndpoints.outputAvailable ? "yes" : "no"} · pair {device.bulkEndpoints.inOutPairAvailable ? "yes" : "no"}</Text>
+              <Text style={styles.diagnosticEntryPermission}>Permission {device.permissionGranted ? "granted" : "not granted"} · read-only diagnostic</Text>
+            </View>)}
+            {filteredDiagnostics.length > 4 ? <Text style={styles.inventoryNotice}>+ {filteredDiagnostics.length - 4} additional privacy-limited entries not shown</Text> : null}
+          </View> : null}
+        </View>
+
+        <View style={styles.sectionHeader}><Text style={styles.sectionTitle}>Approved companions</Text><Text style={styles.sectionMeta}>{USB_PROFILE_CONFIGURED ? `${approvedMatchLabel} MATCHES` : "NOT CONFIGURED"}</Text></View>
         {devices.length === 0 ? (
-          <View style={styles.emptyCard}><Text style={styles.emptyMark}>○</Text><Text style={styles.emptyTitle}>No approved companion in view.</Text><Text style={styles.emptyBody}>{nativeAvailable ? "USB permission and a cooperative interface are required before a device can appear here." : "Live discovery is unavailable in this preview. Use the custom Android development build."}</Text></View>
+          <View style={styles.emptyCard}><Text style={styles.emptyMark}>○</Text><Text style={styles.emptyTitle}>{USB_PROFILE_CONFIGURED ? "No approved companion matched." : "Approved profile not configured."}</Text><Text style={styles.emptyBody}>{nativeAvailable ? USB_PROFILE_CONFIGURED ? "Attached hardware can be enumerated before permission. Permission is required only before opening a selected approved transport." : "The privacy-limited inventory above can show attached hardware, but organization-approved IDs must replace the placeholders before discovery, permission, or transport actions are enabled." : "Live discovery is unavailable in this preview. Use the custom Android development build."}</Text></View>
         ) : devices.map((device) => {
           const isSelected = device.id === selectedId;
           return (
@@ -343,18 +459,18 @@ export default function UsbLinkScreen() {
         ) : null}
 
         <View style={styles.sessionCard}>
-          <View style={styles.sessionHeader}><View><Text style={styles.controlKicker}>SESSION CONTROL</Text><Text style={styles.sessionTitle}>{sessionState === "awaiting-consent" ? "Awaiting matching peer consent" : authenticated ? "Authenticated command channel" : "No authenticated session"}</Text></View><Text style={styles.sessionBadge}>{commandReady ? "READY" : "LOCKED"}</Text></View>
-          <Text style={styles.sessionBody}>{authenticated ? "Only typed, allow-listed actions may be transmitted. Responses must be session-bound and authenticated before disclosure." : "A USB connection alone never authorizes commands. The draft keeps the command channel locked until the peer handshake verifier and platform cryptography are connected."}</Text>
+          <View style={styles.sessionHeader}><View><Text style={styles.controlKicker}>SESSION CONTROL</Text><Text style={styles.sessionTitle}>{sessionState === "awaiting-consent" ? "Scope shown; target auth unavailable" : "No authenticated session"}</Text></View><Text style={styles.sessionBadge}>{commandReady ? "READY" : "LOCKED"}</Text></View>
+          <Text style={styles.sessionBody}>A USB connection and a locally displayed scope do not establish a session. Target-cooperative protocol verification and platform crypto binding are unavailable, so typed commands remain locked.</Text>
           <Pressable accessibilityRole="button" accessibilityLabel="Send an authenticated read posture action" accessibilityState={{ disabled: !commandReady }} onPress={sendReadPosture} disabled={!commandReady} style={({ pressed }) => [styles.commandButton, !commandReady && styles.disabled, pressed && styles.pressed]}><Text style={styles.commandButtonText}>Run typed read-posture</Text><Text style={styles.commandButtonArrow}>→</Text></Pressable>
-          {lastResult ? <Text style={styles.resultText}>Last result · {lastResult.status.toUpperCase()} · {lastResult.detail}</Text> : null}
+          {lastResult ? <Text style={styles.resultText}>Request {lastResult.requestId} · {lastResult.status} · {lastResult.detail}</Text> : null}
           {sessionEvent ? <Text style={styles.sessionEventText}>{sessionEvent.code} · {sessionEvent.message}</Text> : null}
         </View>
 
         <Pressable accessibilityRole="button" accessibilityLabel="Toggle transport boundary details" onPress={() => setDetailsOpen(!detailsOpen)} style={styles.boundaryCard}>
           <View style={styles.boundaryTopRow}><View style={styles.boundaryMark}><Text style={styles.boundaryMarkText}>!</Text></View><View style={styles.boundaryCopy}><Text style={styles.boundaryTitle}>Transport boundary</Text><Text style={styles.boundarySubtitle}>USB permission is not authorization.</Text></View><Text style={styles.chevron}>{detailsOpen ? "⌃" : "⌄"}</Text></View>
-          {detailsOpen ? <View style={styles.boundaryDetails}><Text style={styles.detailLine}><Text style={styles.detailNumber}>01</Text> Transport connects before the cooperative session is established.</Text><Text style={styles.detailLine}><Text style={styles.detailNumber}>02</Text> Only typed, allow-listed protocol frames are accepted.</Text><Text style={styles.detailLine}><Text style={styles.detailNumber}>03</Text> Disconnect, replay, failed authentication, or consent changes close the session.</Text></View> : null}
+          {detailsOpen ? <View style={styles.boundaryDetails}><Text style={styles.detailLine}><Text style={styles.detailNumber}>01</Text> Android may enumerate attached USB hardware before permission; permission is required before opening a selected transport.</Text><Text style={styles.detailLine}><Text style={styles.detailNumber}>02</Text> Transport connection is separate from target-cooperative protocol verification and authenticated session establishment.</Text><Text style={styles.detailLine}><Text style={styles.detailNumber}>03</Text> No target verifier or platform crypto binding is wired here, so commands cannot unlock or simulate an established session.</Text></View> : null}
         </Pressable>
-        <Text style={styles.footerNote}>{nativeAvailable ? "Draft wiring is fail-closed: the native peer-handshake verifier must emit a matching session-established event before commands can unlock." : "Live discovery requires the custom Android development build; this preview does not simulate USB devices."}</Text>
+        <Text style={styles.footerNote}>{nativeAvailable ? "Fail closed: this screen cannot establish an authenticated session or unlock commands until a target-cooperative verifier and platform crypto binding are implemented." : "Live discovery requires the custom Android development build; this preview does not simulate USB devices."}</Text>
       </ScrollView>
     </ScreenContainer>
   );
@@ -395,6 +511,28 @@ const styles = StyleSheet.create({
   eventText: { color: palette.ink, fontSize: 10, lineHeight: 13, marginTop: 4 },
   disabled: { opacity: 0.55 },
   pressed: { opacity: 0.8 },
+  auditWarning: { backgroundColor: "#FCECEB", borderWidth: 1, borderColor: "#F5C7C3", borderRadius: 14, padding: 13, marginBottom: 13 },
+  auditWarningLabel: { color: palette.red, fontSize: 9, fontWeight: "900", letterSpacing: 0.9 },
+  auditWarningText: { color: "#7D403B", fontSize: 11, lineHeight: 16, marginTop: 5 },
+  diagnosticsCard: { backgroundColor: "#FFFDFC", borderWidth: 1, borderColor: palette.line, borderRadius: 17, padding: 16, marginBottom: 22 },
+  diagnosticsHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
+  diagnosticsTitle: { color: palette.ink, fontSize: 16, fontWeight: "800", marginTop: 5 },
+  diagnosticsBadge: { color: palette.orange, fontSize: 9, fontWeight: "900", letterSpacing: 0.8 },
+  diagnosticsBody: { color: palette.muted, fontSize: 12, lineHeight: 17, marginTop: 11 },
+  diagnosticStats: { flexDirection: "row", borderTopWidth: 1, borderTopColor: palette.line, marginTop: 13, paddingTop: 11 },
+  diagnosticStat: { flex: 1, paddingRight: 5 },
+  diagnosticStatLabel: { color: palette.muted, fontSize: 8, fontWeight: "900", letterSpacing: 0.7 },
+  diagnosticStatValue: { color: palette.ink, fontSize: 10, fontWeight: "900", marginTop: 5 },
+  profileWarning: { color: "#7A5B1F", fontSize: 11, fontWeight: "700", lineHeight: 16, marginTop: 13 },
+  inventoryNotice: { color: palette.muted, fontSize: 10, lineHeight: 15, marginTop: 11 },
+  diagnosticList: { borderTopWidth: 1, borderTopColor: palette.line, marginTop: 13, paddingTop: 11 },
+  diagnosticListTitle: { color: palette.muted, fontSize: 8, fontWeight: "900", letterSpacing: 0.8, marginBottom: 7 },
+  diagnosticEntry: { backgroundColor: "#F8F7F2", borderRadius: 11, padding: 10, marginTop: 7 },
+  diagnosticEntryTop: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  diagnosticEntryId: { color: palette.ink, fontSize: 10, fontWeight: "900" },
+  diagnosticEntryFlag: { color: palette.orange, fontSize: 8, fontWeight: "900", letterSpacing: 0.6 },
+  diagnosticEntryMeta: { color: palette.muted, fontSize: 10, lineHeight: 15, marginTop: 4 },
+  diagnosticEntryPermission: { color: palette.green, fontSize: 9, fontWeight: "900", marginTop: 5 },
   sectionHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 10 },
   sectionTitle: { color: palette.ink, fontSize: 17, fontWeight: "800" },
   sectionMeta: { color: palette.muted, fontSize: 9, fontWeight: "900", letterSpacing: 1 },

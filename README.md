@@ -4,7 +4,9 @@ Droid Commander is an Android security-training and device-service orchestration
 
 ## Current status
 
-The repository contains a working Expo/React Native application, a generated Android project, a local Kotlin USB Host module, protocol and policy libraries, tests, CI workflows, and operational documentation. The debug Android build has passed in GitHub Actions. Production signing is protected by the GitHub `production` Environment and requires reviewer approval; physical-device validation and organization/provider configuration remain release gates.
+The repository contains an Expo/React Native application, a generated Android project, a local Kotlin USB Host module, protocol and policy libraries, tests, CI workflows, and operational documentation. Earlier APKs compiled and were signed, but physical testing showed that Command/Assess still displayed demo observations and Sessions displayed sample activity. The current source replaces those paths with actual native host collection, shared persisted host reports and conservative host-to-CVE correlation; see [LIVE_HOST_ASSESSMENT.md](LIVE_HOST_ASSESSMENT.md). A new native build and Galaxy A15 validation are still required for these changes. Compilation is not evidence of complete device-service functionality.
+
+Production signing is protected by the GitHub `production` Environment and requires reviewer approval. End-to-end cooperative USB authentication, configured companion profiles and real manufacturer-provider adapters remain release gates. The USB screen must not present module presence or raw device enumeration as an authenticated command session.
 
 This repository does not contain a manufacturer-approved universal backdoor. It does not implement automated lock-screen bypass, arbitrary shell access, arbitrary code or exploit execution, silent OEM unlocking, unattended flashing, credential extraction, or encryption bypass.
 
