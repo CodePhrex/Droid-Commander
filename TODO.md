@@ -82,4 +82,6 @@
 - [x] Binary action serialization is strict and limited to read-posture, read-capabilities, simulate-remediation, and verify-posture; it does not accept arbitrary commands or payloads.
 - [x] The codec rejects malformed, truncated, oversized, unknown-version/type, invalid UTF-8, inconsistent-length, and unsupported-action packets.
 - [x] Wire-format tests cover round-trips, endian encoding, fixed-field validation, and malformed input.
+- [x] The command channel requires an injected 16-byte session authenticator, transmits only typed allow-listed actions over the native bridge, and parses only matching-session action-result frames.
+- [x] Command-channel tests cover authenticated send, sequence increments, tag rejection, native send rejection, response parsing, wrong-session rejection, malformed base64/frames, and post-close behavior.
 - [ ] Native stream reassembly, authentication-tag verification, and physical transport tests are implemented.

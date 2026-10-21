@@ -43,6 +43,24 @@ export type ActionRequest =
   | { requestId: number; action: "simulate-remediation"; findingId: string }
   | { requestId: number; action: "verify-posture"; findingId: string };
 
+export type ActionResultStatus = "ok" | "denied" | "failed" | "invalid";
+export type ActionResult = {
+  requestId: number;
+  status: ActionResultStatus;
+  detail: string;
+};
+
+const ACTION_RESULT_STATUS_TO_CODE: Record<ActionResultStatus, number> = {
+  ok: 1,
+  denied: 2,
+  failed: 3,
+  invalid: 4,
+};
+
+const CODE_TO_ACTION_RESULT_STATUS = Object.fromEntries(
+  Object.entries(ACTION_RESULT_STATUS_TO_CODE).map(([name, code]) => [code, name]),
+) as Record<number, ActionResultStatus | undefined>;
+
 export type UsbPacket = {
   messageType: UsbWireMessageType;
   flags: number;
@@ -148,6 +166,31 @@ export function decodeActionRequest(payload: Uint8Array): ActionRequest {
   const findingLength = readU16(view, 5);
   if (findingLength === 0 || payload.length !== 7 + findingLength) throw new UsbWireError("PAYLOAD", "Parameterized action length is invalid.");
   return { requestId, action, findingId: decodeUtf8(payload.subarray(7)) } as ActionRequest;
+}
+
+export function encodeActionResult(result: ActionResult): Uint8Array {
+  requireUint32(result.requestId, "requestId");
+  const statusCode = ACTION_RESULT_STATUS_TO_CODE[result.status];
+  if (!statusCode) throw new UsbWireError("PAYLOAD", "Action result status is not allow-listed.");
+  const detail = utf8(result.detail);
+  if (detail.length > 4096) throw new UsbWireError("PAYLOAD", "Action result detail must be at most 4096 UTF-8 bytes.");
+  const bytes = new Uint8Array(7 + detail.length);
+  const view = new DataView(bytes.buffer);
+  writeU32(view, 0, result.requestId);
+  view.setUint8(4, statusCode);
+  writeU16(view, 5, detail.length);
+  bytes.set(detail, 7);
+  return bytes;
+}
+
+export function decodeActionResult(payload: Uint8Array): ActionResult {
+  if (payload.length < 7) throw new UsbWireError("PAYLOAD", "Action result is truncated.");
+  const view = new DataView(payload.buffer, payload.byteOffset, payload.byteLength);
+  const status = CODE_TO_ACTION_RESULT_STATUS[view.getUint8(4)];
+  if (!status) throw new UsbWireError("PAYLOAD", "Action result status is not allow-listed.");
+  const detailLength = readU16(view, 5);
+  if (payload.length !== 7 + detailLength || detailLength > 4096) throw new UsbWireError("PAYLOAD", "Action result detail length is invalid.");
+  return { requestId: readU32(view, 0), status, detail: decodeUtf8(payload.subarray(7)) };
 }
 
 export function encodePacket(packet: UsbPacket): Uint8Array {

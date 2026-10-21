@@ -73,6 +73,19 @@ A read-only command must have exactly five payload bytes (`u32` request ID plus 
 
 Version 1 intentionally does not serialize `run-shell`, package installation, lock-screen operations, arbitrary code, exploit payloads, or unrestricted parameter maps. Any future action requires a new reviewed command code, a matching target-side allow-list, a separate authorization category, and new tests.
 
+## Binary action-result payload
+
+An `action-result` payload uses the matching request ID and a bounded detail string:
+
+```text
+requestId:   u32
+status:      u8 (1=ok, 2=denied, 3=failed, 4=invalid)
+detailSize:  u16
+detail:      UTF-8 bytes, 0–4096 bytes
+```
+
+The response parser rejects unknown statuses, invalid UTF-8, detail-length mismatches, and detail strings larger than 4096 bytes. Response frames must also match the active session ID before the result is delivered to the command layer.
+
 ## Stream reassembly and dispatch
 
 USB bulk transfers are transport chunks, not packet boundaries. The native adapter must accumulate bytes until at least the five-byte prefix needed to read the header length and payload length, then wait for the exact packet length. It must enforce the maximum before allocating a buffer. After a complete packet is decoded, it passes through authentication and session-state validation before command dispatch.
