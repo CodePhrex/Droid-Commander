@@ -132,6 +132,20 @@
 - [x] Invalid-chain reports are visibly marked `INVALID` and are never presented as complete disclosures.
 - [ ] Connect all native privileged-operation completion callbacks and the production audit sink to this ledger.
 
+## Authorized device-image acquisition and restoration evidence
+
+- [x] The image workflow binds acquisition to authorization, operator, organization, exact target, owner consent, known encryption state, encrypted destination, capacity, and explicit provider capabilities.
+- [x] Full-device image requests require a reviewed provider capability and are distinguished from ordinary Android backup or owner file transfer.
+- [x] Locked/encrypted targets, unknown encryption state, missing consent, insufficient capacity, unencrypted destinations, missing provider capabilities, and missing restore providers are blocked or routed to an explicit handoff; no authentication or encryption bypass is implemented.
+- [x] Provider manifests require sequential chunks, exact offsets and lengths, total-size agreement, encrypted-at-rest storage, and valid SHA-256 digests before restoration evidence is accepted.
+- [x] Image policy and manifest tests are covered in `tests/device-image-workflow.test.ts`, with boundaries documented in `DEVICE_IMAGE_WORKFLOW.md`.
+- [ ] Connect an organization-approved acquisition/restore provider, secure manifest persistence, interrupted-transfer resume, destructive-restore confirmation, and native image callbacks to the privileged ledger.
+
+## Pre-build readiness audit
+
+- [x] `PREBUILD_READINESS.md` records delivered foundations, explicit build blockers, physical-device validation gates, image-provider requirements, recommended build order, and prohibited release capabilities.
+- [ ] Custom Android compilation, organization configuration, physical-device matrix, provider integrations, complete session persistence, production audit sink, and release security/privacy review are complete.
+
 ## USB packet framing and binary command serialization
 
 - [x] The wire format defines a fixed versioned header with magic, message type, session binding, sequence, timestamp, nonce, exact payload length, and fixed authentication-tag length.
