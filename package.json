@@ -15,6 +15,7 @@
     "test": "vitest run",
     "db:push": "drizzle-kit generate && drizzle-kit migrate",
     "android": "expo run:android",
+    "setup:codespaces": "bash scripts/setup-github-codespaces.sh",
     "setup:codespaces:expo": "bash scripts/setup-codespaces-expo.sh",
     "ios": "expo run:ios",
     "qr": "node scripts/generate_qr.mjs",
