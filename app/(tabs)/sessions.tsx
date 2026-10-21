@@ -1,20 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Pressable, ScrollView, Share, StyleSheet, Text, View } from "react-native";
 
 import { ScreenContainer } from "@/components/screen-container";
 import { palette, sessions } from "@/constants/commander";
-import { renderSessionDisclosureMarkdown } from "@/lib/session-disclosure";
+import { mobilePrivilegedActionLedger } from "@/lib/native-privileged-action-ledger";
+import { renderPrivilegedLedgerDisclosureMarkdown } from "@/lib/session-disclosure";
+import type { PrivilegedActionEvent } from "@/lib/privileged-action-core";
+import type { MobileLedgerVerification } from "@/lib/native-privileged-action-ledger";
 
 export default function SessionsScreen() {
   const [selected, setSelected] = useState<string | null>("session-041");
   const [exporting, setExporting] = useState(false);
+  const [ledgerEvents, setLedgerEvents] = useState<PrivilegedActionEvent[]>([]);
+  const [ledgerIntegrity, setLedgerIntegrity] = useState<MobileLedgerVerification>({ valid: true, entries: 0, lastHash: null });
+
+  useEffect(() => {
+    let mounted = true;
+    Promise.all([mobilePrivilegedActionLedger.read(), mobilePrivilegedActionLedger.verify()]).then(([events, integrity]) => {
+      if (!mounted) return;
+      setLedgerEvents(events);
+      setLedgerIntegrity(integrity);
+    }).catch((error) => {
+      if (mounted) setLedgerIntegrity({ valid: false, entries: 0, lastHash: null, error: error instanceof Error ? error.message : "Ledger unavailable." });
+    });
+    return () => { mounted = false; };
+  }, []);
 
   const exportDisclosure = async () => {
     setExporting(true);
     try {
       await Share.share({
-        title: "Droid Commander session disclosure",
-        message: renderSessionDisclosureMarkdown(sessions),
+        title: "Droid Commander privileged-action ledger",
+        message: renderPrivilegedLedgerDisclosureMarkdown(ledgerEvents, ledgerIntegrity),
       });
     } catch {
       Alert.alert("Export unavailable", "The system share sheet could not be opened. No session data was changed.");
@@ -49,8 +66,8 @@ export default function SessionsScreen() {
         <View style={styles.exportCard}>
           <View style={styles.exportIcon}><Text style={styles.exportIconText}>↗</Text></View>
           <View style={styles.exportCopy}>
-            <Text style={styles.exportTitle}>User disclosure export</Text>
-            <Text style={styles.exportDetail}>Share a readable Markdown summary of local sessions.</Text>
+            <Text style={styles.exportTitle}>Privileged action ledger</Text>
+            <Text style={styles.exportDetail}>{ledgerIntegrity.valid ? `${ledgerIntegrity.entries} entr${ledgerIntegrity.entries === 1 ? "y" : "ies"} · SHA-256 chain verified` : `Integrity warning · ${ledgerIntegrity.error ?? "ledger verification failed"}`}</Text>
           </View>
           <Pressable
             accessibilityRole="button"

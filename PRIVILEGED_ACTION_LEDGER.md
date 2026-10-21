@@ -1,10 +1,18 @@
 # Privileged-action disclosure ledger
 
-Droid Commander now supports an append-only JSONL ledger for user-facing disclosure of privileged or security-sensitive workflows. It records requests, approvals, denials, starts, completions, failures, cancellations, handoffs, and explicit no-change outcomes for actions such as OEM-unlock requests, USB-debugging changes, bootloader or recovery handoffs, root sessions, diagnostics, remediation, system-patch handoffs, and session closure.
+Droid Commander supports an append-only, hash-chained ledger for user-facing disclosure of privileged or security-sensitive workflows. The CLI persists JSONL, while the Android app persists the same event contract in AsyncStorage and exposes the verified chain through the Sessions dashboard. It records requests, approvals, denials, starts, completions, failures, cancellations, handoffs, and explicit no-change outcomes for actions such as OEM-unlock requests, USB-debugging changes, bootloader or recovery handoffs, root sessions, diagnostics, remediation, system-patch handoffs, and session closure.
 
 Each event contains the operator, organization, target, action, result, human-readable summary, implementation or handoff description, system modifications or explicit no-change statements, optional consent and ticket references, timestamp, sequence, previous hash, and event hash. The chain is verified before each append; a corrupted ledger cannot receive new entries until it is preserved and repaired through the organization’s evidence process.
 
 The ledger rejects passwords, passcodes, PINs, private keys, secrets, recovery codes, seed phrases, access tokens, refresh tokens, and client secrets. It does not record raw credentials, arbitrary shell commands, or private payloads. Store the ledger with restrictive file permissions and include it in the owner disclosure package only after reviewing for local policy and personal-data requirements.
+
+## Android dashboard storage
+
+The mobile adapter is `lib/native-privileged-action-ledger.ts`. It uses the `@droidcmd/privileged-action-ledger/v1` AsyncStorage key, Expo Crypto SHA-256 hashing, the shared canonical serializer, and the same sequence/previous-hash validation rules as the CLI ledger. It refuses to append when the stored chain is invalid, rejects secret-like fields before storage, serializes writes to avoid concurrent sequence collisions, and supports JSON/JSONL export.
+
+The Sessions dashboard reads and verifies the mobile ledger on mount, displays the entry count and chain status, and shares a Markdown disclosure containing event metadata, summary, implementation, modifications, target, timestamp, and integrity evidence. An invalid chain is surfaced as `INVALID`; it is not repaired or hidden.
+
+Native device smoke validation remains required for AsyncStorage durability and Expo Crypto behavior on the supported Android build.
 
 ## CLI
 
@@ -64,4 +72,4 @@ The report includes the ledger integrity result, event counts, event metadata, u
 
 An intact ledger proves what Droid Commander recorded; it does not prove that an OEM or external laboratory tool completed an action unless an explicit completion or handoff event with corresponding evidence was recorded. Failed, denied, cancelled, and no-change events are retained rather than hidden.
 
-Implementation: `lib/privileged-action-ledger.ts`, `lib/privileged-action-report.ts`, and `scripts/privileged-ledger-cli.ts`. Tests: `tests/privileged-action-ledger.test.ts` and `tests/privileged-action-report.test.ts`.
+Implementation: `lib/privileged-action-core.ts`, `lib/privileged-action-ledger.ts`, `lib/native-privileged-action-ledger.ts`, `lib/privileged-action-report.ts`, and `scripts/privileged-ledger-cli.ts`. Tests: `tests/privileged-action-ledger.test.ts`, `tests/native-privileged-action-ledger.test.ts`, `tests/privileged-action-report.test.ts`, and `tests/session-disclosure.test.ts`.

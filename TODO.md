@@ -104,10 +104,11 @@
 
 ## GUI privileged-action disclosure export
 
-- [x] The Sessions dashboard exposes a visible User disclosure export control with progress, accessible labeling, and no data mutation.
-- [x] Export generates a readable Markdown summary of locally stored session scope, authorization context, results, and limitations through the native system share sheet.
-- [x] The export explicitly states that it is the current local session-report store and does not include credentials, private keys, PINs, biometric data, arbitrary commands, or hidden device changes.
-- [x] Formatter behavior is covered by automated tests; the full hash-chained privileged-action ledger remains available through the operator CLI until native ledger persistence is connected to the dashboard.
+- [x] The Sessions dashboard exposes a visible privileged-action ledger export control with progress, accessible labeling, and no data mutation.
+- [x] The dashboard reads a React Native-safe AsyncStorage ledger, verifies its SHA-256 hash chain on load, displays entry count/integrity state, and shares a readable Markdown ledger disclosure through the native system share sheet.
+- [x] The mobile ledger uses the same canonical field ordering, sequence, previous-hash, event-hash, validation, secret-rejection, and invalid-append refusal rules as the CLI ledger.
+- [x] The export explicitly excludes credentials, private keys, PINs, biometric data, arbitrary commands, and hidden device changes; invalid chains are visibly marked `INVALID`.
+- [x] Mobile storage and disclosure formatter behavior are covered by automated tests; native device smoke validation remains required for AsyncStorage and Expo Crypto.
 
 ## Operator developer mode and diagnostic oversight
 
