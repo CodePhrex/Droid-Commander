@@ -30,6 +30,22 @@ export type RootGrant = {
   manager: string;
 };
 
+export type RawBootState = {
+  manufacturer: string;
+  model: string;
+  device: string;
+  product: string;
+  bootloader: string;
+  androidVersion: string;
+  sdkInt: number;
+  securityPatch: string;
+  verifiedBootState?: string;
+  flashLocked?: string;
+  vbmetaDeviceState?: string;
+  verityMode?: string;
+  oemUnlockAllowed?: string;
+};
+
 type NativeUsbHostModule = {
   addListener(eventName: "onUsbHostEvent", listener: (event: UsbHostEvent) => void): { remove(): void };
   startDiscovery(vendorIds: number[], productIds: number[], interfaceClass: number): Promise<UsbDeviceDescriptor[]>;
@@ -46,6 +62,7 @@ type NativeUsbHostModule = {
   requestRootSession(sessionId: string, targetId: string, scopes: string[], durationSeconds: number): Promise<RootGrant | { granted: false; reason: string }>;
   executeApprovedRootOperation(sessionId: string, operationId: string, parameters: Record<string, string>): Promise<{ ok: boolean; message: string; value?: string }>;
   closeRootSession(sessionId: string): Promise<void>;
+  collectBootState(): Promise<RawBootState>;
 };
 
 const NativeUsbHost = requireOptionalNativeModule<NativeUsbHostModule>("DroidCommanderUsbHost");
@@ -117,4 +134,22 @@ export function executeApprovedRootOperation(sessionId: string, operationId: str
 
 export function closeRootSession(sessionId: string) {
   return NativeUsbHost?.closeRootSession(sessionId) ?? Promise.resolve();
+}
+
+export function collectBootState(): Promise<RawBootState> {
+  return NativeUsbHost?.collectBootState() ?? Promise.resolve({
+    manufacturer: "",
+    model: "",
+    device: "",
+    product: "",
+    bootloader: "",
+    androidVersion: "",
+    sdkInt: 0,
+    securityPatch: "",
+    verifiedBootState: "",
+    flashLocked: "",
+    vbmetaDeviceState: "",
+    verityMode: "",
+    oemUnlockAllowed: "",
+  });
 }

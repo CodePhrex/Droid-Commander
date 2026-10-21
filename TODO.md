@@ -68,6 +68,15 @@
 - [x] Android instrumentation coverage is authored for capability gating, allow-list filtering, permission outcomes, bounded send rejection, lifecycle teardown, and opt-in approved-fixture connection/round-trip flows.
 - [ ] The adapter is compiled in a custom Expo development build with organization-approved vendor/product/interface identifiers and verified on physical lab devices.
 
+## Bootloader and verified-boot state collection
+
+- [x] The native Android module collects read-only build identity, bootloader version, security patch, verified-boot state, flash-lock state, vbmeta state, verity mode, and exposed OEM-unlock state using fixed property names.
+- [x] The normalizer matches only exact organization-approved manufacturer/model/product profiles and reports unknown or unregistered devices as unsupported.
+- [x] Reports distinguish locked, unlocked, and unknown bootloader state; green/yellow/orange/red/unknown verified boot; and allowed/disallowed/unknown OEM unlock.
+- [x] Collection explicitly exposes no unlock, flashing, recovery-installation, or arbitrary-command capability.
+- [x] Boot-state normalization is covered by automated tests and documented in `BOOT_STATE_COLLECTION.md`.
+- [ ] Add organization-specific supported-model profiles and verify collected values on physical lab devices.
+
 ## USB Link connection-management screen
 
 - [x] A dedicated React Native screen provides USB Host readiness, discovery, device cards, permission state, connection lifecycle, transport event status, and safe-operation boundary messaging.

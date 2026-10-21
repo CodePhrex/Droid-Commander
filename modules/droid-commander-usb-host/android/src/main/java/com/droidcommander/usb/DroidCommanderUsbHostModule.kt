@@ -101,6 +101,11 @@ class DroidCommanderUsbHostModule : Module() {
       root().closeSession(sessionId)
     }
 
+    AsyncFunction("collectBootState") {
+      val context = appContext.reactContext ?: error("React context unavailable")
+      BootStateCollector(context).collect()
+    }
+
     OnDestroy {
       adapter?.close()
       adapter = null
