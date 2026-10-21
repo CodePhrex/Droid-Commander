@@ -95,3 +95,12 @@
 - [x] Android Keystore-backed signature verification, certificate trust-anchor storage, encrypted credential provisioning, and clear/revoke controls are exposed through the local Expo module.
 - [x] Native smoke tests cover malformed trust material, fail-closed verification before trust-anchor provisioning, and idempotent credential clearing.
 - [ ] Managed deployment provisioning, user-authenticated Keystore use where required by policy, and a production audit sink are connected.
+
+## Two-party high-security verification and consent
+
+- [x] High-security requests require separate operator verification and client/target consent before execution.
+- [x] The client prompt displays the exact operation, target, purpose, risk, operator, expiry, and one-time challenge; the client must type the challenge to confirm.
+- [x] Approval is bound to a request digest, expires, is audited, and is consumed before execution so it cannot be replayed.
+- [x] Denial, mismatch, verifier failure, expiry, and execution failure are fail-closed and covered by automated tests.
+- [x] The reusable prompt and gate are documented in `TWO_PARTY_CONSENT.md`.
+- [ ] Connect every high-security native operation to this gate and the production operator/client identity providers.
