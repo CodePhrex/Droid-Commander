@@ -101,6 +101,8 @@
 - [x] The native module exposes read-only Developer Options, USB-debugging, OEM-unlock, and debuggable-build state, plus a visible handoff to Android Developer Options.
 - [x] The feature does not silently enable Developer Options, USB debugging, wireless debugging, OEM unlock, root, arbitrary shell, package installation, bootloader unlock, or flashing.
 - [x] Policy behavior is covered by automated tests and documented in `OPERATOR_DEVELOPER_MODE.md`.
+- [x] `developer:cli` inspects imported debug state, toggles Droid Commander’s own local diagnostic session, and creates explicit non-mutating Android Developer Options handoff requests with operator/device/reason/confirmation records.
+- [x] CLI integration tests cover inspection, local activation/deactivation, and system-toggle request transparency.
 - [ ] Add organization-specific operator identity provisioning and production audit-sink integration.
 
 ## USB packet framing and binary command serialization

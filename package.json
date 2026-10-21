@@ -19,7 +19,8 @@
     "qr": "node scripts/generate_qr.mjs",
     "transfer:cli": "tsx scripts/transfer-cli.ts",
     "breakglass:cli": "tsx scripts/break-glass-ledger-cli.ts",
-    "recovery:cli": "tsx scripts/recovery-readiness-cli.ts"
+    "recovery:cli": "tsx scripts/recovery-readiness-cli.ts",
+    "developer:cli": "tsx scripts/developer-options-cli.ts"
   },
   "dependencies": {
     "@expo/metro-runtime": "~57.0.16",
