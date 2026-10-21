@@ -142,4 +142,5 @@
 - [x] Every recovery action is bound to the exact target and requires visible owner confirmation; destructive reset requires a separate destructive confirmation.
 - [x] Recovery behavior and tests are documented in `DAMAGED_DEVICE_RECOVERY.md` and `tests/damaged-device-recovery.test.ts`.
 - [x] `DAMAGED_DEVICE_RECOVERY.md` includes an owner-witnessed transfer checklist and post-unlock destination verification procedure that excludes credentials and preserves the source after failed verification.
+- [x] Executable transfer verification rules and tests cover verified, partial, failed, interrupted, mismatched, unreadable, unreachable-destination, unsafe-credential, and source-preservation outcomes.
 - [ ] Add native hardware-health signals, device-specific external-display/input support, and OEM/enterprise integration without weakening authentication boundaries.
