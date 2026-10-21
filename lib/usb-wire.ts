@@ -157,6 +157,7 @@ export function encodePacket(packet: UsbPacket): Uint8Array {
   requireLength(packet.nonce, 16, "nonce");
   requireLength(packet.authTag, USB_AUTH_TAG_LENGTH, "authTag");
   requireUint32(packet.sequence, "sequence");
+  if (!Number.isInteger(packet.flags) || packet.flags < 0 || packet.flags > 0xff) throw new UsbWireError("FIELD", "flags must be an unsigned 8-bit integer.");
   if (!Number.isSafeInteger(packet.timestampMs) || packet.timestampMs < 0) throw new UsbWireError("FIELD", "timestampMs must be a non-negative safe integer.");
   if (packet.payload.length > USB_MAX_PAYLOAD_BYTES) throw new UsbWireError("LENGTH", "Payload exceeds the packet limit.");
 
@@ -195,6 +196,7 @@ export function decodePacket(bytes: Uint8Array): UsbPacket {
   if (!messageType) throw new UsbWireError("MESSAGE_TYPE", "Message type code is not allow-listed.");
   const headerLength = readU16(view, 5);
   if (headerLength !== USB_HEADER_LENGTH) throw new UsbWireError("LENGTH", "Unexpected header length.");
+  if (view.getUint8(56) !== 0) throw new UsbWireError("FIELD", "Reserved header byte must be zero.");
   const payloadLength = readU32(view, 51);
   const authTagLength = view.getUint8(55);
   if (authTagLength !== USB_AUTH_TAG_LENGTH) throw new UsbWireError("AUTH_TAG", "Authentication tag must be 16 bytes.");
