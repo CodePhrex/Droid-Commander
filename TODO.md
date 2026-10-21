@@ -94,6 +94,14 @@
 - [x] The screen is wired to live native-module events.
 - [ ] Connection state persists across app restarts.
 
+## GUI quality and operator usability
+
+- [x] All screens share a responsive centered content frame capped for tablet/web readability while preserving full-width phone layouts.
+- [x] The global tab bar has compact labels, consistent active-state styling, keyboard dismissal, and touch-friendly item spacing.
+- [x] Primary workflows use larger touch targets and accessible labels/states for assessment, session, catalog, command-center, and USB actions.
+- [x] GUI checks and lint remain clean after the visual consistency pass.
+- [ ] Add screenshot-based visual regression coverage for key states on representative phone and tablet sizes.
+
 ## Operator developer mode and diagnostic oversight
 
 - [x] An application-level operator developer session requires authorization, a bound session, a specific reason, a 1–60 minute duration, and a fixed diagnostic capability allow-list.

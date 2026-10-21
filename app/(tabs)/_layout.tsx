@@ -3,6 +3,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { HapticTab } from "@/components/haptic-tab";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import { palette } from "@/constants/commander";
 import { Platform } from "react-native";
 import { useColors } from "@/hooks/use-colors";
 
@@ -18,13 +19,17 @@ export default function TabLayout() {
         tabBarActiveTintColor: colors.tint,
         headerShown: false,
         tabBarButton: HapticTab,
+        tabBarHideOnKeyboard: true,
+        tabBarLabelStyle: { fontSize: 10, fontWeight: "800", letterSpacing: 0.2 },
+        tabBarItemStyle: { borderRadius: 12, marginHorizontal: 2, marginVertical: 4 },
+        tabBarActiveBackgroundColor: palette.orangeSoft,
         tabBarStyle: {
-          paddingTop: 8,
+          paddingTop: 6,
           paddingBottom: bottomPadding,
           height: tabBarHeight,
-          backgroundColor: colors.background,
+          backgroundColor: palette.paper,
           borderTopColor: colors.border,
-          borderTopWidth: 0.5,
+          borderTopWidth: 1,
         },
       }}
     >

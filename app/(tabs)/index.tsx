@@ -88,6 +88,9 @@ export default function CommandCenterScreen() {
         </View>
 
         <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={assessmentComplete ? "Assessment verified" : "Run local assessment"}
+          accessibilityHint="Uses observable, permission-compliant signals"
           onPress={() => setAssessmentComplete(true)}
           style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed]}
         >
@@ -114,6 +117,9 @@ export default function CommandCenterScreen() {
           return (
             <Pressable
               key={item.id}
+              accessibilityRole="button"
+              accessibilityLabel={`${item.label}, ${item.status}. ${expanded ? "Collapse" : "Expand"} evidence`}
+              accessibilityState={{ expanded }}
               onPress={() => setExpandedFinding(expanded ? null : item.id)}
               style={({ pressed }) => [styles.findingCard, pressed && styles.pressed]}
             >
@@ -139,6 +145,9 @@ export default function CommandCenterScreen() {
         </View>
 
         <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Transport readiness details"
+          accessibilityState={{ expanded: usbExpanded }}
           onPress={() => setUsbExpanded(!usbExpanded)}
           style={({ pressed }) => [styles.transportCard, pressed && styles.pressed]}
         >
@@ -176,6 +185,8 @@ export default function CommandCenterScreen() {
             </View>
           </View>
           <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={sessionAuthorized ? "Review authorization" : "Create scoped session"}
             onPress={() => setScopeOpen(true)}
             style={({ pressed }) => [styles.secondaryButton, pressed && styles.pressed]}
           >
@@ -264,7 +275,7 @@ const styles = StyleSheet.create({
   scoreBarFill: { height: 6, backgroundColor: palette.orange, borderRadius: 4 },
   scoreMetaRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 10 },
   scoreMeta: { color: palette.navyMuted, fontSize: 10, fontWeight: "700" },
-  primaryButton: { flexDirection: "row", alignItems: "center", backgroundColor: palette.orange, borderRadius: 16, padding: 14, marginBottom: 24 },
+  primaryButton: { flexDirection: "row", alignItems: "center", minHeight: 56, backgroundColor: palette.orange, borderRadius: 16, padding: 14, marginBottom: 24 },
   primaryButtonIcon: { width: 34, height: 34, borderRadius: 11, backgroundColor: "rgba(255,255,255,0.22)", alignItems: "center", justifyContent: "center" },
   primaryButtonIconText: { color: "#FFFFFF", fontSize: 22, fontWeight: "500", lineHeight: 24 },
   primaryButtonCopy: { flex: 1, marginLeft: 11 },

@@ -39,6 +39,9 @@ export default function AssessmentsScreen() {
               : "No backend, root access, or device-owner privileges are assumed in this mode."}
           </Text>
           <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={running ? "Reading local signals" : completed ? "Run assessment again" : "Run local assessment"}
+            accessibilityState={{ disabled: running }}
             disabled={running}
             onPress={() => {
               setRunning(true);
@@ -65,6 +68,9 @@ export default function AssessmentsScreen() {
           return (
             <Pressable
               key={item.id}
+              accessibilityRole="button"
+              accessibilityLabel={`${item.label}, ${statusLabel(item.status)}. ${expanded ? "Collapse" : "Expand"} evidence`}
+              accessibilityState={{ expanded }}
               onPress={() => setSelected(expanded ? "" : item.id)}
               style={({ pressed }) => [styles.checkCard, expanded && styles.selectedCard, pressed && styles.pressed]}
             >
@@ -108,7 +114,7 @@ const styles = StyleSheet.create({
   modeBadge: { borderWidth: 1, borderColor: "#476371", borderRadius: 6, paddingHorizontal: 7, paddingVertical: 5 },
   modeBadgeText: { color: palette.navyMuted, fontSize: 8, fontWeight: "900", letterSpacing: 0.8 },
   modeDetail: { color: palette.navyMuted, fontSize: 12, lineHeight: 17, marginTop: 10 },
-  runButton: { backgroundColor: palette.orange, borderRadius: 12, marginTop: 16, paddingHorizontal: 13, paddingVertical: 12, flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  runButton: { backgroundColor: palette.orange, borderRadius: 12, minHeight: 48, marginTop: 16, paddingHorizontal: 13, paddingVertical: 12, flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
   runningButton: { opacity: 0.7 },
   runButtonText: { color: "#FFFFFF", fontSize: 13, fontWeight: "900" },
   runButtonArrow: { color: "#FFFFFF", fontSize: 18 },

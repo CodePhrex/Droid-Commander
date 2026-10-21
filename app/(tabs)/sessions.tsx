@@ -40,6 +40,9 @@ export default function SessionsScreen() {
           return (
             <Pressable
               key={session.id}
+              accessibilityRole="button"
+              accessibilityLabel={`${session.title}, ${session.status}. ${expanded ? "Collapse" : "Expand"} audit context`}
+              accessibilityState={{ expanded }}
               onPress={() => setSelected(expanded ? null : session.id)}
               style={({ pressed }) => [styles.sessionCard, expanded && styles.selectedCard, pressed && styles.pressed]}
             >
@@ -128,7 +131,7 @@ const styles = StyleSheet.create({
   auditRow: { flexDirection: "row", justifyContent: "space-between", gap: 12, marginTop: 9 },
   auditLabel: { color: palette.muted, fontSize: 10, width: 80 },
   auditValue: { color: palette.ink, fontSize: 10, fontWeight: "700", flex: 1, textAlign: "right" },
-  reportButton: { borderTopWidth: 1, borderTopColor: palette.line, marginTop: 13, paddingTop: 12, flexDirection: "row", justifyContent: "space-between" },
+  reportButton: { borderTopWidth: 1, borderTopColor: palette.line, minHeight: 44, marginTop: 13, paddingTop: 12, flexDirection: "row", justifyContent: "space-between" },
   reportButtonText: { color: palette.orange, fontSize: 11, fontWeight: "900" },
   reportButtonArrow: { color: palette.orange, fontSize: 17 },
   emptyHint: { backgroundColor: palette.navy, borderRadius: 17, padding: 16, marginTop: 7 },

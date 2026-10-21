@@ -53,7 +53,7 @@ export default function CatalogScreen() {
           <View style={styles.metrics}><Metric value={String(view?.snapshot?.records.length ?? 0)} label="records" /><Metric value={String(view?.snapshot?.patches.length ?? 0)} label="patch advisories" /><Metric value={String(view?.staleSources.length ?? 0)} label="stale sources" /></View>
         </View>
 
-        <View style={styles.searchBox}><IconSymbol name="magnifyingglass" size={18} color={palette.muted} /><TextInput value={query} onChangeText={setQuery} placeholder="Search CVE, package, product" placeholderTextColor={palette.muted} style={styles.searchInput} /></View>
+        <View style={styles.searchBox}><IconSymbol name="magnifyingglass" size={18} color={palette.muted} /><TextInput accessibilityLabel="Search vulnerability catalog" value={query} onChangeText={setQuery} placeholder="Search CVE, package, product" placeholderTextColor={palette.muted} style={styles.searchInput} /></View>
 
         <SectionTitle title="Source freshness" />
         <View style={styles.sourceList}>{(view?.snapshot?.sources ?? []).map((source) => <View key={source.sourceId} style={styles.sourceRow}><View style={[styles.sourceMark, { backgroundColor: source.status === "fresh" ? palette.green : source.status === "stale" ? palette.orange : palette.muted }]} /><View style={styles.sourceText}><Text style={styles.sourceName}>{source.sourceId === "cisa-kev" ? "CISA KEV" : source.sourceId === "android-bulletin" ? "Android Security Bulletin" : source.sourceId.toUpperCase()}</Text><Text style={styles.sourceRole}>{source.role}</Text></View><Text style={styles.sourceCount}>{source.recordCount}</Text></View>)}</View>
@@ -64,7 +64,7 @@ export default function CatalogScreen() {
         <View style={styles.sectionHeader}><SectionTitle title="Android patch levels" /><Text style={styles.sectionMeta}>vendor update guidance</Text></View>
         {patches.length === 0 ? <Text style={styles.emptyText}>No Android bulletin manifest is cached. Refresh the catalog or configure the organization’s signed bulletin mirror.</Text> : patches.map((patch) => <View key={patch.id} style={styles.patchCard}><View style={styles.patchIcon}><IconSymbol name="arrow.down.circle.fill" size={18} color={palette.navy} /></View><View style={styles.patchBody}><Text style={styles.patchTitle}>{patch.title}</Text><Text style={styles.patchMeta}>Security patch level {patch.patchLevel ?? "not specified"} · {patch.fixedCves.length} CVEs</Text></View></View>)}
 
-        <Pressable onPress={() => void refreshCatalog()} style={({ pressed }) => [styles.refreshButton, pressed && styles.pressed]}><Text style={styles.refreshText}>{refreshing ? "Refreshing feeds…" : "Refresh authoritative feeds"}</Text></Pressable>
+        <Pressable accessibilityRole="button" accessibilityLabel="Refresh authoritative vulnerability feeds" accessibilityState={{ busy: refreshing }} onPress={() => void refreshCatalog()} style={({ pressed }) => [styles.refreshButton, pressed && styles.pressed]}><Text style={styles.refreshText}>{refreshing ? "Refreshing feeds…" : "Refresh authoritative feeds"}</Text></Pressable>
         {refreshing && <ActivityIndicator color={palette.orange} style={styles.spinner} />}
       </ScrollView>
     </ScreenContainer>

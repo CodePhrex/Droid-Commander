@@ -141,7 +141,7 @@ export default function UsbLinkScreen() {
         </View>
 
         <View style={styles.actionRow}>
-          <Pressable onPress={scan} disabled={linkState === "scanning"} style={({ pressed }) => [styles.scanButton, pressed && styles.pressed, linkState === "scanning" && styles.disabled]}>
+          <Pressable accessibilityRole="button" accessibilityLabel={nativeAvailable ? "Scan for approved USB devices" : "Custom Android build required for USB scanning"} accessibilityState={{ disabled: linkState === "scanning" }} onPress={scan} disabled={linkState === "scanning"} style={({ pressed }) => [styles.scanButton, pressed && styles.pressed, linkState === "scanning" && styles.disabled]}>
             <Text style={styles.scanButtonText}>{linkState === "scanning" ? "Scanning…" : nativeAvailable ? "Scan for devices" : "Native build required"}</Text>
             <Text style={styles.scanButtonArrow}>↗</Text>
           </Pressable>
@@ -154,7 +154,7 @@ export default function UsbLinkScreen() {
         ) : devices.map((device) => {
           const isSelected = device.id === selectedId;
           return (
-            <Pressable key={device.id} onPress={() => setSelectedId(device.id)} style={({ pressed }) => [styles.deviceCard, isSelected && styles.deviceCardSelected, pressed && styles.pressed]}>
+            <Pressable key={device.id} accessibilityRole="button" accessibilityLabel={`${device.name}, ${device.permission === "granted" ? "permission granted" : "permission required"}`} accessibilityState={{ selected: isSelected }} onPress={() => setSelectedId(device.id)} style={({ pressed }) => [styles.deviceCard, isSelected && styles.deviceCardSelected, pressed && styles.pressed]}>
               <View style={[styles.deviceIcon, isSelected && styles.deviceIconSelected]}><Text style={[styles.deviceIconText, isSelected && styles.deviceIconTextSelected]}>▣</Text></View>
               <View style={styles.deviceBody}>
                 <View style={styles.deviceTopRow}><Text style={styles.deviceName}>{device.name}</Text><View style={[styles.permissionPill, device.permission === "granted" && styles.permissionPillGranted]}><Text style={[styles.permissionText, device.permission === "granted" && styles.permissionTextGranted]}>{device.permission === "granted" ? "PERMITTED" : "UNVERIFIED"}</Text></View></View>
@@ -171,11 +171,11 @@ export default function UsbLinkScreen() {
             <View style={styles.controlHeader}><View><Text style={styles.controlKicker}>SELECTED TARGET</Text><Text style={styles.controlTitle}>{selected.name}</Text></View><Text style={styles.controlIndex}>{connected ? "03 / 03" : selected.permission === "granted" ? "02 / 03" : "01 / 03"}</Text></View>
             <View style={styles.stepRow}><Step number="01" label="Discovered" complete /><Step number="02" label="Permission" complete={selected.permission === "granted"} /><Step number="03" label="Connected" complete={connected} /></View>
             {!connected && selected.permission !== "granted" ? (
-              <Pressable onPress={requestPermission} style={({ pressed }) => [styles.controlButton, pressed && styles.pressed]}><Text style={styles.controlButtonText}>Request owner permission</Text><Text style={styles.controlButtonArrow}>→</Text></Pressable>
+              <Pressable accessibilityRole="button" accessibilityLabel="Request owner permission for the selected USB device" onPress={requestPermission} style={({ pressed }) => [styles.controlButton, pressed && styles.pressed]}><Text style={styles.controlButtonText}>Request owner permission</Text><Text style={styles.controlButtonArrow}>→</Text></Pressable>
             ) : !connected ? (
-              <Pressable onPress={connect} style={({ pressed }) => [styles.controlButton, pressed && styles.pressed]}><Text style={styles.controlButtonText}>Open bounded session</Text><Text style={styles.controlButtonArrow}>→</Text></Pressable>
+              <Pressable accessibilityRole="button" accessibilityLabel="Open a bounded USB session" onPress={connect} style={({ pressed }) => [styles.controlButton, pressed && styles.pressed]}><Text style={styles.controlButtonText}>Open bounded session</Text><Text style={styles.controlButtonArrow}>→</Text></Pressable>
             ) : (
-              <Pressable onPress={disconnect} style={({ pressed }) => [styles.disconnectButton, pressed && styles.pressed]}><Text style={styles.disconnectText}>Disconnect and release interface</Text><Text style={styles.disconnectArrow}>×</Text></Pressable>
+              <Pressable accessibilityRole="button" accessibilityLabel="Disconnect and release USB interface" onPress={disconnect} style={({ pressed }) => [styles.disconnectButton, pressed && styles.pressed]}><Text style={styles.disconnectText}>Disconnect and release interface</Text><Text style={styles.disconnectArrow}>×</Text></Pressable>
             )}
           </View>
         ) : null}
