@@ -96,6 +96,8 @@
 - [x] Native smoke tests cover malformed trust material, fail-closed verification before trust-anchor provisioning, and idempotent credential clearing.
 - [x] A local offline validator enforces signed-claims consistency, trust-anchor validity, maximum lifetime, exact clock window, organization/target/capability binding, local revocation, and one-time consumption.
 - [x] Local validator tests cover valid, missing, malformed, tampered, invalid-signature, verifier-outage, not-yet-valid, expired, overlong, untrusted, revoked, replayed, disabled, and target-mismatch credentials.
+- [x] The offline `breakglass:cli` can list and snapshot the local ledger, irreversibly revoke credential IDs, verify public-key-signed tokens, and optionally consume a valid token once.
+- [x] CLI integration tests cover offline listing, revocation persistence, public-key signature verification, successful consumption, and replay denial.
 - [ ] Managed deployment provisioning, user-authenticated Keystore use where required by policy, and a production audit sink are connected.
 
 ## Two-party high-security verification and consent
