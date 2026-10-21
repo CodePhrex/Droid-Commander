@@ -20,7 +20,6 @@ env:
   ANDROID_BUILD_TOOLS: "36.0.0"
   ANDROID_CMAKE: "3.31.5"
   ANDROID_NDK: "27.3.13750724"
-  GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
 
 jobs:
   android-debug:
@@ -89,7 +88,17 @@ jobs:
           } >> "$GITHUB_ENV"
 
       - name: Install JavaScript dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Cache native CMake intermediates
+        uses: actions/cache@v4
+        with:
+          path: |
+            android/.cxx
+            '**/.cxx'
+          key: ${{ runner.os }}-native-cxx-${{ hashFiles('pnpm-lock.yaml', 'android/**/*.gradle*', 'android/gradle/**', 'gradle.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-native-cxx-
 
       - name: TypeScript checks
         run: pnpm check
@@ -120,7 +129,7 @@ jobs:
 
       - name: Assemble debug APK
         working-directory: android
-        run: ./gradlew :app:assembleDebug --no-daemon --stacktrace
+        run: ./gradlew :app:assembleDebug --build-cache --parallel --no-daemon --stacktrace
 
       - name: Generate APK checksum
         shell: bash
@@ -130,18 +139,10 @@ jobs:
           cp android/app/build/outputs/apk/debug/*.apk artifacts/
           sha256sum artifacts/*.apk | tee artifacts/SHA256SUMS.txt
 
-      - name: Upload APK artifact
+      - name: Upload APK and checksum
         uses: actions/upload-artifact@v4
         with:
           name: droid-commander-debug-apk-${{ github.sha }}
-          path: artifacts/*.apk
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Upload APK checksum
-        uses: actions/upload-artifact@v4
-        with:
-          name: droid-commander-debug-apk-${{ github.sha }}-sha256
-          path: artifacts/SHA256SUMS.txt
+          path: artifacts/*
           if-no-files-found: error
           retention-days: 14
