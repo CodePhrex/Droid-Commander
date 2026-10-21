@@ -41,4 +41,12 @@ A successful break-glass result includes `targetAuthorizationUnchanged: true`. T
 - Guard: `lib/break-glass-admin.ts`
 - Tests: `tests/break-glass-admin.test.ts`
 
+## Local offline credential validation
+
+The local validator in `lib/local-break-glass-credential.ts` is the offline credential boundary. It requires a locally trusted issuer and signing key, verifies that the signed claims exactly match the presented credential, enforces organization and target binding, checks the fixed capability allow-list, rejects disabled accounts, and applies a maximum credential lifetime. A credential is valid only when the local clock is inside its signed `validFrom`/`validUntil` window and the issuer trust anchor is also current.
+
+The local ledger stores revocation and one-time-consumption identifiers. `validateAndConsume` consumes a credential only after every validation and signature check succeeds; failed, expired, malformed, revoked, or verifier-unavailable attempts do not consume it. The ledger can be serialized as non-secret metadata for offline persistence and restored on startup. It contains no private keys, passwords, PINs, recovery codes, or reusable universal secret.
+
+Offline operation remains bounded: a valid local credential can activate only its signed, target-bound recovery capability. It cannot authorize a new target, bypass Android authentication, install code, execute arbitrary commands, or widen the approved scope. Expired, replayed, revoked, or unverifiable credentials fail closed.
+
 Before deployment, the organization must connect the signature verifier to Android Keystore-backed verification or another reviewed platform crypto boundary, define the accepted issuer, and configure the audit sink. Until then, this module is a provider-neutral policy guard and not a production credential store.

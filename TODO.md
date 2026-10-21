@@ -94,6 +94,8 @@
 - [x] Break-glass behavior and tests are documented in `BREAK_GLASS_ADMIN.md` and `tests/break-glass-admin.test.ts`.
 - [x] Android Keystore-backed signature verification, certificate trust-anchor storage, encrypted credential provisioning, and clear/revoke controls are exposed through the local Expo module.
 - [x] Native smoke tests cover malformed trust material, fail-closed verification before trust-anchor provisioning, and idempotent credential clearing.
+- [x] A local offline validator enforces signed-claims consistency, trust-anchor validity, maximum lifetime, exact clock window, organization/target/capability binding, local revocation, and one-time consumption.
+- [x] Local validator tests cover valid, missing, malformed, tampered, invalid-signature, verifier-outage, not-yet-valid, expired, overlong, untrusted, revoked, replayed, disabled, and target-mismatch credentials.
 - [ ] Managed deployment provisioning, user-authenticated Keystore use where required by policy, and a production audit sink are connected.
 
 ## Two-party high-security verification and consent
