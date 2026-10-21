@@ -66,3 +66,11 @@
 - [x] Native I/O is bounded and off the UI thread, with safe handling for permission denial, unsupported interfaces, short writes, read failures, disconnects, and teardown.
 - [x] An Expo Modules bridge sketch and Android device-filter integration notes define the custom development-build boundary.
 - [ ] The adapter is wired into a custom Expo development build with organization-approved vendor/product/interface identifiers and verified on physical lab devices.
+
+## USB packet framing and binary command serialization
+
+- [x] The wire format defines a fixed versioned header with magic, message type, session binding, sequence, timestamp, nonce, exact payload length, and fixed authentication-tag length.
+- [x] Binary action serialization is strict and limited to read-posture, read-capabilities, simulate-remediation, and verify-posture; it does not accept arbitrary commands or payloads.
+- [x] The codec rejects malformed, truncated, oversized, unknown-version/type, invalid UTF-8, inconsistent-length, and unsupported-action packets.
+- [x] Wire-format tests cover round-trips, endian encoding, fixed-field validation, and malformed input.
+- [ ] Native stream reassembly, authentication-tag verification, and physical transport tests are implemented.
