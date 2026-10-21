@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { ScreenContainer } from "@/components/screen-container";
+import { ServiceHandoffPanel } from "@/components/service-handoff-panel";
 import { palette } from "@/constants/commander";
 import {
   addUsbHostListener,
@@ -418,6 +419,8 @@ export default function UsbLinkScreen() {
             {filteredDiagnostics.length > 4 ? <Text style={styles.inventoryNotice}>+ {filteredDiagnostics.length - 4} additional privacy-limited entries not shown</Text> : null}
           </View> : null}
         </View>
+
+        <ServiceHandoffPanel />
 
         <View style={styles.sectionHeader}><Text style={styles.sectionTitle}>Approved companions</Text><Text style={styles.sectionMeta}>{USB_PROFILE_CONFIGURED ? `${approvedMatchLabel} MATCHES` : "NOT CONFIGURED"}</Text></View>
         {devices.length === 0 ? (
