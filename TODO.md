@@ -52,3 +52,10 @@
 - [x] The provider-neutral organization integration contract is documented, including online status, offline fallback, provider outage, and data-minimization behavior.
 - [x] Credential runtime tests cover online, offline-cache, revoked, suspended, stale, malformed, untrusted, and provider-failure states.
 - [ ] Native signature verification, secure credential storage, and a deploying organization’s provider adapter are implemented.
+
+## Cooperative USB OTG session protocol
+
+- [x] The protocol draft defines controller/target roles, versioned framing, handshake, peer authentication boundary, visible consent, session open, typed message allow-list, action scope, replay protection, clock skew, heartbeat, and teardown behavior.
+- [x] The runtime state machine rejects pre-handshake frames, session mismatch, replay or out-of-order frames, unauthenticated frames, oversized frames, stale frames, and actions outside the session allow-list.
+- [x] Protocol tests cover establishment, frame acceptance, replay, consent revocation, timeout, disconnect, and unsupported action behavior.
+- [ ] Native OTG discovery, bounded transport, platform cryptography, and physical device-matrix tests are implemented.
