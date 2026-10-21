@@ -228,3 +228,12 @@
 - [x] The `transfer:cli` operator interface persists non-secret session state, monitors checklist conditions in real time, records manifest updates, runs shared verification, and refuses source release until verified plus owner-confirmed.
 - [x] CLI state and command behavior are tested and documented in `TRANSFER_CLI.md`.
 - [ ] Add native hardware-health signals, device-specific external-display/input support, and OEM/enterprise integration without weakening authentication boundaries.
+
+## Vendor-authorized capability providers
+
+- [x] A provider registry validates signed, time-bounded manifests and adapter identity before registration.
+- [x] Requests are bound to exact target model/firmware, declared operation, operator reason, owner consent, independent second approval for high-risk work, and a short-lived single-use capability token.
+- [x] Provider revocation, token replay prevention, manifest/target/approval mismatch checks, fail-closed provider execution, and audit events are implemented and tested.
+- [x] Universal arbitrary shell, arbitrary code/exploit payload, silent lock-screen bypass, silent OEM unlock, unattended flashing, and credential-extraction declarations are rejected by policy.
+- [x] The contract and native-integration boundary are documented in `VENDOR_CAPABILITY_PROVIDER.md`.
+- [ ] Connect a real manufacturer/provider SDK, certificate trust-anchor rotation, UI confirmation surface, and native completion callbacks after vendor authorization and lab validation.
