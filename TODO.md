@@ -143,4 +143,6 @@
 - [x] Recovery behavior and tests are documented in `DAMAGED_DEVICE_RECOVERY.md` and `tests/damaged-device-recovery.test.ts`.
 - [x] `DAMAGED_DEVICE_RECOVERY.md` includes an owner-witnessed transfer checklist and post-unlock destination verification procedure that excludes credentials and preserves the source after failed verification.
 - [x] Executable transfer verification rules and tests cover verified, partial, failed, interrupted, mismatched, unreadable, unreachable-destination, unsafe-credential, and source-preservation outcomes.
+- [x] The `transfer:cli` operator interface persists non-secret session state, monitors checklist conditions in real time, records manifest updates, runs shared verification, and refuses source release until verified plus owner-confirmed.
+- [x] CLI state and command behavior are tested and documented in `TRANSFER_CLI.md`.
 - [ ] Add native hardware-health signals, device-specific external-display/input support, and OEM/enterprise integration without weakening authentication boundaries.

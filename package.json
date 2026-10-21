@@ -16,7 +16,8 @@
     "db:push": "drizzle-kit generate && drizzle-kit migrate",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "qr": "node scripts/generate_qr.mjs"
+    "qr": "node scripts/generate_qr.mjs",
+    "transfer:cli": "tsx scripts/transfer-cli.ts"
   },
   "dependencies": {
     "@expo/metro-runtime": "~57.0.16",

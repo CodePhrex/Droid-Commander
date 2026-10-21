@@ -8,7 +8,7 @@ export type TransferSession = {
   ownerId: string;
   authorizationId: string;
   method: "android-backup" | "oem-migration" | "owner-approved-file-transfer";
-  selectedCategories: TransferCategory[];
+  selectedCategories: readonly TransferCategory[];
   ownerConfirmed: boolean;
   sourceUnlocked: boolean;
   credentialHandledByApp: boolean;
