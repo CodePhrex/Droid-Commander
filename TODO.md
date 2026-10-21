@@ -154,6 +154,14 @@
 - [x] Setup and rotation guidance is documented in `PRODUCTION_SIGNING.md`.
 - [ ] Configure actual production secrets, required reviewers, Play App Signing/upload-key policy, and release approval rules in GitHub.
 
+## Organization identity and provider scaffold
+
+- [x] A clearly labeled non-production placeholder profile exists for the authorized retail and service technician firm; it makes no legal-identity or manufacturer-approval claim.
+- [x] Certificate lifecycle states, explicit UI confirmation payloads, validity-window checks, organization binding, pending rotation, and native structured completion callbacks are scaffolded.
+- [x] Placeholder-profile, rotation, confirmation, validity, organization-binding, callback-filtering, and pending-state tests are implemented.
+- [x] Production secrets and private key material remain outside source code and documentation.
+- [ ] Replace the placeholder only after verified firm identity, manufacturer/provider authorization, trust-anchor distribution, native adapter implementation, UI review, and physical lab validation are complete.
+
 ## USB packet framing and binary command serialization
 
 - [x] The wire format defines a fixed versioned header with magic, message type, session binding, sequence, timestamp, nonce, exact payload length, and fixed authentication-tag length.
