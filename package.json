@@ -14,8 +14,8 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "db:push": "drizzle-kit generate && drizzle-kit migrate",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "qr": "node scripts/generate_qr.mjs"
   },
   "dependencies": {
@@ -36,6 +36,7 @@
     "expo-audio": "~57.0.5",
     "expo-build-properties": "~57.0.21",
     "expo-constants": "~57.0.19",
+    "expo-droid-commander-usb-host": "file:./modules/droid-commander-usb-host",
     "expo-font": "~57.0.4",
     "expo-haptics": "~57.0.3",
     "expo-image": "~57.0.5",

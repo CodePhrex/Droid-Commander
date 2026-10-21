@@ -2,13 +2,16 @@
 
 ## Current project state
 
-Droid Commander is currently an Expo-managed project without a checked-in Android directory. The native implementation is therefore staged under `native/android/` as an integration draft. It requires a development build or prebuild/custom Expo module before it can run on a physical Android device; Expo Go cannot load this custom native module.
+Droid Commander now has a generated `android/` project and a local Expo module under `modules/droid-commander-usb-host/`. The module is resolved by Expo autolinking and is included in the app dependency graph. Expo Go cannot load this custom native module; a development build is required.
+
+The Android project was generated with `expo prebuild --platform android --no-install`. The debug Gradle build was attempted, but this Sandbox has no Android SDK (`ANDROID_HOME`/`ANDROID_SDK_ROOT` are unset), so APK compilation and device installation remain pending an Android build environment.
 
 ## Files
 
 - `native/android/src/main/java/com/droidcommander/usb/UsbHostAdapter.kt` — Android `UsbManager` adapter.
 - `native/android/src/main/java/com/droidcommander/usb/DroidCommanderUsbHostModule.kt` — thin Expo Modules bridge sketch.
 - `native/android/src/main/res/xml/usb_device_filter.xml` — narrow attachment-filter placeholder.
+- `modules/droid-commander-usb-host/` — autolinked local Expo module used by the generated Android project.
 
 ## Adapter behavior
 
