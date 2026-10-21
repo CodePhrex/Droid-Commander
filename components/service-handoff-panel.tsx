@@ -22,7 +22,7 @@ const SAMSUNG_HANDOFFS = [
   },
 ] as const;
 
-export funce etion ServiceHandoffPanel() {
+export function ServiceHandoffPanel() {
   const [adbStepsOpen, setAdbStepsOpen] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
