@@ -129,12 +129,14 @@ install_sdk_packages() {
   log "accepting Android SDK licenses"
   yes | "$sdkmanager" --sdk_root="$SDK_ROOT" --licenses >/dev/null || true
   log "installing pinned Android packages"
-  "$sdkmanager" --sdk_root="$SDK_ROOT" \
-    "platform-tools" \
-    "platforms;android-${ANDROID_API}" \
-    "build-tools;${ANDROID_BUILD_TOOLS}" \
-    "cmake;${ANDROID_CMAKE}" \
-    "ndk;${ANDROID_NDK}"
+  if ! "$sdkmanager" --sdk_root="$SDK_ROOT" \
+      "platform-tools" \
+      "platforms;android-${ANDROID_API}" \
+      "build-tools;${ANDROID_BUILD_TOOLS}" \
+      "cmake;${ANDROID_CMAKE}" \
+      "ndk;${ANDROID_NDK}"; then
+    log "sdkmanager returned nonzero; continuing to strict installed-tool verification"
+  fi
 }
 
 write_environment_file() {
