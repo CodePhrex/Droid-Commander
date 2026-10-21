@@ -77,6 +77,14 @@
 - [x] Boot-state normalization is covered by automated tests and documented in `BOOT_STATE_COLLECTION.md`.
 - [ ] Add organization-specific supported-model profiles and verify collected values on physical lab devices.
 
+## Offline recovery readiness and flashing-state monitor
+
+- [x] The `recovery:cli` validates an exact supported device profile, artifact SHA-256, trusted offline signature, owner/data-wipe confirmation, backup prerequisite, enterprise-management status, OEM-unlock eligibility, and verified-boot state.
+- [x] The CLI persists a handoff-only monitor and accepts only manual, noted transitions through handoff-ready, operator-confirmed, bootloader, recovery, verification, complete, or failed.
+- [x] Validation and monitoring always report unlock, flashing, and recovery installation as unavailable; the CLI does not issue fastboot, adb, unlock, or flash commands.
+- [x] Recovery readiness rules and state transitions are covered by automated tests and documented in `RECOVERY_READINESS_CLI.md`.
+- [ ] Add organization-specific artifact schemas and physical device/OEM handoff verification.
+
 ## USB Link connection-management screen
 
 - [x] A dedicated React Native screen provides USB Host readiness, discovery, device cards, permission state, connection lifecycle, transport event status, and safe-operation boundary messaging.
