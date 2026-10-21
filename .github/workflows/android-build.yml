@@ -18,8 +18,8 @@ concurrency:
 env:
   ANDROID_API: "36"
   ANDROID_BUILD_TOOLS: "36.0.0"
-  ANDROID_CMAKE: "3.22.1"
-  ANDROID_NDK: "27.1.12297006"
+  ANDROID_CMAKE: "3.31.5"
+  ANDROID_NDK: "27.3.13750724"
   GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
 
 jobs:
@@ -77,6 +77,11 @@ jobs:
           export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
           chmod +x scripts/setup-android-ci.sh
           scripts/setup-android-ci.sh
+          # React Native’s generated Gradle catalog asks for 27.1.12297006.
+          # Ubuntu 24.04 provides 27.3.13750724; this compatibility link keeps
+          # the generated project unchanged while using the verified toolchain.
+          ln -sfn "$ANDROID_HOME/ndk/$ANDROID_NDK" "$ANDROID_HOME/ndk/27.1.12297006"
+          ln -sfn "$ANDROID_HOME/cmake/$ANDROID_CMAKE" "$ANDROID_HOME/cmake/3.22.1"
           {
             echo "ANDROID_HOME=$ANDROID_HOME"
             echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"

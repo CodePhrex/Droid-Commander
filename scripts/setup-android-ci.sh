@@ -11,8 +11,8 @@ CMDLINE_TOOLS_SHA256="${CMDLINE_TOOLS_SHA256:-4e4c464f145a7512b57d088ac6c278c03c
 CMDLINE_TOOLS_URL="${CMDLINE_TOOLS_URL:-https://dl.google.com/android/repository/commandlinetools-linux-${CMDLINE_TOOLS_VERSION}_latest.zip}"
 ANDROID_API="${ANDROID_API:-36}"
 ANDROID_BUILD_TOOLS="${ANDROID_BUILD_TOOLS:-36.0.0}"
-ANDROID_NDK="${ANDROID_NDK:-27.1.12297006}"
-ANDROID_CMAKE="${ANDROID_CMAKE:-3.22.1}"
+ANDROID_NDK="${ANDROID_NDK:-27.3.13750724}"
+ANDROID_CMAKE="${ANDROID_CMAKE:-3.31.5}"
 JDK_PACKAGE="${JDK_PACKAGE:-openjdk-21-jdk}"
 INSTALL_SYSTEM_PACKAGES="${INSTALL_SYSTEM_PACKAGES:-1}"
 WRITE_PROFILE="${WRITE_PROFILE:-1}"
@@ -25,7 +25,7 @@ usage() {
 Usage: scripts/setup-android-ci.sh [--verify-only] [--help]
 
 Installs the pinned Android CI toolchain for Droid Commander:
-  Android API 36, Build Tools 36.0.0, NDK 27.1.12297006, CMake 3.22.1,
+  Android API 36, Build Tools 36.0.0, NDK 27.3.13750724, CMake 3.31.5,
   Android command-line tools 15859902, and OpenJDK 21.
 
 Environment overrides:
