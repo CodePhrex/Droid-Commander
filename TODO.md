@@ -83,6 +83,7 @@
 - [x] The CLI persists a handoff-only monitor and accepts only manual, noted transitions through handoff-ready, operator-confirmed, bootloader, recovery, verification, complete, or failed.
 - [x] Validation and monitoring always report unlock, flashing, and recovery installation as unavailable; the CLI does not issue fastboot, adb, unlock, or flash commands.
 - [x] Recovery readiness rules and state transitions are covered by automated tests and documented in `RECOVERY_READINESS_CLI.md`.
+- [x] `PREFLASH_FAILURE_OVERRIDE_GUIDE.md` defines failure triage, evidence retention, escalation, narrowly scoped governance exceptions, non-overrideable safety failures, and monitor closeout requirements.
 - [ ] Add organization-specific artifact schemas and physical device/OEM handoff verification.
 
 ## USB Link connection-management screen
