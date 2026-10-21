@@ -35,3 +35,10 @@
 
 - [ ] Local session history shows findings, scope, authorization context, remediation activity, verification result, timestamp, and assessment limitations.
 - [x] The prototype keeps the report experience independent of the backend and identifies any in-memory/demo data boundary.
+
+## Compliance validation gates are executable and documented
+
+- [x] The project contains pure validation rules for authorization, target scope, consent, action allow-lists, observation limitations, USB readiness, ADB approval, audit context, payload prohibition, and system-update boundaries.
+- [x] Automated tests cover allow, review, and deny outcomes for authorized security-policy analysis.
+- [x] A compliance document defines positive, negative, boundary, USB, ADB, audit, and safe-training test cases with expected evidence.
+- [ ] Native device-matrix tests execute the same controls against real non-rooted test handsets and approved lab fixtures.
