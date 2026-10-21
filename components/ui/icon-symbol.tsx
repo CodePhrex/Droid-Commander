@@ -22,6 +22,9 @@ const MAPPING = {
   "checkmark.seal.fill": "fact-check",
   "clock.arrow.circlepath": "history",
   "cable.connector": "usb",
+  "book.closed.fill": "menu-book",
+  magnifyingglass: "search",
+  "arrow.down.circle.fill": "download",
 } satisfies IconMapping;
 
 /**

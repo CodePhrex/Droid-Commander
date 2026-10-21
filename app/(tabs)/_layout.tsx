@@ -50,6 +50,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="catalog"
+        options={{
+          title: "Threat Intel",
+          tabBarIcon: ({ color }) => <IconSymbol size={24} name="book.closed.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="usb"
         options={{
           title: "USB Link",

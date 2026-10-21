@@ -104,3 +104,12 @@
 - [x] Denial, mismatch, verifier failure, expiry, and execution failure are fail-closed and covered by automated tests.
 - [x] The reusable prompt and gate are documented in `TWO_PARTY_CONSENT.md`.
 - [ ] Connect every high-security native operation to this gate and the production operator/client identity providers.
+
+## Offline CVE and patch catalog
+
+- [x] The application has a catalog service with NVD CVE, CISA KEV, OSV package, and Android Security Bulletin source roles.
+- [x] The service normalizes and merges duplicate CVEs, prioritizes known exploitation, maps package fixed versions, and records Android security patch levels and fixed CVEs.
+- [x] The last valid snapshot persists through the native AsyncStorage adapter and remains searchable offline after restart.
+- [x] Source freshness, stale/unavailable state, cache integrity, and optional signed-feed verification are explicit; invalid or unsigned payloads are not presented as verified.
+- [x] Catalog synchronization and offline fallback are covered by automated tests and documented in `VULNERABILITY_CATALOG.md`.
+- [ ] Add the freshness/search UI, a managed refresh schedule, signed organization feed mirror, and OEM/SoC bulletins for the deployed device inventory.
