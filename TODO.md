@@ -163,6 +163,14 @@
 - [ ] Replace the placeholder only after verified firm identity, manufacturer/provider authorization, trust-anchor distribution, native adapter implementation, UI review, and physical lab validation are complete.
 - [x] `AUTHORIZED_TECHNICIAN_PROFILE_INTEGRATION.md` documents profile configuration, evidence requirements, provider manifests, UI confirmation, certificate rotation, native callbacks, audit handling, and release gates.
 
+## Public repository documentation and privacy controls
+
+- [x] `README.md` provides public-safe project scope, authorized-use boundaries, setup, and documentation entry points.
+- [x] `DOCUMENTATION_INDEX.md` catalogs instructional, technical, operator, administrative, provider, recovery, build, and release documents with Public-safe, Public administrative, Restricted operational, and Secret classifications.
+- [x] `SECURITY.md` defines public disclosure, secret-handling, vulnerability-reporting, and maintainer-response rules.
+- [x] `.github/CODEOWNERS` requires maintainer review for documentation, provider, security, signing, native, and workflow changes.
+- [ ] Keep real firm identity evidence, manufacturer agreements, internal endpoints, customer/device data, and provider secrets in access-controlled systems outside this public repository.
+
 ## USB packet framing and binary command serialization
 
 - [x] The wire format defines a fixed versioned header with magic, message type, session binding, sequence, timestamp, nonce, exact payload length, and fixed authentication-tag length.
