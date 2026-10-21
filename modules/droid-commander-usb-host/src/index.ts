@@ -1,4 +1,4 @@
-import { requireNativeModule } from "expo-modules-core";
+import { requireOptionalNativeModule } from "expo-modules-core";
 
 export type UsbHostEvent = {
   type: string;
@@ -24,35 +24,37 @@ type NativeUsbHostModule = {
   close(): Promise<void>;
 };
 
-const NativeUsbHost = requireNativeModule<NativeUsbHostModule>("DroidCommanderUsbHost");
+const NativeUsbHost = requireOptionalNativeModule<NativeUsbHostModule>("DroidCommanderUsbHost");
+
+export const isUsbHostAvailable = NativeUsbHost !== null;
 
 export function startDiscovery(options: {
   vendorIds: number[];
   productIds: number[];
   interfaceClass: number;
 }): Promise<UsbDeviceDescriptor[]> {
-  return NativeUsbHost.startDiscovery(options.vendorIds, options.productIds, options.interfaceClass);
+  return NativeUsbHost?.startDiscovery(options.vendorIds, options.productIds, options.interfaceClass) ?? Promise.resolve([]);
 }
 
 export function requestPermission(deviceName: string) {
-  return NativeUsbHost.requestPermission(deviceName);
+  return NativeUsbHost?.requestPermission(deviceName) ?? Promise.resolve(false);
 }
 
 export function connect(deviceName: string) {
-  return NativeUsbHost.connect(deviceName);
+  return NativeUsbHost?.connect(deviceName) ?? Promise.resolve(false);
 }
 
 export function sendPacket(bytes: Uint8Array) {
   let binary = "";
   for (const byte of bytes) binary += String.fromCharCode(byte);
   const base64 = globalThis.btoa(binary);
-  return NativeUsbHost.sendBase64(base64);
+  return NativeUsbHost?.sendBase64(base64) ?? Promise.resolve(false);
 }
 
 export function close() {
-  return NativeUsbHost.close();
+  return NativeUsbHost?.close() ?? Promise.resolve();
 }
 
 export function addUsbHostListener(listener: (event: UsbHostEvent) => void) {
-  return NativeUsbHost.addListener("onUsbHostEvent", listener);
+  return NativeUsbHost?.addListener("onUsbHostEvent", listener) ?? { remove: () => undefined };
 }

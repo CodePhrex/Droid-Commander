@@ -1,8 +1,17 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { ScreenContainer } from "@/components/screen-container";
 import { palette } from "@/constants/commander";
+import {
+  addUsbHostListener,
+  close as closeUsbHost,
+  connect as connectUsbHost,
+  isUsbHostAvailable,
+  requestPermission as requestUsbPermission,
+  startDiscovery,
+  type UsbDeviceDescriptor,
+} from "expo-droid-commander-usb-host";
 
 type LinkState = "idle" | "scanning" | "connected";
 type PermissionState = "not-requested" | "granted";
@@ -16,49 +25,89 @@ type UsbDevice = {
   signal: string;
 };
 
-const discoveredDevice: UsbDevice = {
-  id: "lab-handset-a",
-  name: "Lab handset A",
-  descriptor: "USB companion · approved lab profile",
-  interfaceLabel: "Bulk IN / OUT · protocol v1",
-  permission: "not-requested",
-  signal: "Ready",
+const USB_PROFILE = {
+  // Replace these placeholders with the organization-approved companion IDs.
+  vendorIds: [0x1234],
+  productIds: [0x5678],
+  interfaceClass: 0xff,
 };
 
+function deviceFromDescriptor(descriptor: UsbDeviceDescriptor): UsbDevice {
+  const shortName = descriptor.deviceName.split("/").pop() || descriptor.deviceName;
+  return {
+    id: descriptor.deviceName,
+    name: shortName,
+    descriptor: `USB ${descriptor.vendorId.toString(16).padStart(4, "0")}:${descriptor.productId.toString(16).padStart(4, "0")} · native allow-list`,
+    interfaceLabel: `${descriptor.interfaceCount} interface${descriptor.interfaceCount === 1 ? "" : "s"} · bulk policy`,
+    permission: descriptor.permissionGranted ? "granted" : "not-requested",
+    signal: descriptor.permissionGranted ? "Permission granted" : "Ready",
+  };
+}
+
 export default function UsbLinkScreen() {
+  const [nativeAvailable] = useState(isUsbHostAvailable);
   const [linkState, setLinkState] = useState<LinkState>("idle");
   const [devices, setDevices] = useState<UsbDevice[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const [lastEvent, setLastEvent] = useState("No transport event yet");
+  const [lastEvent, setLastEvent] = useState(nativeAvailable ? "Native USB Host module ready" : "Custom Android build required");
 
   const selected = useMemo(() => devices.find((device) => device.id === selectedId) ?? null, [devices, selectedId]);
   const connected = linkState === "connected" && selected !== null;
 
-  const scan = () => {
+  useEffect(() => {
+    const subscription = addUsbHostListener((event) => {
+      const payload = typeof event.payload === "object" && event.payload !== null ? event.payload as Record<string, unknown> : {};
+      const deviceName = typeof payload.deviceName === "string" ? payload.deviceName : null;
+      if (event.type === "permission-granted") {
+        setDevices((current) => current.map((device) => device.id === deviceName || deviceName === null ? { ...device, permission: "granted", signal: "Permission granted" } : device));
+      }
+      if (event.type === "permission-denied" || event.type === "permission-rejected") {
+        setDevices((current) => current.map((device) => device.id === deviceName || deviceName === null ? { ...device, permission: "not-requested", signal: "Permission denied" } : device));
+      }
+      if (event.type === "connected") setLinkState("connected");
+      if (event.type === "disconnected" || event.type === "connection-failed" || event.type === "transport-error") setLinkState("idle");
+      setLastEvent(event.type.replaceAll("-", " ").replace(/^./, (letter) => letter.toUpperCase()));
+    });
+    return () => subscription.remove();
+  }, []);
+
+  const scan = async () => {
+    if (!nativeAvailable) {
+      setLastEvent("Native USB Host module unavailable · use a custom Android build");
+      return;
+    }
     setLinkState("scanning");
     setLastEvent("Scanning USB Host inventory…");
-    setTimeout(() => {
-      setDevices([{ ...discoveredDevice }]);
-      setSelectedId(discoveredDevice.id);
+    try {
+      const found = await startDiscovery(USB_PROFILE);
+      const nextDevices = found.map(deviceFromDescriptor);
+      setDevices(nextDevices);
+      setSelectedId(nextDevices[0]?.id ?? null);
+      setLastEvent(`Discovery complete · ${nextDevices.length} approved profile${nextDevices.length === 1 ? "" : "s"} found`);
+    } catch {
+      setLastEvent("Discovery failed · inspect native transport events");
+    } finally {
       setLinkState("idle");
-      setLastEvent("Discovery complete · 1 approved profile found");
-    }, 600);
+    }
   };
 
-  const requestPermission = () => {
-    if (!selected) return;
-    setDevices((current) => current.map((device) => device.id === selected.id ? { ...device, permission: "granted", signal: "Permission granted" } : device));
-    setLastEvent("Owner permission recorded for this USB device");
+  const requestPermission = async () => {
+    if (!selected || !nativeAvailable) return;
+    setLastEvent("Waiting for Android owner-permission dialog…");
+    const requested = await requestUsbPermission(selected.id);
+    if (!requested) setLastEvent("Permission request rejected by native USB Host API");
   };
 
-  const connect = () => {
-    if (!selected || selected.permission !== "granted") return;
-    setLinkState("connected");
-    setLastEvent("Session open · awaiting protocol heartbeat");
+  const connect = async () => {
+    if (!selected || selected.permission !== "granted" || !nativeAvailable) return;
+    setLastEvent("Opening bounded native USB session…");
+    const opened = await connectUsbHost(selected.id);
+    if (!opened) setLastEvent("Connection rejected · check permission and interface policy");
   };
 
-  const disconnect = () => {
+  const disconnect = async () => {
+    await closeUsbHost();
     setLinkState("idle");
     setLastEvent("Connection closed · interface released");
   };
@@ -70,9 +119,7 @@ export default function UsbLinkScreen() {
           <View style={styles.headerCopy}>
             <Text style={styles.kicker}>USB LINK // COOPERATIVE TRANSPORT</Text>
             <Text style={styles.title}>Device connections.</Text>
-            <Text style={styles.subtitle}>
-              Discover an explicitly approved companion, request owner permission, and open a bounded training session.
-            </Text>
+            <Text style={styles.subtitle}>Discover an explicitly approved companion, request owner permission, and open a bounded training session.</Text>
           </View>
           <View style={[styles.stateDot, connected && styles.stateDotConnected]} />
         </View>
@@ -82,9 +129,9 @@ export default function UsbLinkScreen() {
             <View style={styles.hostIcon}><Text style={styles.hostIconText}>↕</Text></View>
             <View style={styles.hostCopy}>
               <Text style={styles.hostLabel}>LOCAL USB HOST</Text>
-              <Text style={styles.hostTitle}>Ready for a cooperative link</Text>
+              <Text style={styles.hostTitle}>{nativeAvailable ? "Ready for a cooperative link" : "Native build required"}</Text>
             </View>
-            <View style={styles.readyPill}><Text style={styles.readyPillText}>{connected ? "ACTIVE" : "READY"}</Text></View>
+            <View style={styles.readyPill}><Text style={styles.readyPillText}>{connected ? "ACTIVE" : nativeAvailable ? "READY" : "OFFLINE"}</Text></View>
           </View>
           <View style={styles.hostStats}>
             <View><Text style={styles.statLabel}>ROLE</Text><Text style={styles.statValue}>CONTROLLER</Text></View>
@@ -95,115 +142,56 @@ export default function UsbLinkScreen() {
 
         <View style={styles.actionRow}>
           <Pressable onPress={scan} disabled={linkState === "scanning"} style={({ pressed }) => [styles.scanButton, pressed && styles.pressed, linkState === "scanning" && styles.disabled]}>
-            <Text style={styles.scanButtonText}>{linkState === "scanning" ? "Scanning…" : "Scan for devices"}</Text>
+            <Text style={styles.scanButtonText}>{linkState === "scanning" ? "Scanning…" : nativeAvailable ? "Scan for devices" : "Native build required"}</Text>
             <Text style={styles.scanButtonArrow}>↗</Text>
           </Pressable>
-          <View style={styles.lastEventBox}>
-            <Text style={styles.eventLabel}>LAST EVENT</Text>
-            <Text style={styles.eventText} numberOfLines={2}>{lastEvent}</Text>
-          </View>
+          <View style={styles.lastEventBox}><Text style={styles.eventLabel}>LAST EVENT</Text><Text style={styles.eventText} numberOfLines={2}>{lastEvent}</Text></View>
         </View>
 
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Discovered devices</Text>
-          <Text style={styles.sectionMeta}>{devices.length.toString().padStart(2, "0")} FOUND</Text>
-        </View>
-
+        <View style={styles.sectionHeader}><Text style={styles.sectionTitle}>Discovered devices</Text><Text style={styles.sectionMeta}>{devices.length.toString().padStart(2, "0")} FOUND</Text></View>
         {devices.length === 0 ? (
-          <View style={styles.emptyCard}>
-            <Text style={styles.emptyMark}>○</Text>
-            <Text style={styles.emptyTitle}>No approved companion in view.</Text>
-            <Text style={styles.emptyBody}>USB permission and a cooperative interface are required before a device can appear here.</Text>
-          </View>
-        ) : (
-          devices.map((device) => {
-            const isSelected = device.id === selectedId;
-            return (
-              <Pressable key={device.id} onPress={() => setSelectedId(device.id)} style={({ pressed }) => [styles.deviceCard, isSelected && styles.deviceCardSelected, pressed && styles.pressed]}>
-                <View style={[styles.deviceIcon, isSelected && styles.deviceIconSelected]}><Text style={[styles.deviceIconText, isSelected && styles.deviceIconTextSelected]}>▣</Text></View>
-                <View style={styles.deviceBody}>
-                  <View style={styles.deviceTopRow}>
-                    <Text style={styles.deviceName}>{device.name}</Text>
-                    <View style={[styles.permissionPill, device.permission === "granted" && styles.permissionPillGranted]}>
-                      <Text style={[styles.permissionText, device.permission === "granted" && styles.permissionTextGranted]}>{device.permission === "granted" ? "PERMITTED" : "UNVERIFIED"}</Text>
-                    </View>
-                  </View>
-                  <Text style={styles.deviceDescriptor}>{device.descriptor}</Text>
-                  <View style={styles.deviceMetaRow}>
-                    <Text style={styles.deviceMeta}>{device.interfaceLabel}</Text>
-                    <Text style={styles.deviceSignal}>{connected && isSelected ? "Connected" : device.signal}</Text>
-                  </View>
-                </View>
-                <Text style={styles.chevron}>{isSelected ? "⌃" : "⌄"}</Text>
-              </Pressable>
-            );
-          })
-        )}
+          <View style={styles.emptyCard}><Text style={styles.emptyMark}>○</Text><Text style={styles.emptyTitle}>No approved companion in view.</Text><Text style={styles.emptyBody}>{nativeAvailable ? "USB permission and a cooperative interface are required before a device can appear here." : "Live discovery is unavailable in this preview. Use the custom Android development build."}</Text></View>
+        ) : devices.map((device) => {
+          const isSelected = device.id === selectedId;
+          return (
+            <Pressable key={device.id} onPress={() => setSelectedId(device.id)} style={({ pressed }) => [styles.deviceCard, isSelected && styles.deviceCardSelected, pressed && styles.pressed]}>
+              <View style={[styles.deviceIcon, isSelected && styles.deviceIconSelected]}><Text style={[styles.deviceIconText, isSelected && styles.deviceIconTextSelected]}>▣</Text></View>
+              <View style={styles.deviceBody}>
+                <View style={styles.deviceTopRow}><Text style={styles.deviceName}>{device.name}</Text><View style={[styles.permissionPill, device.permission === "granted" && styles.permissionPillGranted]}><Text style={[styles.permissionText, device.permission === "granted" && styles.permissionTextGranted]}>{device.permission === "granted" ? "PERMITTED" : "UNVERIFIED"}</Text></View></View>
+                <Text style={styles.deviceDescriptor}>{device.descriptor}</Text>
+                <View style={styles.deviceMetaRow}><Text style={styles.deviceMeta}>{device.interfaceLabel}</Text><Text style={styles.deviceSignal}>{connected && isSelected ? "Connected" : device.signal}</Text></View>
+              </View>
+              <Text style={styles.chevron}>{isSelected ? "⌃" : "⌄"}</Text>
+            </Pressable>
+          );
+        })}
 
         {selected ? (
           <View style={styles.controlCard}>
-            <View style={styles.controlHeader}>
-              <View>
-                <Text style={styles.controlKicker}>SELECTED TARGET</Text>
-                <Text style={styles.controlTitle}>{selected.name}</Text>
-              </View>
-              <Text style={styles.controlIndex}>{connected ? "03 / 03" : selected.permission === "granted" ? "02 / 03" : "01 / 03"}</Text>
-            </View>
-            <View style={styles.stepRow}>
-              <Step number="01" label="Discovered" complete />
-              <Step number="02" label="Permission" complete={selected.permission === "granted"} />
-              <Step number="03" label="Connected" complete={connected} />
-            </View>
+            <View style={styles.controlHeader}><View><Text style={styles.controlKicker}>SELECTED TARGET</Text><Text style={styles.controlTitle}>{selected.name}</Text></View><Text style={styles.controlIndex}>{connected ? "03 / 03" : selected.permission === "granted" ? "02 / 03" : "01 / 03"}</Text></View>
+            <View style={styles.stepRow}><Step number="01" label="Discovered" complete /><Step number="02" label="Permission" complete={selected.permission === "granted"} /><Step number="03" label="Connected" complete={connected} /></View>
             {!connected && selected.permission !== "granted" ? (
-              <Pressable onPress={requestPermission} style={({ pressed }) => [styles.controlButton, pressed && styles.pressed]}>
-                <Text style={styles.controlButtonText}>Request owner permission</Text>
-                <Text style={styles.controlButtonArrow}>→</Text>
-              </Pressable>
+              <Pressable onPress={requestPermission} style={({ pressed }) => [styles.controlButton, pressed && styles.pressed]}><Text style={styles.controlButtonText}>Request owner permission</Text><Text style={styles.controlButtonArrow}>→</Text></Pressable>
             ) : !connected ? (
-              <Pressable onPress={connect} style={({ pressed }) => [styles.controlButton, pressed && styles.pressed]}>
-                <Text style={styles.controlButtonText}>Open bounded session</Text>
-                <Text style={styles.controlButtonArrow}>→</Text>
-              </Pressable>
+              <Pressable onPress={connect} style={({ pressed }) => [styles.controlButton, pressed && styles.pressed]}><Text style={styles.controlButtonText}>Open bounded session</Text><Text style={styles.controlButtonArrow}>→</Text></Pressable>
             ) : (
-              <Pressable onPress={disconnect} style={({ pressed }) => [styles.disconnectButton, pressed && styles.pressed]}>
-                <Text style={styles.disconnectText}>Disconnect and release interface</Text>
-                <Text style={styles.disconnectArrow}>×</Text>
-              </Pressable>
+              <Pressable onPress={disconnect} style={({ pressed }) => [styles.disconnectButton, pressed && styles.pressed]}><Text style={styles.disconnectText}>Disconnect and release interface</Text><Text style={styles.disconnectArrow}>×</Text></Pressable>
             )}
           </View>
         ) : null}
 
         <Pressable onPress={() => setDetailsOpen(!detailsOpen)} style={styles.boundaryCard}>
-          <View style={styles.boundaryTopRow}>
-            <View style={styles.boundaryMark}><Text style={styles.boundaryMarkText}>!</Text></View>
-            <View style={styles.boundaryCopy}>
-              <Text style={styles.boundaryTitle}>Transport boundary</Text>
-              <Text style={styles.boundarySubtitle}>USB permission is not authorization.</Text>
-            </View>
-            <Text style={styles.chevron}>{detailsOpen ? "⌃" : "⌄"}</Text>
-          </View>
-          {detailsOpen ? (
-            <View style={styles.boundaryDetails}>
-              <Text style={styles.detailLine}><Text style={styles.detailNumber}>01</Text> Both devices must show the same scoped exercise.</Text>
-              <Text style={styles.detailLine}><Text style={styles.detailNumber}>02</Text> Only typed, allow-listed protocol frames are accepted.</Text>
-              <Text style={styles.detailLine}><Text style={styles.detailNumber}>03</Text> Disconnect, replay, or consent changes close the session.</Text>
-            </View>
-          ) : null}
+          <View style={styles.boundaryTopRow}><View style={styles.boundaryMark}><Text style={styles.boundaryMarkText}>!</Text></View><View style={styles.boundaryCopy}><Text style={styles.boundaryTitle}>Transport boundary</Text><Text style={styles.boundarySubtitle}>USB permission is not authorization.</Text></View><Text style={styles.chevron}>{detailsOpen ? "⌃" : "⌄"}</Text></View>
+          {detailsOpen ? <View style={styles.boundaryDetails}><Text style={styles.detailLine}><Text style={styles.detailNumber}>01</Text> Both devices must show the same scoped exercise.</Text><Text style={styles.detailLine}><Text style={styles.detailNumber}>02</Text> Only typed, allow-listed protocol frames are accepted.</Text><Text style={styles.detailLine}><Text style={styles.detailNumber}>03</Text> Disconnect, replay, or consent changes close the session.</Text></View> : null}
         </Pressable>
-
-        <Text style={styles.footerNote}>Prototype screen: discovery and connection states are simulated until the native Expo module is run in a custom Android development build.</Text>
+        <Text style={styles.footerNote}>{nativeAvailable ? "Live native events are connected. Replace the placeholder USB profile with organization-approved companion identifiers before lab use." : "Live discovery requires the custom Android development build; this preview does not simulate USB devices."}</Text>
       </ScrollView>
     </ScreenContainer>
   );
 }
 
 function Step({ number, label, complete }: { number: string; label: string; complete: boolean }) {
-  return (
-    <View style={styles.step}>
-      <View style={[styles.stepCircle, complete && styles.stepCircleComplete]}><Text style={[styles.stepNumber, complete && styles.stepNumberComplete]}>{complete ? "✓" : number}</Text></View>
-      <Text style={[styles.stepLabel, complete && styles.stepLabelComplete]}>{label}</Text>
-    </View>
-  );
+  return <View style={styles.step}><View style={[styles.stepCircle, complete && styles.stepCircleComplete]}><Text style={[styles.stepNumber, complete && styles.stepNumberComplete]}>{complete ? "✓" : number}</Text></View><Text style={[styles.stepLabel, complete && styles.stepLabelComplete]}>{label}</Text></View>;
 }
 
 const styles = StyleSheet.create({

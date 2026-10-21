@@ -71,8 +71,10 @@
 ## USB Link connection-management screen
 
 - [x] A dedicated React Native screen provides USB Host readiness, discovery, device cards, permission state, connection lifecycle, transport event status, and safe-operation boundary messaging.
-- [x] The screen includes mock discovery, permission, connect, and disconnect interactions that make the native integration boundary explicit.
-- [ ] The screen is wired to live native-module events and persists connection state across app restarts.
+- [x] The screen calls the local Expo USB Host module for discovery, Android permission requests, bounded connection, close/teardown, and native transport-event updates.
+- [x] The bridge degrades safely to an explicit custom-build-required state when the native module is unavailable on web, Expo Go, or another unsupported platform.
+- [x] The screen is wired to live native-module events.
+- [ ] Connection state persists across app restarts.
 
 ## USB packet framing and binary command serialization
 
