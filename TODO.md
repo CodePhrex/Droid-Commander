@@ -141,4 +141,5 @@
 - [x] Safe alternatives include owner-entered external input, already-authorized ADB diagnostics after unlock, owner-witnessed backup after unlock, preconfigured enterprise recovery, OEM repair, and official destructive factory reset.
 - [x] Every recovery action is bound to the exact target and requires visible owner confirmation; destructive reset requires a separate destructive confirmation.
 - [x] Recovery behavior and tests are documented in `DAMAGED_DEVICE_RECOVERY.md` and `tests/damaged-device-recovery.test.ts`.
+- [x] `DAMAGED_DEVICE_RECOVERY.md` includes an owner-witnessed transfer checklist and post-unlock destination verification procedure that excludes credentials and preserves the source after failed verification.
 - [ ] Add native hardware-health signals, device-specific external-display/input support, and OEM/enterprise integration without weakening authentication boundaries.
