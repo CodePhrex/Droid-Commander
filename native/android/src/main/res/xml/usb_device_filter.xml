@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Replace these placeholders with the organization-approved companion identifiers.
+     Do not ship a broad filter that accepts arbitrary USB devices. -->
+<resources>
+    <usb-device vendor-id="0" product-id="0" />
+</resources>

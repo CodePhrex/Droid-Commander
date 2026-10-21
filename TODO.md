@@ -59,3 +59,10 @@
 - [x] The runtime state machine rejects pre-handshake frames, session mismatch, replay or out-of-order frames, unauthenticated frames, oversized frames, stale frames, and actions outside the session allow-list.
 - [x] Protocol tests cover establishment, frame acceptance, replay, consent revocation, timeout, disconnect, and unsupported action behavior.
 - [ ] Native OTG discovery, bounded transport, platform cryptography, and physical device-matrix tests are implemented.
+
+## Native Android USB Host adapter
+
+- [x] A Kotlin Android `UsbManager` adapter draft enumerates devices, listens for attach/detach, requests explicit user permission, selects an allow-listed interface with bulk IN/OUT endpoints, and reports structured transport events.
+- [x] Native I/O is bounded and off the UI thread, with safe handling for permission denial, unsupported interfaces, short writes, read failures, disconnects, and teardown.
+- [x] An Expo Modules bridge sketch and Android device-filter integration notes define the custom development-build boundary.
+- [ ] The adapter is wired into a custom Expo development build with organization-approved vendor/product/interface identifiers and verified on physical lab devices.
