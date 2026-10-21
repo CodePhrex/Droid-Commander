@@ -1,0 +1,16 @@
+# Public repository code-owner review policy
+# Replace @CodePhrex with the verified organization maintainer team when available.
+
+* @CodePhrex
+
+# Security, identity, provider, signing, and native integration changes require maintainer review.
+/SECURITY.md @CodePhrex
+/DOCUMENTATION_INDEX.md @CodePhrex
+/AUTHORIZED_TECHNICIAN_PROFILE_INTEGRATION.md @CodePhrex
+/ORGANIZATION_PROVIDER_SCAFFOLD.md @CodePhrex
+/VENDOR_CAPABILITY_PROVIDER.md @CodePhrex
+/PRODUCTION_SIGNING.md @CodePhrex
+/.github/workflows/ @CodePhrex
+/android/ @CodePhrex
+/modules/ @CodePhrex
+/lib/ @CodePhrex

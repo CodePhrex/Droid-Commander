@@ -154,6 +154,23 @@
 - [x] Setup and rotation guidance is documented in `PRODUCTION_SIGNING.md`.
 - [ ] Configure actual production secrets, required reviewers, Play App Signing/upload-key policy, and release approval rules in GitHub.
 
+## Organization identity and provider scaffold
+
+- [x] A clearly labeled non-production placeholder profile exists for the authorized retail and service technician firm; it makes no legal-identity or manufacturer-approval claim.
+- [x] Certificate lifecycle states, explicit UI confirmation payloads, validity-window checks, organization binding, pending rotation, and native structured completion callbacks are scaffolded.
+- [x] Placeholder-profile, rotation, confirmation, validity, organization-binding, callback-filtering, and pending-state tests are implemented.
+- [x] Production secrets and private key material remain outside source code and documentation.
+- [ ] Replace the placeholder only after verified firm identity, manufacturer/provider authorization, trust-anchor distribution, native adapter implementation, UI review, and physical lab validation are complete.
+- [x] `AUTHORIZED_TECHNICIAN_PROFILE_INTEGRATION.md` documents profile configuration, evidence requirements, provider manifests, UI confirmation, certificate rotation, native callbacks, audit handling, and release gates.
+
+## Public repository documentation and privacy controls
+
+- [x] `README.md` provides public-safe project scope, authorized-use boundaries, setup, and documentation entry points.
+- [x] `DOCUMENTATION_INDEX.md` catalogs instructional, technical, operator, administrative, provider, recovery, build, and release documents with Public-safe, Public administrative, Restricted operational, and Secret classifications.
+- [x] `SECURITY.md` defines public disclosure, secret-handling, vulnerability-reporting, and maintainer-response rules.
+- [x] `.github/CODEOWNERS` requires maintainer review for documentation, provider, security, signing, native, and workflow changes.
+- [ ] Keep real firm identity evidence, manufacturer agreements, internal endpoints, customer/device data, and provider secrets in access-controlled systems outside this public repository.
+
 ## USB packet framing and binary command serialization
 
 - [x] The wire format defines a fixed versioned header with magic, message type, session binding, sequence, timestamp, nonce, exact payload length, and fixed authentication-tag length.
@@ -228,3 +245,12 @@
 - [x] The `transfer:cli` operator interface persists non-secret session state, monitors checklist conditions in real time, records manifest updates, runs shared verification, and refuses source release until verified plus owner-confirmed.
 - [x] CLI state and command behavior are tested and documented in `TRANSFER_CLI.md`.
 - [ ] Add native hardware-health signals, device-specific external-display/input support, and OEM/enterprise integration without weakening authentication boundaries.
+
+## Vendor-authorized capability providers
+
+- [x] A provider registry validates signed, time-bounded manifests and adapter identity before registration.
+- [x] Requests are bound to exact target model/firmware, declared operation, operator reason, owner consent, independent second approval for high-risk work, and a short-lived single-use capability token.
+- [x] Provider revocation, token replay prevention, manifest/target/approval mismatch checks, fail-closed provider execution, and audit events are implemented and tested.
+- [x] Universal arbitrary shell, arbitrary code/exploit payload, silent lock-screen bypass, silent OEM unlock, unattended flashing, and credential-extraction declarations are rejected by policy.
+- [x] The contract and native-integration boundary are documented in `VENDOR_CAPABILITY_PROVIDER.md`.
+- [ ] Connect a real manufacturer/provider SDK, certificate trust-anchor rotation, UI confirmation surface, and native completion callbacks after vendor authorization and lab validation.
