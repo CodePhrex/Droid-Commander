@@ -20,8 +20,6 @@ env:
   ANDROID_BUILD_TOOLS: "36.0.0"
   ANDROID_CMAKE: "3.22.1"
   ANDROID_NDK: "27.1.12297006"
-  ANDROID_SDK_ROOT: ${{ github.workspace }}/.android-sdk
-  ANDROID_HOME: ${{ github.workspace }}/.android-sdk
   GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
 
 jobs:
@@ -74,8 +72,16 @@ jobs:
           WRITE_PROFILE: "0"
         run: |
           set -euo pipefail
+          export ANDROID_SDK_ROOT="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          export ANDROID_HOME="$ANDROID_SDK_ROOT"
+          export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
           chmod +x scripts/setup-android-ci.sh
           scripts/setup-android-ci.sh
+          {
+            echo "ANDROID_HOME=$ANDROID_HOME"
+            echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"
+            echo "PATH=$PATH"
+          } >> "$GITHUB_ENV"
 
       - name: Install JavaScript dependencies
         run: pnpm install --frozen-lockfile
