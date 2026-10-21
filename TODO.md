@@ -102,6 +102,13 @@
 - [x] GUI checks and lint remain clean after the visual consistency pass.
 - [ ] Add screenshot-based visual regression coverage for key states on representative phone and tablet sizes.
 
+## GUI privileged-action disclosure export
+
+- [x] The Sessions dashboard exposes a visible User disclosure export control with progress, accessible labeling, and no data mutation.
+- [x] Export generates a readable Markdown summary of locally stored session scope, authorization context, results, and limitations through the native system share sheet.
+- [x] The export explicitly states that it is the current local session-report store and does not include credentials, private keys, PINs, biometric data, arbitrary commands, or hidden device changes.
+- [x] Formatter behavior is covered by automated tests; the full hash-chained privileged-action ledger remains available through the operator CLI until native ledger persistence is connected to the dashboard.
+
 ## Operator developer mode and diagnostic oversight
 
 - [x] An application-level operator developer session requires authorization, a bound session, a specific reason, a 1–60 minute duration, and a fixed diagnostic capability allow-list.

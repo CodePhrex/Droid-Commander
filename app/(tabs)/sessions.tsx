@@ -1,11 +1,27 @@
 import { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, ScrollView, Share, StyleSheet, Text, View } from "react-native";
 
 import { ScreenContainer } from "@/components/screen-container";
 import { palette, sessions } from "@/constants/commander";
+import { renderSessionDisclosureMarkdown } from "@/lib/session-disclosure";
 
 export default function SessionsScreen() {
   const [selected, setSelected] = useState<string | null>("session-041");
+  const [exporting, setExporting] = useState(false);
+
+  const exportDisclosure = async () => {
+    setExporting(true);
+    try {
+      await Share.share({
+        title: "Droid Commander session disclosure",
+        message: renderSessionDisclosureMarkdown(sessions),
+      });
+    } catch {
+      Alert.alert("Export unavailable", "The system share sheet could not be opened. No session data was changed.");
+    } finally {
+      setExporting(false);
+    }
+  };
 
   return (
     <ScreenContainer containerClassName="bg-[#F5F3EE]" safeAreaClassName="bg-[#F5F3EE]">
@@ -28,6 +44,24 @@ export default function SessionsScreen() {
             <Text style={styles.storageDetail}>No cloud sync required for the training log.</Text>
           </View>
           <View style={styles.storageStatus}><View style={styles.dot} /><Text style={styles.storageStatusText}>READY</Text></View>
+        </View>
+
+        <View style={styles.exportCard}>
+          <View style={styles.exportIcon}><Text style={styles.exportIconText}>↗</Text></View>
+          <View style={styles.exportCopy}>
+            <Text style={styles.exportTitle}>User disclosure export</Text>
+            <Text style={styles.exportDetail}>Share a readable Markdown summary of local sessions.</Text>
+          </View>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Export session disclosure"
+            accessibilityState={{ busy: exporting }}
+            disabled={exporting}
+            onPress={() => void exportDisclosure()}
+            style={({ pressed }) => [styles.exportButton, pressed && styles.pressed, exporting && styles.exportButtonDisabled]}
+          >
+            <Text style={styles.exportButtonText}>{exporting ? "Preparing…" : "Export"}</Text>
+          </Pressable>
         </View>
 
         <View style={styles.sectionRow}>
@@ -107,6 +141,15 @@ const styles = StyleSheet.create({
   storageStatus: { flexDirection: "row", alignItems: "center" },
   dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: palette.green, marginRight: 5 },
   storageStatusText: { color: palette.green, fontSize: 8, fontWeight: "900", letterSpacing: 0.8 },
+  exportCard: { flexDirection: "row", alignItems: "center", backgroundColor: palette.paper, borderWidth: 1, borderColor: palette.line, borderRadius: 16, padding: 12, marginBottom: 25 },
+  exportIcon: { width: 34, height: 34, borderRadius: 11, backgroundColor: palette.orangeSoft, alignItems: "center", justifyContent: "center", marginRight: 10 },
+  exportIconText: { color: palette.orange, fontSize: 18, fontWeight: "900" },
+  exportCopy: { flex: 1, paddingRight: 8 },
+  exportTitle: { color: palette.ink, fontSize: 12, fontWeight: "900" },
+  exportDetail: { color: palette.muted, fontSize: 10, lineHeight: 14, marginTop: 3 },
+  exportButton: { minHeight: 40, justifyContent: "center", backgroundColor: palette.navy, borderRadius: 10, paddingHorizontal: 12 },
+  exportButtonDisabled: { opacity: 0.65 },
+  exportButtonText: { color: "#FFFFFF", fontSize: 10, fontWeight: "900" },
   sectionRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 10 },
   sectionTitle: { color: palette.ink, fontSize: 17, fontWeight: "800" },
   sectionMeta: { color: palette.muted, fontSize: 9, fontWeight: "900", letterSpacing: 0.9 },
