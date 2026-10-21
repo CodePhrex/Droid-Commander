@@ -105,6 +105,15 @@
 - [x] CLI integration tests cover inspection, local activation/deactivation, and system-toggle request transparency.
 - [ ] Add organization-specific operator identity provisioning and production audit-sink integration.
 
+## Privileged-action disclosure ledger
+
+- [x] An append-only JSONL ledger records privileged-action requests, approvals, denials, starts, completions, failures, cancellations, handoffs, and explicit no-change outcomes.
+- [x] Each event records operator, organization, target, action, result, summary, implementation/handoff description, modifications, consent/ticket references, timestamp, sequence, previous hash, and event hash.
+- [x] Appends verify the prior hash chain and refuse to extend a corrupted ledger; exports support user disclosure in JSON and JSONL formats.
+- [x] The ledger rejects passwords, PINs, private keys, recovery codes, tokens, secrets, arbitrary shell commands, and private payloads.
+- [x] Ledger tests cover chained events, disclosure exports, tamper detection, append refusal, denied/failed retention, and secret rejection; documentation is in `PRIVILEGED_ACTION_LEDGER.md`.
+- [ ] Connect all native privileged-operation completion callbacks and the production audit sink to this ledger.
+
 ## USB packet framing and binary command serialization
 
 - [x] The wire format defines a fixed versioned header with magic, message type, session binding, sequence, timestamp, nonce, exact payload length, and fixed authentication-tag length.
