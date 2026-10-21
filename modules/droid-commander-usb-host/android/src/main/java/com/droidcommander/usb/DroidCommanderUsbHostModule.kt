@@ -6,6 +6,7 @@ import expo.modules.kotlin.modules.ModuleDefinition
 
 class DroidCommanderUsbHostModule : Module() {
   private var adapter: UsbHostAdapter? = null
+  private var breakGlassVerifier: BreakGlassKeystoreVerifier? = null
 
   override fun definition() = ModuleDefinition {
     Name("DroidCommanderUsbHost")
@@ -62,9 +63,36 @@ class DroidCommanderUsbHostModule : Module() {
       adapter = null
     }
 
+    AsyncFunction("provisionBreakGlassTrustAnchor") { issuerId: String, keyId: String, certificateBase64: String ->
+      breakGlass().provisionTrustAnchor(issuerId, keyId, certificateBase64)
+    }
+
+    AsyncFunction("verifyBreakGlassSignature") { payload: String, signatureBase64: String, issuerId: String, keyId: String ->
+      breakGlass().verifyBreakGlassSignature(payload, signatureBase64, issuerId, keyId)
+    }
+
+    AsyncFunction("provisionBreakGlassCredential") { credentialJson: String ->
+      breakGlass().provisionBreakGlassCredential(credentialJson)
+    }
+
+    AsyncFunction("hasProvisionedBreakGlassCredential") {
+      breakGlass().hasProvisionedBreakGlassCredential()
+    }
+
+    AsyncFunction("clearProvisionedBreakGlassCredential") {
+      breakGlass().clearProvisionedBreakGlassCredential()
+    }
+
     OnDestroy {
       adapter?.close()
       adapter = null
+      breakGlassVerifier = null
+    }
+  }
+
+  private fun breakGlass(): BreakGlassKeystoreVerifier {
+    return breakGlassVerifier ?: BreakGlassKeystoreVerifier(appContext.reactContext ?: error("React context unavailable")).also {
+      breakGlassVerifier = it
     }
   }
 }

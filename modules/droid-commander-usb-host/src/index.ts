@@ -22,6 +22,11 @@ type NativeUsbHostModule = {
   connect(deviceName: string): Promise<boolean>;
   sendBase64(bytesBase64: string): Promise<boolean>;
   close(): Promise<void>;
+  provisionBreakGlassTrustAnchor(issuerId: string, keyId: string, certificateBase64: string): Promise<boolean>;
+  verifyBreakGlassSignature(payload: string, signatureBase64: string, issuerId: string, keyId: string): Promise<boolean>;
+  provisionBreakGlassCredential(credentialJson: string): Promise<boolean>;
+  hasProvisionedBreakGlassCredential(): Promise<boolean>;
+  clearProvisionedBreakGlassCredential(): Promise<void>;
 };
 
 const NativeUsbHost = requireOptionalNativeModule<NativeUsbHostModule>("DroidCommanderUsbHost");
@@ -57,4 +62,24 @@ export function close() {
 
 export function addUsbHostListener(listener: (event: UsbHostEvent) => void) {
   return NativeUsbHost?.addListener("onUsbHostEvent", listener) ?? { remove: () => undefined };
+}
+
+export function provisionBreakGlassTrustAnchor(issuerId: string, keyId: string, certificateBase64: string) {
+  return NativeUsbHost?.provisionBreakGlassTrustAnchor(issuerId, keyId, certificateBase64) ?? Promise.resolve(false);
+}
+
+export function verifyBreakGlassSignature(payload: string, signatureBase64: string, issuerId: string, keyId: string) {
+  return NativeUsbHost?.verifyBreakGlassSignature(payload, signatureBase64, issuerId, keyId) ?? Promise.resolve(false);
+}
+
+export function provisionBreakGlassCredential(credentialJson: string) {
+  return NativeUsbHost?.provisionBreakGlassCredential(credentialJson) ?? Promise.resolve(false);
+}
+
+export function hasProvisionedBreakGlassCredential() {
+  return NativeUsbHost?.hasProvisionedBreakGlassCredential() ?? Promise.resolve(false);
+}
+
+export function clearProvisionedBreakGlassCredential() {
+  return NativeUsbHost?.clearProvisionedBreakGlassCredential() ?? Promise.resolve();
 }

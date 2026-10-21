@@ -92,4 +92,6 @@
 - [x] Recovery capabilities are fixed to authentication diagnostics, confirmation retry, provider refresh, audit export, and controlled session close; they cannot authorize targets, bypass USB permission, override device/vendor authentication, send active commands, install packages, execute code, or bypass a lock screen.
 - [x] The guard records every attempt, fails closed on verifier errors, resets failed-attempt state after successful activation, and temporarily locks after repeated failures.
 - [x] Break-glass behavior and tests are documented in `BREAK_GLASS_ADMIN.md` and `tests/break-glass-admin.test.ts`.
-- [ ] Android Keystore-backed signature verification, secure credential provisioning, and a production audit sink are connected.
+- [x] Android Keystore-backed signature verification, certificate trust-anchor storage, encrypted credential provisioning, and clear/revoke controls are exposed through the local Expo module.
+- [x] Native smoke tests cover malformed trust material, fail-closed verification before trust-anchor provisioning, and idempotent credential clearing.
+- [ ] Managed deployment provisioning, user-authenticated Keystore use where required by policy, and a production audit sink are connected.
