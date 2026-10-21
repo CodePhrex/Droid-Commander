@@ -174,7 +174,7 @@ verify_toolchain() {
   [[ -x "$cmake" && -x "$ninja" && -x "$aapt2" && -x "$clang" ]] || fatal "one or more installed tools are not executable"
 
   for binary in "$cmake" "$ninja" "$aapt2" "$clang"; do
-    file "$binary" | grep -Eq 'ELF 64-bit.*x86-64' \
+    file -L "$binary" | grep -Eq 'ELF 64-bit.*x86-64' \
       || fatal "tool is not an x86-64 ELF binary: $binary"
   done
 
