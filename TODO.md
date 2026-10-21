@@ -113,3 +113,13 @@
 - [x] Source freshness, stale/unavailable state, cache integrity, and optional signed-feed verification are explicit; invalid or unsigned payloads are not presented as verified.
 - [x] Catalog synchronization and offline fallback are covered by automated tests and documented in `VULNERABILITY_CATALOG.md`.
 - [ ] Add the freshness/search UI, a managed refresh schedule, signed organization feed mirror, and OEM/SoC bulletins for the deployed device inventory.
+
+## Consent-gated vulnerability proof and remediation
+
+- [x] A detected CVE can map to a reviewed, typed remediation plan containing the exact finding, target, purpose, authorization, allowed step kinds, and two-party execution consent.
+- [x] The runner supports only safe proof checks, bounded setting changes, approved application fixes, and OS-managed system-patch handoff; arbitrary exploit payloads and unrestricted commands are rejected.
+- [x] Execution consumes the two-party consent before the first step and journals plan, step, failure, completion, and rollback events.
+- [x] Completed reversible steps are automatically rolled back in reverse order after a later failure, with explicit `rollback-partial` state when recovery is incomplete.
+- [x] Manual rollback requires a separate two-party consent request; system patching remains an Android/vendor confirmation handoff rather than a silent in-app update or downgrade.
+- [x] Runner behavior is covered by automated tests and documented in `REMEDIATION_RUNNER.md`.
+- [ ] Bind each production `actionId` to reviewed native implementations and persist the remediation journal in the organization audit system.
