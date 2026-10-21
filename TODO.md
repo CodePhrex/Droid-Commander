@@ -42,3 +42,10 @@
 - [x] Automated tests cover allow, review, and deny outcomes for authorized security-policy analysis.
 - [x] A compliance document defines positive, negative, boundary, USB, ADB, audit, and safe-training test cases with expected evidence.
 - [ ] Native device-matrix tests execute the same controls against real non-rooted test handsets and approved lab fixtures.
+
+## Personnel authorization and license verification workflow
+
+- [x] The workflow separates personnel eligibility, exercise authorization, and target consent/capability as independent gates.
+- [x] The workflow defines enrollment, signed or organization-verified credential checks, bounded exercise approval, target binding, session admission, in-session enforcement, closeout, renewal, and revocation.
+- [x] The workflow specifies fail-closed behavior, offline verification boundaries, suggested record fields, decision outcomes, recovery rules, and implementation acceptance criteria.
+- [ ] Credential-specific runtime validation and native organization-provider integration are implemented and covered by tests.
