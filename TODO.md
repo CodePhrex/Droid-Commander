@@ -133,3 +133,12 @@
 - [x] The native bridge currently implements protected-metadata proof and safely reports unsupported application-specific root operations.
 - [x] Root capability behavior is covered by automated tests and documented in `ROOT_CAPABILITY.md`.
 - [ ] Add organization-approved root operation adapters, device-owner policy checks, production audit persistence, and physical rooted-device validation.
+
+## Damaged-device recovery without authentication bypass
+
+- [x] The application explicitly refuses to bypass PIN, pattern, fingerprint, face authentication, lock-screen protection, encryption, or Android trust prompts, including on rooted devices.
+- [x] The recovery planner detects damaged display, touch, button, and biometric conditions and reports safe owner-mediated alternatives.
+- [x] Safe alternatives include owner-entered external input, already-authorized ADB diagnostics after unlock, owner-witnessed backup after unlock, preconfigured enterprise recovery, OEM repair, and official destructive factory reset.
+- [x] Every recovery action is bound to the exact target and requires visible owner confirmation; destructive reset requires a separate destructive confirmation.
+- [x] Recovery behavior and tests are documented in `DAMAGED_DEVICE_RECOVERY.md` and `tests/damaged-device-recovery.test.ts`.
+- [ ] Add native hardware-health signals, device-specific external-display/input support, and OEM/enterprise integration without weakening authentication boundaries.
