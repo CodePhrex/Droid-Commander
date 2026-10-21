@@ -68,6 +68,12 @@
 - [x] Android instrumentation coverage is authored for capability gating, allow-list filtering, permission outcomes, bounded send rejection, lifecycle teardown, and opt-in approved-fixture connection/round-trip flows.
 - [ ] The adapter is compiled in a custom Expo development build with organization-approved vendor/product/interface identifiers and verified on physical lab devices.
 
+## USB Link connection-management screen
+
+- [x] A dedicated React Native screen provides USB Host readiness, discovery, device cards, permission state, connection lifecycle, transport event status, and safe-operation boundary messaging.
+- [x] The screen includes mock discovery, permission, connect, and disconnect interactions that make the native integration boundary explicit.
+- [ ] The screen is wired to live native-module events and persists connection state across app restarts.
+
 ## USB packet framing and binary command serialization
 
 - [x] The wire format defines a fixed versioned header with magic, message type, session binding, sequence, timestamp, nonce, exact payload length, and fixed authentication-tag length.

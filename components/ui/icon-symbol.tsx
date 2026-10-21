@@ -21,6 +21,7 @@ const MAPPING = {
   "shield.fill": "security",
   "checkmark.seal.fill": "fact-check",
   "clock.arrow.circlepath": "history",
+  "cable.connector": "usb",
 } satisfies IconMapping;
 
 /**

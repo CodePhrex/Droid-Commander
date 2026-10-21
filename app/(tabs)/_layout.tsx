@@ -49,6 +49,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={24} name="clock.arrow.circlepath" color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="usb"
+        options={{
+          title: "USB Link",
+          tabBarIcon: ({ color }) => <IconSymbol size={24} name="cable.connector" color={color} />,
+        }}
+      />
     </Tabs>
   );
 }
