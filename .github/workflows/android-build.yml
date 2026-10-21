@@ -1,0 +1,111 @@
+name: Android build
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  ANDROID_API: "36"
+  ANDROID_BUILD_TOOLS: "36.0.0"
+  ANDROID_CMAKE: "3.22.1"
+  ANDROID_NDK: "27.1.12297006"
+  ANDROID_SDK_ROOT: ${{ github.workspace }}/.android-sdk
+  ANDROID_HOME: ${{ github.workspace }}/.android-sdk
+  GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
+
+jobs:
+  android-debug:
+    name: Build debug APK
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.13.0"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+
+      - name: Enable pnpm
+        shell: bash
+        run: |
+          set -euo pipefail
+          corepack enable
+          corepack prepare pnpm@9.12.0 --activate
+          pnpm --version
+
+      - name: Install Android SDK and NDK
+        shell: bash
+        env:
+          INSTALL_SYSTEM_PACKAGES: "0"
+          WRITE_PROFILE: "0"
+        run: |
+          set -euo pipefail
+          chmod +x scripts/setup-android-ci.sh
+          scripts/setup-android-ci.sh
+
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: TypeScript checks
+        run: pnpm check
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Validate Gradle wrapper
+        working-directory: android
+        run: ./gradlew --version
+
+      - name: Assemble debug APK
+        working-directory: android
+        run: ./gradlew :app:assembleDebug --no-daemon --stacktrace
+
+      - name: Generate APK checksum
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          cp android/app/build/outputs/apk/debug/*.apk artifacts/
+          sha256sum artifacts/*.apk | tee artifacts/SHA256SUMS.txt
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: droid-commander-debug-apk-${{ github.sha }}
+          path: artifacts/*.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload APK checksum
+        uses: actions/upload-artifact@v4
+        with:
+          name: droid-commander-debug-apk-${{ github.sha }}-sha256
+          path: artifacts/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 14
