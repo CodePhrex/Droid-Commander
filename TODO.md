@@ -65,7 +65,8 @@
 - [x] A Kotlin Android `UsbManager` adapter draft enumerates devices, listens for attach/detach, requests explicit user permission, selects an allow-listed interface with bulk IN/OUT endpoints, and reports structured transport events.
 - [x] Native I/O is bounded and off the UI thread, with safe handling for permission denial, unsupported interfaces, short writes, read failures, disconnects, and teardown.
 - [x] The Kotlin adapter is staged as a local Expo module with autolinking metadata, JavaScript bridge, Android manifest feature declaration, and base64 bridge boundary for binary packets.
-- [ ] The adapter is wired into a custom Expo development build with organization-approved vendor/product/interface identifiers and verified on physical lab devices.
+- [x] Android instrumentation coverage is authored for capability gating, allow-list filtering, permission outcomes, bounded send rejection, lifecycle teardown, and opt-in approved-fixture connection/round-trip flows.
+- [ ] The adapter is compiled in a custom Expo development build with organization-approved vendor/product/interface identifiers and verified on physical lab devices.
 
 ## USB packet framing and binary command serialization
 
