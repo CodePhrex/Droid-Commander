@@ -48,4 +48,7 @@
 - [x] The workflow separates personnel eligibility, exercise authorization, and target consent/capability as independent gates.
 - [x] The workflow defines enrollment, signed or organization-verified credential checks, bounded exercise approval, target binding, session admission, in-session enforcement, closeout, renewal, and revocation.
 - [x] The workflow specifies fail-closed behavior, offline verification boundaries, suggested record fields, decision outcomes, recovery rules, and implementation acceptance criteria.
-- [ ] Credential-specific runtime validation and native organization-provider integration are implemented and covered by tests.
+- [x] Credential-specific runtime validation is implemented with issuer trust, signature, validity, organization, action-scope, and cached-revocation checks.
+- [x] The provider-neutral organization integration contract is documented, including online status, offline fallback, provider outage, and data-minimization behavior.
+- [x] Credential runtime tests cover online, offline-cache, revoked, suspended, stale, malformed, untrusted, and provider-failure states.
+- [ ] Native signature verification, secure credential storage, and a deploying organization’s provider adapter are implemented.
