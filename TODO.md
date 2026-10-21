@@ -94,6 +94,15 @@
 - [x] The screen is wired to live native-module events.
 - [ ] Connection state persists across app restarts.
 
+## Operator developer mode and diagnostic oversight
+
+- [x] An application-level operator developer session requires authorization, a bound session, a specific reason, a 1–60 minute duration, and a fixed diagnostic capability allow-list.
+- [x] Sessions expire automatically, enforce capability checks before each use, and explicitly record that Android security settings remain unchanged.
+- [x] The native module exposes read-only Developer Options, USB-debugging, OEM-unlock, and debuggable-build state, plus a visible handoff to Android Developer Options.
+- [x] The feature does not silently enable Developer Options, USB debugging, wireless debugging, OEM unlock, root, arbitrary shell, package installation, bootloader unlock, or flashing.
+- [x] Policy behavior is covered by automated tests and documented in `OPERATOR_DEVELOPER_MODE.md`.
+- [ ] Add organization-specific operator identity provisioning and production audit-sink integration.
+
 ## USB packet framing and binary command serialization
 
 - [x] The wire format defines a fixed versioned header with magic, message type, session binding, sequence, timestamp, nonce, exact payload length, and fixed authentication-tag length.

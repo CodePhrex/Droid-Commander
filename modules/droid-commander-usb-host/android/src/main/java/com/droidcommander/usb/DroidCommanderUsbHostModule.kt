@@ -1,5 +1,8 @@
 package com.droidcommander.usb
 
+import android.content.Intent
+import android.os.Build
+import android.provider.Settings
 import android.util.Base64
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
@@ -104,6 +107,23 @@ class DroidCommanderUsbHostModule : Module() {
     AsyncFunction("collectBootState") {
       val context = appContext.reactContext ?: error("React context unavailable")
       BootStateCollector(context).collect()
+    }
+
+    AsyncFunction("collectDebugState") {
+      val context = appContext.reactContext ?: error("React context unavailable")
+      mapOf(
+        "developerOptionsEnabled" to (Settings.Global.getInt(context.contentResolver, "development_settings_enabled", 0) == 1),
+        "adbEnabled" to (Settings.Global.getInt(context.contentResolver, "adb_enabled", 0) == 1),
+        "oemUnlockAllowed" to (Settings.Global.getString(context.contentResolver, "oem_unlock_allowed") ?: ""),
+        "debuggableBuild" to (Build.TYPE == "eng" || Build.TYPE == "userdebug"),
+        "readOnly" to true,
+      )
+    }
+
+    AsyncFunction("openDeveloperOptions") {
+      val activity = appContext.currentActivity ?: return@AsyncFunction false
+      activity.startActivity(Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS))
+      true
     }
 
     OnDestroy {

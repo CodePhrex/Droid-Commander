@@ -46,6 +46,14 @@ export type RawBootState = {
   oemUnlockAllowed?: string;
 };
 
+export type DebugState = {
+  developerOptionsEnabled: boolean;
+  adbEnabled: boolean;
+  oemUnlockAllowed: string;
+  debuggableBuild: boolean;
+  readOnly: true;
+};
+
 type NativeUsbHostModule = {
   addListener(eventName: "onUsbHostEvent", listener: (event: UsbHostEvent) => void): { remove(): void };
   startDiscovery(vendorIds: number[], productIds: number[], interfaceClass: number): Promise<UsbDeviceDescriptor[]>;
@@ -63,6 +71,8 @@ type NativeUsbHostModule = {
   executeApprovedRootOperation(sessionId: string, operationId: string, parameters: Record<string, string>): Promise<{ ok: boolean; message: string; value?: string }>;
   closeRootSession(sessionId: string): Promise<void>;
   collectBootState(): Promise<RawBootState>;
+  collectDebugState(): Promise<DebugState>;
+  openDeveloperOptions(): Promise<boolean>;
 };
 
 const NativeUsbHost = requireOptionalNativeModule<NativeUsbHostModule>("DroidCommanderUsbHost");
@@ -152,4 +162,12 @@ export function collectBootState(): Promise<RawBootState> {
     verityMode: "",
     oemUnlockAllowed: "",
   });
+}
+
+export function collectDebugState(): Promise<DebugState> {
+  return NativeUsbHost?.collectDebugState() ?? Promise.resolve({ developerOptionsEnabled: false, adbEnabled: false, oemUnlockAllowed: "", debuggableBuild: false, readOnly: true });
+}
+
+export function openDeveloperOptions() {
+  return NativeUsbHost?.openDeveloperOptions() ?? Promise.resolve(false);
 }
