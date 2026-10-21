@@ -76,7 +76,7 @@ jobs:
           export ANDROID_HOME="$ANDROID_SDK_ROOT"
           export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
           chmod +x scripts/setup-android-ci.sh
-          scripts/setup-android-ci.sh
+          VERIFY_ONLY=1 scripts/setup-android-ci.sh
           # React Native’s generated Gradle catalog asks for 27.1.12297006.
           # Ubuntu 24.04 provides 27.3.13750724; this compatibility link keeps
           # the generated project unchanged while using the verified toolchain.
