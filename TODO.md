@@ -161,6 +161,7 @@
 - [x] Placeholder-profile, rotation, confirmation, validity, organization-binding, callback-filtering, and pending-state tests are implemented.
 - [x] Production secrets and private key material remain outside source code and documentation.
 - [ ] Replace the placeholder only after verified firm identity, manufacturer/provider authorization, trust-anchor distribution, native adapter implementation, UI review, and physical lab validation are complete.
+- [x] `AUTHORIZED_TECHNICIAN_PROFILE_INTEGRATION.md` documents profile configuration, evidence requirements, provider manifests, UI confirmation, certificate rotation, native callbacks, audit handling, and release gates.
 
 ## USB packet framing and binary command serialization
 
