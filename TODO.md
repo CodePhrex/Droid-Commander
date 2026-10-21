@@ -146,6 +146,14 @@
 - [x] `PREBUILD_READINESS.md` records delivered foundations, explicit build blockers, physical-device validation gates, image-provider requirements, recommended build order, and prohibited release capabilities.
 - [ ] Custom Android compilation, organization configuration, physical-device matrix, provider integrations, complete session persistence, production audit sink, and release security/privacy review are complete.
 
+## Protected production Android signing
+
+- [x] Release Gradle builds fail closed unless the keystore path, keystore password, key alias, and key password are present.
+- [x] The workflow signs APK and AAB outputs only from the protected GitHub `production` Environment, materializes the keystore ephemerally with restrictive permissions, and never commits or prints signing material.
+- [x] Production runs are limited to `v*` tags or manual dispatch, require the debug job to pass, use the GitHub run number for version codes, generate SHA-256 checksums, and upload signed outputs as one artifact.
+- [x] Setup and rotation guidance is documented in `PRODUCTION_SIGNING.md`.
+- [ ] Configure actual production secrets, required reviewers, Play App Signing/upload-key policy, and release approval rules in GitHub.
+
 ## USB packet framing and binary command serialization
 
 - [x] The wire format defines a fixed versioned header with magic, message type, session binding, sequence, timestamp, nonce, exact payload length, and fixed authentication-tag length.

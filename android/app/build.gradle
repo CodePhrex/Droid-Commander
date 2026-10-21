@@ -87,13 +87,25 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
+    def releaseStoreFile = System.getenv("ANDROID_KEYSTORE_PATH")
+    def releaseStorePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+    def releaseKeyAlias = System.getenv("ANDROID_KEY_ALIAS")
+    def releaseKeyPassword = System.getenv("ANDROID_KEY_PASSWORD")
+    def releaseSigningConfigured = [releaseStoreFile, releaseStorePassword, releaseKeyAlias, releaseKeyPassword].every { value -> value }
+    def releaseBuildRequested = gradle.startParameter.taskNames.any { taskName -> taskName.toLowerCase().contains("release") }
+    def androidVersionCode = (project.findProperty('androidVersionCode') ?: System.getenv('ANDROID_VERSION_CODE') ?: '1').toString().toInteger()
+    def androidVersionName = (project.findProperty('androidVersionName') ?: System.getenv('ANDROID_VERSION_NAME') ?: '1.0.0').toString()
+    if (releaseBuildRequested && !releaseSigningConfigured) {
+        throw new GradleException("Release signing is not configured. Provide ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, and ANDROID_KEY_PASSWORD.")
+    }
+
     namespace 'space.manus.droidcmd.t001139759265994'
     defaultConfig {
         applicationId 'space.manus.droidcmd.t001139759265994'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0.0"
+        versionCode androidVersionCode
+        versionName androidVersionName
 
         buildConfigField "String", "REACT_NATIVE_RELEASE_LEVEL", "\"${findProperty('reactNativeReleaseLevel') ?: 'stable'}\""
     }
@@ -104,15 +116,21 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            if (releaseSigningConfigured) {
+                storeFile file(releaseStoreFile)
+                storePassword releaseStorePassword
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeyPassword
+            }
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             def enableShrinkResources = findProperty('android.enableShrinkResourcesInReleaseBuilds') ?: 'false'
             shrinkResources enableShrinkResources.toBoolean()
             minifyEnabled enableMinifyInReleaseBuilds
