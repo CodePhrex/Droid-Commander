@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Modal,
   Pressable,
@@ -8,12 +8,10 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { router } from "expo-router";
 
 import { ScreenContainer } from "@/components/screen-container";
-import { HostInformation } from "@/components/host-information";
-import { palette, type AssessmentStatus } from "@/constants/commander";
-import { useLocalAssessment } from "@/hooks/use-local-assessment";
-import { hostIdentity } from "@/lib/local-assessment";
+import { assessments, palette, type AssessmentStatus } from "@/constants/commander";
 
 const statusColors: Record<AssessmentStatus, { text: string; fill: string }> = {
   critical: { text: palette.red, fill: "#FCECEB" },
@@ -23,9 +21,7 @@ const statusColors: Record<AssessmentStatus, { text: string; fill: string }> = {
 };
 
 export default function CommandCenterScreen() {
-  const { report, phase, error, storageWarning, cached, runAssessment } = useLocalAssessment();
-  const running = phase === "running";
-  const assessments = report?.checks ?? [];
+  const [assessmentComplete, setAssessmentComplete] = useState(false);
   const [expandedFinding, setExpandedFinding] = useState<string | null>("security-patch");
   const [usbExpanded, setUsbExpanded] = useState(false);
   const [scopeOpen, setScopeOpen] = useState(false);
@@ -33,7 +29,7 @@ export default function CommandCenterScreen() {
   const [authorizedBy, setAuthorizedBy] = useState("");
   const [sessionAuthorized, setSessionAuthorized] = useState(false);
 
-  const coverage = report ? Math.round(report.summary.observed / report.checks.length * 100) : 0;
+  const posture = useMemo(() => (assessmentComplete ? 78 : 72), [assessmentComplete]);
   const canCreateScope = scopeName.trim().length > 2 && authorizedBy.trim().length > 2;
 
   return (
@@ -60,287 +56,4 @@ export default function CommandCenterScreen() {
               A consent-first field instrument for learning how device posture can be measured and improved.
             </Text>
           </View>
-          <Text style={styles.buildTag}>HOST SCAN{`\n`}{report?.host.appVersion ?? "LOCAL"}</Text>
-        </View>
-
-        <View style={styles.postureCard}>
-          <View style={styles.postureTopRow}>
-            <Text style={styles.postureLabel}>LOCAL EVIDENCE COVERAGE</Text>
-            <Text style={styles.postureStamp}>{running ? "READING" : report ? cached ? "CACHED" : "COLLECTED" : "NOT ASSESSED"}</Text>
-          </View>
-          <View style={styles.scoreRow}>
-            <View style={styles.scoreBlock}>
-              <Text style={styles.score}>{report ? report.summary.observed : "—"}</Text>
-              <Text style={styles.scoreDenominator}>/ {report?.checks.length ?? "—"}</Text>
-            </View>
-            <View style={styles.scoreCopy}>
-              <Text style={styles.scoreTitle}>{hostIdentity(report?.host)}</Text>
-              <Text style={styles.scoreDetail}>
-                {report
-                  ? `Actual check coverage, not a security score. Collected ${report.collectedAt}.`
-                  : "Run the scan to collect this device's actual Android readings. No USB target is needed."}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.scoreBarTrack}>
-            <View style={[styles.scoreBarFill, { width: `${coverage}%` }]} />
-          </View>
-          <View style={styles.scoreMetaRow}>
-            <Text style={styles.scoreMeta}>{report?.summary.review ?? "—"} review</Text>
-            <Text style={styles.scoreMeta}>{report?.summary.clear ?? "—"} policy checks clear</Text>
-            <Text style={styles.scoreMeta}>{report?.summary.unknown ?? "—"} unknown</Text>
-          </View>
-        </View>
-
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={running ? "Reading local host" : "Run local host scan"}
-          accessibilityHint="Collects actual read-only Android API observations"
-          accessibilityState={{ disabled: running, busy: running }}
-          disabled={running}
-          onPress={() => void runAssessment()}
-          style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed]}
-        >
-          <View style={styles.primaryButtonIcon}>
-            <Text style={styles.primaryButtonIconText}>+</Text>
-          </View>
-          <View style={styles.primaryButtonCopy}>
-            <Text style={styles.primaryButtonTitle}>
-              {running ? "Reading actual host data…" : report ? "Refresh local host scan" : "Run local host scan"}
-            </Text>
-            <Text style={styles.primaryButtonDetail}>Read-only · no root grant · no target required</Text>
-          </View>
-          <Text style={styles.primaryArrow}>›</Text>
-        </Pressable>
-
-        {error ? <Text accessibilityRole="alert" style={styles.footerNote}>{error}</Text> : null}
-        {storageWarning ? <Text accessibilityRole="alert" style={styles.footerNote}>{storageWarning}</Text> : null}
-        <HostInformation report={report} />
-
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Signal review</Text>
-          <Text style={styles.sectionMeta}>{assessments.length} ACTUAL CHECKS</Text>
-        </View>
-
-        {assessments.map((item, index) => {
-          const colors = statusColors[item.status];
-          const expanded = expandedFinding === item.id;
-          return (
-            <Pressable
-              key={item.id}
-              accessibilityRole="button"
-              accessibilityLabel={`${item.label}, ${item.status}. ${expanded ? "Collapse" : "Expand"} evidence`}
-              accessibilityState={{ expanded }}
-              onPress={() => setExpandedFinding(expanded ? null : item.id)}
-              style={({ pressed }) => [styles.findingCard, pressed && styles.pressed]}
-            >
-              <View style={styles.findingIndex}><Text style={styles.findingIndexText}>0{index + 1}</Text></View>
-              <View style={styles.findingBody}>
-                <View style={styles.findingTopRow}>
-                  <Text style={styles.findingTitle}>{item.label}</Text>
-                  <View style={[styles.statusPill, { backgroundColor: colors.fill }]}>
-                    <Text style={[styles.statusText, { color: colors.text }]}>{item.status.toUpperCase()}</Text>
-                  </View>
-                </View>
-                {expanded ? <Text style={styles.findingDetail}>{item.value}{`\n`}{item.detail}{`\n`}Source: {item.source}{`\n`}Limit: {item.limitation}</Text> : null}
-                <Text style={styles.findingAction}>{expanded ? item.action : "Tap to inspect evidence"}</Text>
-              </View>
-              <Text style={styles.findingChevron}>{expanded ? "⌃" : "⌄"}</Text>
-            </Pressable>
-          );
-        })}
-
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Transport readiness</Text>
-          <Text style={styles.sectionMeta}>USB / ADB</Text>
-        </View>
-
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Transport readiness details"
-          accessibilityState={{ expanded: usbExpanded }}
-          onPress={() => setUsbExpanded(!usbExpanded)}
-          style={({ pressed }) => [styles.transportCard, pressed && styles.pressed]}
-        >
-          <View style={styles.transportIcon}><Text style={styles.transportIconText}>↕</Text></View>
-          <View style={styles.transportBody}>
-            <View style={styles.findingTopRow}>
-              <Text style={styles.findingTitle}>{report ? report.host.usbDeviceCount === null ? "USB inventory unavailable" : `${report.host.usbDeviceCount} USB device(s) enumerated` : "USB inventory not checked"}</Text>
-              <View style={styles.neutralPill}><Text style={styles.neutralPillText}>BEST EFFORT</Text></View>
-            </View>
-            <Text style={styles.transportDetail}>
-              {report ? `Host feature: ${report.host.usbHostSupported === null ? "unknown" : report.host.usbHostSupported ? "declared" : "not declared"}. Enumeration is not a compatible or authenticated target session.` : "Run a host scan first. Use USB Link to inspect attachment and companion compatibility separately."}
-            </Text>
-            {usbExpanded ? (
-              <View style={styles.transportChecklist}>
-                <Text style={styles.checklistLine}><Text style={styles.checklistMark}>01</Text> Host hardware and cable capability</Text>
-                <Text style={styles.checklistLine}><Text style={styles.checklistMark}>02</Text> Target-side permission and consent</Text>
-                <Text style={styles.checklistLine}><Text style={styles.checklistMark}>03</Text> Cooperative protocol or approved ADB trust</Text>
-              </View>
-            ) : null}
-            <Text style={styles.findingAction}>{usbExpanded ? "USB path is never a privilege bypass" : "Review connection prerequisites"}</Text>
-          </View>
-          <Text style={styles.findingChevron}>{usbExpanded ? "⌃" : "⌄"}</Text>
-        </Pressable>
-
-        <View style={styles.scopeCard}>
-          <View style={styles.scopeTopRow}>
-            <View style={styles.scopeMark}><Text style={styles.scopeMarkText}>{sessionAuthorized ? "✓" : "!"}</Text></View>
-            <View style={styles.scopeCopy}>
-              <Text style={styles.scopeTitle}>{sessionAuthorized ? "Scope draft entered" : "Training scope draft"}</Text>
-              <Text style={styles.scopeDetail}>
-                {sessionAuthorized
-                  ? `${scopeName} · declared by ${authorizedBy} · not verified`
-                  : "Active-exercise authorization requires configured identity and consent providers. This form records a draft only."}
-              </Text>
-            </View>
-          </View>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={sessionAuthorized ? "Edit scope draft" : "Enter scope draft"}
-            onPress={() => setScopeOpen(true)}
-            style={({ pressed }) => [styles.secondaryButton, pressed && styles.pressed]}
-          >
-            <Text style={styles.secondaryButtonText}>{sessionAuthorized ? "Edit scope draft" : "Enter scope draft"}</Text>
-            <Text style={styles.secondaryButtonArrow}>→</Text>
-          </Pressable>
-        </View>
-
-        <Text style={styles.footerNote}>
-          Host findings come from actual local Android readings. Cached reports retain their collection time. USB peer authentication and manufacturer-provider operations remain separate integrations.
-        </Text>
-      </ScrollView>
-
-      <Modal visible={scopeOpen} animationType="slide" transparent onRequestClose={() => setScopeOpen(false)}>
-        <View style={styles.modalBackdrop}>
-          <View style={styles.modalCard}>
-            <View style={styles.modalHandle} />
-            <Text style={styles.modalKicker}>UNVERIFIED SCOPE DRAFT</Text>
-            <Text style={styles.modalTitle}>Define the training scope.</Text>
-            <Text style={styles.modalBody}>
-              This screen keeps a scope draft in memory. It is not a verified owner-consent record and does not grant device privileges or authorize a USB target.
-            </Text>
-            <Text style={styles.inputLabel}>TARGET SCOPE</Text>
-            <TextInput
-              value={scopeName}
-              onChangeText={setScopeName}
-              placeholder="e.g. Lab handset A"
-              placeholderTextColor="#9AA5A7"
-              style={styles.input}
-            />
-            <Text style={styles.inputLabel}>AUTHORIZED BY</Text>
-            <TextInput
-              value={authorizedBy}
-              onChangeText={setAuthorizedBy}
-              placeholder="Name or training ticket"
-              placeholderTextColor="#9AA5A7"
-              style={styles.input}
-            />
-            <View style={styles.modalActions}>
-              <Pressable onPress={() => setScopeOpen(false)} style={styles.cancelButton}>
-                <Text style={styles.cancelText}>Cancel</Text>
-              </Pressable>
-              <Pressable
-                disabled={!canCreateScope}
-                onPress={() => {
-                  setSessionAuthorized(true);
-                  setScopeOpen(false);
-                }}
-                style={[styles.modalPrimary, !canCreateScope && styles.disabledButton]}
-              >
-                <Text style={styles.modalPrimaryText}>Use scope draft</Text>
-              </Pressable>
-            </View>
-          </View>
-        </View>
-      </Modal>
-    </ScreenContainer>
-  );
-}
-
-const styles = StyleSheet.create({
-  scrollContent: { paddingHorizontal: 20, paddingTop: 18, paddingBottom: 34 },
-  headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
-  kicker: { color: palette.orange, fontSize: 10, fontWeight: "800", letterSpacing: 1.2 },
-  wordmark: { color: palette.ink, fontSize: 21, fontWeight: "800", letterSpacing: -0.5, marginTop: 4 },
-  offlinePill: { flexDirection: "row", alignItems: "center", borderWidth: 1, borderColor: palette.line, borderRadius: 20, paddingHorizontal: 9, paddingVertical: 7 },
-  greenDot: { width: 6, height: 6, borderRadius: 4, backgroundColor: palette.green, marginRight: 6 },
-  offlineText: { color: palette.green, fontSize: 9, fontWeight: "800", letterSpacing: 0.6 },
-  introRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginTop: 22, marginBottom: 18 },
-  introCopy: { flex: 1, paddingRight: 18 },
-  title: { color: palette.ink, fontSize: 30, fontWeight: "800", letterSpacing: -1.1, lineHeight: 34 },
-  subtitle: { color: palette.muted, fontSize: 14, lineHeight: 20, marginTop: 8 },
-  buildTag: { color: palette.muted, fontSize: 9, lineHeight: 13, fontWeight: "800", letterSpacing: 1, textAlign: "right" },
-  postureCard: { backgroundColor: palette.navy, borderRadius: 22, padding: 20, marginBottom: 12 },
-  postureTopRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  postureLabel: { color: palette.navyMuted, fontSize: 10, fontWeight: "800", letterSpacing: 1.1 },
-  postureStamp: { color: palette.orange, fontSize: 9, fontWeight: "800", letterSpacing: 0.8 },
-  scoreRow: { flexDirection: "row", alignItems: "center", marginTop: 14 },
-  scoreBlock: { flexDirection: "row", alignItems: "flex-end", width: 116 },
-  score: { color: "#FFFFFF", fontSize: 54, fontWeight: "800", letterSpacing: -3, lineHeight: 58 },
-  scoreDenominator: { color: palette.navyMuted, fontSize: 13, fontWeight: "700", marginBottom: 9, marginLeft: 3 },
-  scoreCopy: { flex: 1, paddingBottom: 5 },
-  scoreTitle: { color: "#FFFFFF", fontSize: 16, fontWeight: "800" },
-  scoreDetail: { color: palette.navyMuted, fontSize: 12, lineHeight: 17, marginTop: 4 },
-  scoreBarTrack: { height: 6, borderRadius: 4, backgroundColor: "#274556", marginTop: 18, overflow: "hidden" },
-  scoreBarFill: { height: 6, backgroundColor: palette.orange, borderRadius: 4 },
-  scoreMetaRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 10 },
-  scoreMeta: { color: palette.navyMuted, fontSize: 10, fontWeight: "700" },
-  primaryButton: { flexDirection: "row", alignItems: "center", minHeight: 56, backgroundColor: palette.orange, borderRadius: 16, padding: 14, marginBottom: 24 },
-  primaryButtonIcon: { width: 34, height: 34, borderRadius: 11, backgroundColor: "rgba(255,255,255,0.22)", alignItems: "center", justifyContent: "center" },
-  primaryButtonIconText: { color: "#FFFFFF", fontSize: 22, fontWeight: "500", lineHeight: 24 },
-  primaryButtonCopy: { flex: 1, marginLeft: 11 },
-  primaryButtonTitle: { color: "#FFFFFF", fontSize: 15, fontWeight: "800" },
-  primaryButtonDetail: { color: "#FFE6D9", fontSize: 11, marginTop: 3 },
-  primaryArrow: { color: "#FFFFFF", fontSize: 27, fontWeight: "300", paddingHorizontal: 4 },
-  pressed: { opacity: 0.82 },
-  sectionHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 10, marginTop: 2 },
-  sectionTitle: { color: palette.ink, fontSize: 17, fontWeight: "800" },
-  sectionMeta: { color: palette.muted, fontSize: 9, fontWeight: "800", letterSpacing: 1 },
-  findingCard: { flexDirection: "row", backgroundColor: palette.paper, borderWidth: 1, borderColor: palette.line, borderRadius: 15, padding: 13, marginBottom: 9 },
-  findingIndex: { width: 27, height: 27, borderRadius: 9, backgroundColor: palette.orangeSoft, alignItems: "center", justifyContent: "center", marginRight: 10 },
-  findingIndexText: { color: palette.orange, fontSize: 10, fontWeight: "900" },
-  findingBody: { flex: 1 },
-  findingTopRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  findingTitle: { color: palette.ink, fontSize: 14, fontWeight: "800", flex: 1, paddingRight: 7 },
-  statusPill: { borderRadius: 5, paddingHorizontal: 6, paddingVertical: 4 },
-  statusText: { fontSize: 8, fontWeight: "900", letterSpacing: 0.7 },
-  findingDetail: { color: palette.muted, fontSize: 12, lineHeight: 17, marginTop: 8 },
-  findingAction: { color: palette.orange, fontSize: 11, fontWeight: "800", marginTop: 8 },
-  findingChevron: { color: palette.muted, fontSize: 17, marginLeft: 7, marginTop: 1 },
-  transportCard: { flexDirection: "row", backgroundColor: "#EAF0F0", borderRadius: 16, padding: 14, marginBottom: 18 },
-  transportIcon: { width: 34, height: 34, borderRadius: 11, backgroundColor: palette.navy, alignItems: "center", justifyContent: "center", marginRight: 10 },
-  transportIconText: { color: "#FFFFFF", fontSize: 21, fontWeight: "700" },
-  transportBody: { flex: 1 },
-  neutralPill: { borderRadius: 5, backgroundColor: "#DCE6E6", paddingHorizontal: 6, paddingVertical: 4 },
-  neutralPillText: { color: palette.muted, fontSize: 8, fontWeight: "900", letterSpacing: 0.6 },
-  transportDetail: { color: palette.muted, fontSize: 12, lineHeight: 17, marginTop: 8 },
-  transportChecklist: { borderTopWidth: 1, borderTopColor: "#D4DFDE", marginTop: 10, paddingTop: 8, gap: 6 },
-  checklistLine: { color: palette.ink, fontSize: 11, lineHeight: 15 },
-  checklistMark: { color: palette.orange, fontWeight: "900", letterSpacing: 0.6 },
-  scopeCard: { backgroundColor: palette.paper, borderWidth: 1, borderColor: palette.line, borderRadius: 17, padding: 15, marginBottom: 14 },
-  scopeTopRow: { flexDirection: "row", alignItems: "center" },
-  scopeMark: { width: 31, height: 31, borderRadius: 10, backgroundColor: palette.orangeSoft, alignItems: "center", justifyContent: "center", marginRight: 10 },
-  scopeMarkText: { color: palette.orange, fontSize: 18, fontWeight: "900" },
-  scopeCopy: { flex: 1 },
-  scopeTitle: { color: palette.ink, fontSize: 14, fontWeight: "800" },
-  scopeDetail: { color: palette.muted, fontSize: 11, lineHeight: 16, marginTop: 3 },
-  secondaryButton: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", borderTopWidth: 1, borderTopColor: palette.line, marginTop: 14, paddingTop: 13 },
-  secondaryButtonText: { color: palette.orange, fontSize: 12, fontWeight: "900" },
-  secondaryButtonArrow: { color: palette.orange, fontSize: 18 },
-  footerNote: { color: palette.muted, fontSize: 10, lineHeight: 15, textAlign: "center", paddingHorizontal: 9, marginTop: 1 },
-  modalBackdrop: { flex: 1, backgroundColor: "rgba(16,42,59,0.5)", justifyContent: "flex-end" },
-  modalCard: { backgroundColor: palette.canvas, borderTopLeftRadius: 26, borderTopRightRadius: 26, paddingHorizontal: 22, paddingTop: 12, paddingBottom: 28 },
-  modalHandle: { width: 42, height: 4, borderRadius: 3, backgroundColor: "#C6CFCC", alignSelf: "center", marginBottom: 24 },
-  modalKicker: { color: palette.orange, fontSize: 10, fontWeight: "900", letterSpacing: 1 },
-  modalTitle: { color: palette.ink, fontSize: 25, fontWeight: "800", letterSpacing: -0.6, marginTop: 7 },
-  modalBody: { color: palette.muted, fontSize: 13, lineHeight: 18, marginTop: 8, marginBottom: 20 },
-  inputLabel: { color: palette.muted, fontSize: 9, fontWeight: "900", letterSpacing: 1, marginBottom: 7, marginTop: 9 },
-  input: { backgroundColor: palette.paper, borderWidth: 1, borderColor: palette.line, borderRadius: 12, color: palette.ink, fontSize: 14, paddingHorizontal: 13, paddingVertical: 12 },
-  modalActions: { flexDirection: "row", gap: 10, marginTop: 22 },
-  cancelButton: { flex: 1, borderWidth: 1, borderColor: palette.line, borderRadius: 12, paddingVertical: 13, alignItems: "center" },
-  cancelText: { color: palette.ink, fontSize: 13, fontWeight: "800" },
-  modalPrimary: { flex: 1.6, borderRadius: 12, backgroundColor: palette.orange, paddingVertical: 13, alignItems: "center" },
-  disabledButton: { opacity: 0.4 },
-  modalPrimaryText: { color: "#FFFFFF", fontSize: 13, fontWeight: "900" },
-});
+          <Text style={styles.buildTag}>FIELD BUILD{`\n`}0.1
