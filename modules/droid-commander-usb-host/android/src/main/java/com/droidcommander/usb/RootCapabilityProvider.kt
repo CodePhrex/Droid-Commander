@@ -4,6 +4,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
 /**
@@ -98,7 +99,9 @@ class RootCapabilityProvider {
     return candidates.firstOrNull { File(it).canExecute() }
   }
 
-  private fun iso(epochMs: Long): String = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).format(Date(epochMs))
+  private fun iso(epochMs: Long): String = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
+    timeZone = TimeZone.getTimeZone("UTC")
+  }.format(Date(epochMs))
 
   private data class RootSession(val targetId: String, val scopes: Set<String>, val expiresAt: Long)
 }

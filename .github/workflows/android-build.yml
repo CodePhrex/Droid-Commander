@@ -115,6 +115,10 @@ jobs:
         working-directory: android
         run: ./gradlew --version
 
+      - name: Compile native instrumentation sources
+        working-directory: android
+        run: ./gradlew :expo-droid-commander-usb-host:compileDebugAndroidTestKotlin --build-cache --parallel --no-daemon --stacktrace
+
       - name: Generate CI debug keystore
         run: |
           if [ ! -f android/app/debug.keystore ]; then

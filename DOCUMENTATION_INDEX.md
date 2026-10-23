@@ -35,6 +35,7 @@ This index makes the repository’s instructional, technical, and administrative
 | `USB_COMMAND_CHANNEL.md` | Public-safe | Authenticated command-channel contract. |
 | `USB_HOST_E2E_TESTING.md` | Public-safe | Emulator and approved-fixture native tests. |
 | `BOOT_STATE_COLLECTION.md` | Public-safe | Read-only boot and verified-boot collection. |
+| `LIVE_HOST_ASSESSMENT.md` | Public-safe | Actual native host readings, shared scan/report UI, CVE correlation, storage limits and physical-validation gates. |
 | `RECOVERY_READINESS_CLI.md` | Public-safe | Offline artifact readiness and manual state monitoring. |
 | `ROOT_CAPABILITY.md` | Public-safe | Scoped, consented root-manager boundary. |
 | `VENDOR_CAPABILITY_PROVIDER.md` | Public-safe | Signed provider manifests, exact target scope, and hard prohibitions. |

@@ -15,6 +15,35 @@ export type UsbDeviceDescriptor = {
   permissionGranted: boolean;
 };
 
+export type UsbBulkEndpointAvailability = {
+  inputAvailable: boolean;
+  outputAvailable: boolean;
+  inOutPairAvailable: boolean;
+};
+
+/** A read-only, unfiltered inventory entry with no name, path, serial, or product string. */
+export type UsbInventoryDevice = {
+  /** Android assigns this identifier while the device is attached; it is not a serial number. */
+  deviceId: number;
+  vendorId: number;
+  productId: number;
+  deviceClass: number;
+  interfaceClasses: number[];
+  bulkEndpoints: UsbBulkEndpointAvailability;
+  permissionGranted: boolean;
+};
+
+export type UsbDiagnostics = {
+  /** The actual PackageManager FEATURE_USB_HOST value, or null when unavailable. */
+  featureUsbHost: boolean | null;
+  /** Number of currently enumerated USB devices before policy filtering, or null when unreadable. */
+  rawCount: number | null;
+  /** Unfiltered, privacy-limited entries; null when Android cannot read the list. */
+  devices: UsbInventoryDevice[] | null;
+  readOnly: true;
+  limitations: string[];
+};
+
 export type RootStatus = {
   availability: "unknown" | "unavailable" | "manager-available" | "granted" | "denied";
   manager?: string;
@@ -54,9 +83,45 @@ export type DebugState = {
   readOnly: true;
 };
 
+export type RawLocalDeviceState = {
+  manufacturer: string | null;
+  brand: string | null;
+  model: string | null;
+  device: string | null;
+  product: string | null;
+  androidVersion: string | null;
+  sdkInt: number | null;
+  securityPatch: string | null;
+  buildId: string | null;
+  buildDisplay: string | null;
+  buildType: string | null;
+  bootloader: string | null;
+  supportedAbis: string[] | null;
+  systemBuildFingerprint: string | null;
+  verifiedBootState: string | null;
+  flashLocked: string | null;
+  vbmetaDeviceState: string | null;
+  verityMode: string | null;
+  developerOptionsEnabled: boolean | null;
+  adbEnabled: boolean | null;
+  secureScreenLock: boolean | null;
+  deviceLocked: boolean | null;
+  usbHostSupported: boolean | null;
+  usbAccessorySupported: boolean | null;
+  usbDeviceCount: number | null;
+  appInstallRequestsAllowed: boolean | null;
+  totalMemoryBytes: number | null;
+  appStorageTotalBytes: number | null;
+  appStorageAvailableBytes: number | null;
+  appVersion: string | null;
+  collectedAt: string | null;
+  limitations: string[];
+};
+
 type NativeUsbHostModule = {
   addListener(eventName: "onUsbHostEvent", listener: (event: UsbHostEvent) => void): { remove(): void };
   startDiscovery(vendorIds: number[], productIds: number[], interfaceClass: number): Promise<UsbDeviceDescriptor[]>;
+  getUsbDiagnostics?: () => Promise<UsbDiagnostics | null>;
   requestPermission(deviceName: string): Promise<boolean>;
   connect(deviceName: string): Promise<boolean>;
   sendBase64(bytesBase64: string): Promise<boolean>;
@@ -72,6 +137,7 @@ type NativeUsbHostModule = {
   closeRootSession(sessionId: string): Promise<void>;
   collectBootState(): Promise<RawBootState>;
   collectDebugState(): Promise<DebugState>;
+  collectLocalDeviceState?: () => Promise<RawLocalDeviceState | null>;
   openDeveloperOptions(): Promise<boolean>;
 };
 
@@ -85,6 +151,10 @@ export function startDiscovery(options: {
   interfaceClass: number;
 }): Promise<UsbDeviceDescriptor[]> {
   return NativeUsbHost?.startDiscovery(options.vendorIds, options.productIds, options.interfaceClass) ?? Promise.resolve([]);
+}
+
+export function getUsbDiagnostics(): Promise<UsbDiagnostics | null> {
+  return NativeUsbHost?.getUsbDiagnostics?.() ?? Promise.resolve(null);
 }
 
 export function requestPermission(deviceName: string) {
@@ -166,6 +236,10 @@ export function collectBootState(): Promise<RawBootState> {
 
 export function collectDebugState(): Promise<DebugState> {
   return NativeUsbHost?.collectDebugState() ?? Promise.resolve({ developerOptionsEnabled: false, adbEnabled: false, oemUnlockAllowed: "", debuggableBuild: false, readOnly: true });
+}
+
+export function collectLocalDeviceState(): Promise<RawLocalDeviceState | null> {
+  return NativeUsbHost?.collectLocalDeviceState?.() ?? Promise.resolve(null);
 }
 
 export function openDeveloperOptions() {
