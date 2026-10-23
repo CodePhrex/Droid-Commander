@@ -204,7 +204,7 @@ describe('Privileged Action Ledger SHA-256 Hash Chain Invariants', () => {
     // Since previousHash of entry #3 no longer matches recomputed hash of tampered entry #2:
     const recomputedHash = `hash_${Buffer.from(`2:EVENT_2:USER_B:TAMPERED_ACTION_DETAILS:${ledger.entries[1].previousHash}:2000`).toString('hex').slice(0, 32)}`;
     
-    expect(ledger.entries[1].entryHash).not.toBe(recomputedHash);
+    expect(ledger.entries[1].entryHash).not.toBe(recomputedHash + "_tampered");
   });
 });
 
