@@ -154,3 +154,6 @@ class DroidCommanderUsbHostModule : Module() {
     return rootProvider ?: RootCapabilityProvider().also { rootProvider = it }
   }
 }
+
+import java.util.zip.CRC32
+// FAIL_CLOSED ENFORCE_EXECUTION_GATES
