@@ -1,6 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { BRAND_IDENTITY, COLOR_PALETTE } from './brand-design-system';
+
+export interface BrandHeaderBannerProps {
+  compact?: boolean;
+  activeMode?: string;
+  onOpenSettings?: () => void;
+}
 
 /**
  * BrandHeaderBanner
@@ -8,7 +14,11 @@ import { BRAND_IDENTITY, COLOR_PALETTE } from './brand-design-system';
  * Reusable header component incorporating the official CodePhrex 3D metallic DC logo,
  * circuit board background texture, and metallic typography derived from 1000001971.jpg.
  */
-export const BrandHeaderBanner: React.FC<{ compact?: boolean }> = ({ compact = false }) => {
+export const BrandHeaderBanner: React.FC<BrandHeaderBannerProps> = ({ 
+  compact = false,
+  activeMode,
+  onOpenSettings,
+}) => {
   return (
     <View style={[styles.container, compact && styles.containerCompact]}>
       {/* Background Circuit Grid Texture Overlay */}
@@ -28,8 +38,17 @@ export const BrandHeaderBanner: React.FC<{ compact?: boolean }> = ({ compact = f
       {/* Brand Typography */}
       <View style={styles.textWrapper}>
         <Text style={styles.titleText}>{BRAND_IDENTITY.appName.toUpperCase()}</Text>
-        <Text style={styles.subtitleText}>{BRAND_IDENTITY.developer.toUpperCase()}</Text>
+        <Text style={styles.subtitleText}>
+          {activeMode ? `${BRAND_IDENTITY.developer.toUpperCase()} • ${activeMode}` : BRAND_IDENTITY.developer.toUpperCase()}
+        </Text>
       </View>
+
+      {/* Optional Settings Action */}
+      {onOpenSettings && (
+        <TouchableOpacity style={styles.settingsButton} onPress={onOpenSettings}>
+          <Text style={styles.settingsIcon}>⚙️</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -42,8 +61,9 @@ const styles = StyleSheet.create({
     borderColor: COLOR_PALETTE.background.borderOutline,
     paddingVertical: 20,
     paddingHorizontal: 16,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     overflow: 'hidden',
     position: 'relative',
     marginVertical: 10,
@@ -53,7 +73,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   gridOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: '#0D1117',
     opacity: 0.9,
   },
@@ -68,56 +88,54 @@ const styles = StyleSheet.create({
     opacity: 0.12,
   },
   logoWrapper: {
-    marginBottom: 10,
-    alignItems: 'center',
+    marginRight: 14,
+    zIndex: 2,
   },
   outerRingBevel: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: '#3A4B5C',
-    padding: 3,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: COLOR_PALETTE.accent.metallicSilver,
+    padding: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: COLOR_PALETTE.accent.cyberCyan,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
   },
   innerEmblemDisk: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 33,
-    backgroundColor: '#16202C',
-    borderWidth: 1.5,
-    borderColor: '#79C0FF',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#1E293B',
     justifyContent: 'center',
     alignItems: 'center',
   },
   emblemText: {
-    fontSize: 26,
+    color: COLOR_PALETTE.accent.cyberCyan,
+    fontSize: 18,
     fontWeight: '900',
-    color: '#F0F6FC',
-    letterSpacing: 2,
-    textShadowColor: 'rgba(88, 166, 255, 0.8)',
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 6,
+    fontFamily: 'monospace',
   },
   textWrapper: {
-    alignItems: 'center',
+    flex: 1,
+    zIndex: 2,
   },
   titleText: {
-    fontSize: 20,
+    color: '#FFFFFF',
+    fontSize: 16,
     fontWeight: '800',
-    color: '#F0F6FC',
-    letterSpacing: 2.5,
-    marginBottom: 2,
+    letterSpacing: 1.2,
   },
   subtitleText: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#8B949E',
-    letterSpacing: 4,
+    color: COLOR_PALETTE.accent.cyberCyan,
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 0.8,
+    marginTop: 2,
+  },
+  settingsButton: {
+    padding: 8,
+    zIndex: 2,
+  },
+  settingsIcon: {
+    fontSize: 18,
   },
 });

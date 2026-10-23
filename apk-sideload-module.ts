@@ -6,7 +6,7 @@
  * and multi-stage ADB streaming installation (`pm install-create / write / commit`).
  */
 
-import { PrivilegedActionLedger } from './privileged-action-ledger-schema';
+import { privilegedActionLedger } from './privileged-action-ledger-schema';
 
 export interface ApkMetadata {
   fileName: string;
@@ -28,98 +28,94 @@ export interface SideloadSession {
   ownerConsentVerified: boolean;
   status: 'QUEUED' | 'STREAMING_PACKETS' | 'VERIFYING_SIGNATURE' | 'COMMITTED' | 'FAILED' | 'BLOCKED_NO_CONSENT';
   progressPercent: number;
-  installLog: string[];
+  errorMessage?: string;
 }
 
 export class ApkSideloadModule {
+  private activeSessions: Map<string, SideloadSession> = new Map();
+
   /**
-   * Parses APK header metadata and validates cryptographic signatures.
+   * Pre-flight checks on APK before installation stream
    */
-  public async parseApkHeader(fileName: string, rawBytesLength: number): Promise<ApkMetadata> {
-    return {
-      fileName,
-      fileSizeBytes: rawBytesLength,
-      packageName: 'com.codephrex.droidcommander.diagnostics',
-      versionName: '1.0.0-RELEASE',
-      versionCode: 100,
-      minSdkVersion: 28, // Android 9+
-      targetSdkVersion: 34, // Android 14
-      sha256Digest: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
-      requestedPermissions: [
-        'android.permission.INTERNET',
-        'android.permission.READ_EXTERNAL_STORAGE',
-        'android.permission.MANAGE_EXTERNAL_STORAGE',
-        'android.permission.DUMP',
-      ],
-      isSignedByDebugKey: false,
-    };
+  async validateApkPayload(apk: ApkMetadata, ownerConsent: boolean): Promise<{ valid: boolean; reason?: string }> {
+    if (!ownerConsent) {
+      return { valid: false, reason: 'Explicit owner consent is required before sideloading APK packages.' };
+    }
+
+    if (apk.isSignedByDebugKey) {
+      return { valid: false, reason: 'Packages signed with untrusted test/debug keys are blocked by governance policy.' };
+    }
+
+    if (apk.targetSdkVersion < 28) {
+      return { valid: false, reason: 'Legacy Android SDK versions (< 28) are restricted for security reasons.' };
+    }
+
+    return { valid: true };
   }
 
   /**
-   * Initiates owner-consented APK sideloading session via ADB stream.
+   * Begins multi-stage streaming install
    */
-  public async executeSideloadSession(
+  async initiateSideload(
     apk: ApkMetadata,
     targetDeviceId: string,
-    ownerConsentApproved: boolean,
-    technicianId: string
+    ownerConsentVerified: boolean
   ): Promise<SideloadSession> {
-    const sessionId = `SIDELOAD_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
-    const installLog: string[] = [];
-
-    installLog.push(`[${new Date().toISOString()}] Initializing APK Package Session for ${apk.packageName}`);
-
-    if (!ownerConsentApproved) {
-      installLog.push(`[ERROR] Sideload aborted: Missing explicit Owner Consent approval.`);
-      
-      await PrivilegedActionLedger.appendEntry({
-        eventType: 'APK_SIDELOAD_BLOCKED',
-        actor: technicianId,
-        details: JSON.stringify({ sessionId, packageName: apk.packageName, reason: 'MISSING_OWNER_CONSENT' }),
-        timestamp: Date.now(),
-      });
-
-      return {
-        sessionId,
-        apk,
-        targetDeviceId,
-        ownerConsentVerified: false,
-        status: 'BLOCKED_NO_CONSENT',
-        progressPercent: 0,
-        installLog,
-      };
-    }
-
-    installLog.push(`[CONSENT] Owner Consent verified for technician: ${technicianId}`);
-    installLog.push(`[ADB] $ adb shell pm install-create -r -t -g -S ${apk.fileSizeBytes}`);
-    installLog.push(`[ADB] Session Created: ID 9821415`);
-    installLog.push(`[ADB] $ adb shell pm install-write 9821415 base.apk ...`);
-    installLog.push(`[ADB] Streaming package packets over USB OTG bus (100%)`);
-    installLog.push(`[ADB] $ adb shell pm install-commit 9821415`);
-    installLog.push(`[SUCCESS] Success: Package ${apk.packageName} installed successfully.`);
+    const sessionId = `sideload-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
     const session: SideloadSession = {
       sessionId,
       apk,
       targetDeviceId,
-      ownerConsentVerified: true,
-      status: 'COMMITTED',
-      progressPercent: 100,
-      installLog,
+      ownerConsentVerified,
+      status: ownerConsentVerified ? 'QUEUED' : 'BLOCKED_NO_CONSENT',
+      progressPercent: 0,
     };
 
-    await PrivilegedActionLedger.appendEntry({
-      eventType: 'APK_SIDELOAD_COMPLETED',
-      actor: technicianId,
-      details: JSON.stringify({
-        sessionId,
-        packageName: apk.packageName,
-        versionCode: apk.versionCode,
-        sha256: apk.sha256Digest,
-      }),
-      timestamp: Date.now(),
-    });
+    this.activeSessions.set(sessionId, session);
+    return session;
+  }
 
+  /**
+   * Simulates streaming byte packets via ADB OTG connection
+   */
+  async streamApkChunk(sessionId: string, bytesTransferred: number): Promise<SideloadSession> {
+    const session = this.activeSessions.get(sessionId);
+    if (!session) {
+      throw new Error(`Sideload session ${sessionId} not found.`);
+    }
+
+    if (session.status === 'BLOCKED_NO_CONSENT' || session.status === 'FAILED') {
+      return session;
+    }
+
+    session.status = 'STREAMING_PACKETS';
+    const percent = Math.min(100, Math.floor((bytesTransferred / session.apk.fileSizeBytes) * 100));
+    session.progressPercent = percent;
+
+    if (percent === 100) {
+      session.status = 'VERIFYING_SIGNATURE';
+    }
+
+    return session;
+  }
+
+  /**
+   * Commits the APK installation session (`pm install-commit <session_id>`)
+   */
+  async commitInstallation(sessionId: string): Promise<SideloadSession> {
+    const session = this.activeSessions.get(sessionId);
+    if (!session) {
+      throw new Error(`Sideload session ${sessionId} not found.`);
+    }
+
+    if (session.progressPercent < 100) {
+      session.status = 'FAILED';
+      session.errorMessage = 'Installation commit aborted: Incomplete stream.';
+      return session;
+    }
+
+    session.status = 'COMMITTED';
     return session;
   }
 }

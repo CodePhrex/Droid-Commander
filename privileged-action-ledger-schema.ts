@@ -67,12 +67,28 @@ export const breakGlassTokens = sqliteTable('break_glass_tokens', {
 });
 
 // ----------------------------------------------------------------------------
-// Types
+// 3. Used Nonces Table Schema (Anti-Replay Security Store)
 // ----------------------------------------------------------------------------
+export const usedNonces = sqliteTable('used_nonces', {
+  nonce: text('nonce').primaryKey(),
+  consumedAt: integer('consumed_at').notNull(),
+});
+
+// ----------------------------------------------------------------------------
+// Types & Schema Aliases
+// ----------------------------------------------------------------------------
+export type PrivilegedActionLedger = typeof privilegedActionLedger;
 export type PrivilegedActionLedgerEntry = typeof privilegedActionLedger.$inferSelect;
 export type NewPrivilegedActionLedgerEntry = typeof privilegedActionLedger.$inferInsert;
+
 export type BreakGlassTokenRecord = typeof breakGlassTokens.$inferSelect;
 export type NewBreakGlassTokenRecord = typeof breakGlassTokens.$inferInsert;
+
+export type NewLedgerEntry = NewPrivilegedActionLedgerEntry;
+export type NewBreakGlassToken = NewBreakGlassTokenRecord;
+
+export type UsedNonce = typeof usedNonces.$inferSelect;
+export type NewUsedNonce = typeof usedNonces.$inferInsert;
 
 // ----------------------------------------------------------------------------
 // Cryptographic Hash & Ledger Integrity Helper Routines
@@ -143,4 +159,10 @@ CREATE TABLE IF NOT EXISTS \`break_glass_tokens\` (
 CREATE INDEX IF NOT EXISTS \`idx_bg_admin\` ON \`break_glass_tokens\` (\`admin_id\`);
 CREATE UNIQUE INDEX IF NOT EXISTS \`idx_bg_nonce\` ON \`break_glass_tokens\` (\`nonce\`);
 CREATE INDEX IF NOT EXISTS \`idx_bg_expiry\` ON \`break_glass_tokens\` (\`expires_at\`);
+
+-- Create Used Nonces Anti-Replay Table
+CREATE TABLE IF NOT EXISTS \`used_nonces\` (
+  \`nonce\` TEXT PRIMARY KEY NOT NULL,
+  \`consumed_at\` INTEGER NOT NULL
+);
 `;

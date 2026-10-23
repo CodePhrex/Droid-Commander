@@ -79,8 +79,8 @@ export const BreakGlassEmergencyScreen: React.FC = () => {
     setShowConfirmModal(false);
 
     try {
-      const success = await authService.activateEmergencyOverride(parsedToken);
-      if (success) {
+      const session = await authService.activateEmergencyOverride(parsedToken);
+      if (session && session.active) {
         Alert.alert(
           'Emergency Override Activated',
           `Break-glass session activated for Admin: ${parsedToken.adminId}. All operations will be strictly recorded in the Privileged Action Ledger.`,
@@ -158,7 +158,7 @@ export const BreakGlassEmergencyScreen: React.FC = () => {
 
           <Text style={styles.scopesTitle}>Active Emergency Scopes:</Text>
           <View style={styles.scopesContainer}>
-            {Array.from(activeSession.scopes).map((scope) => (
+            {[...activeSession.scopes].map((scope) => (
               <View key={scope} style={styles.scopePillActive}>
                 <Text style={styles.scopePillTextActive}>{scope}</Text>
               </View>
