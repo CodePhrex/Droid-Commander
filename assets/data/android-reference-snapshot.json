@@ -1,0 +1,3111 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-21T19:00:00.000Z",
+  "records": [
+    {
+      "id": "CVE-2025-48564",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2025-48565",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2025-48566",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-0008",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16, 16-qpr2.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-0010",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-0054",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-0065",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-0084",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16, 16-qpr2.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-27280",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28572",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16-qpr2.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16-qpr2"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28581",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28582",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28583",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28584",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28590",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28593",
+      "title": "Android Security Bulletin 2026-09-05",
+      "summary": "Fixed by Android security patch level 2026-09-05. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-05"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28594",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28596",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28599",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28600",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28602",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28603",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28604",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28606",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28607",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28609",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28611",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 15, 16.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 15",
+        "Android 16"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28612",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28613",
+      "title": "Android Security Bulletin 2026-09-05",
+      "summary": "Fixed by Android security patch level 2026-09-05. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-05"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28614",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28616",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "android"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28617",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28618",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28620",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28622",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28623",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28624",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28626",
+      "title": "Android Security Bulletin 2026-09-05",
+      "summary": "Fixed by Android security patch level 2026-09-05. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-05"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28627",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28630",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28631",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28633",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28634",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28636",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28638",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28639",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28642",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28644",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28650",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28652",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28653",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28655",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28656",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28657",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28658",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28660",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28662",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28663",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28664",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28667",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28668",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-28671",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-33636",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-45513",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-45515",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-45516",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-45517",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-45518",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-45519",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-45520",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-45521",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-45524",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-45525",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-45527",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-45528",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-45529",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-45531",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49878",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49879",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49880",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49881",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49882",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49884",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49885",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49887",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49895",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49913",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49918",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49919",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49921",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49926",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49927",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49932",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49933",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-49937",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-55256",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-55265",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-55266",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-55269",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-55270",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-55273",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-55277",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-55279",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-55280",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-55285",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-55286",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-55290",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-55294",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-58815",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-58822",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-58823",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-58834",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-58835",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-58839",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-58841",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-58854",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-58856",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-58859",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 17.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-58865",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-58874",
+      "title": "Android Security Bulletin 2026-09-01",
+      "summary": "Fixed by Android security patch level 2026-09-01. Official table lists updated AOSP versions: 14, 15, 16, 16-qpr2.",
+      "severity": "high",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 14",
+        "Android 15",
+        "Android 16",
+        "Android 16-qpr2"
+      ],
+      "patchedVersions": [
+        "2026-09-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-09-01",
+      "modifiedAt": "2026-09-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+      ]
+    },
+    {
+      "id": "CVE-2026-58880",
+      "title": "Android Security Bulletin 2026-10-01",
+      "summary": "Fixed by Android security patch level 2026-10-01. Official table lists updated AOSP versions: 16, 16-qpr2, 17.",
+      "severity": "critical",
+      "exploited": false,
+      "affectedProducts": [
+        "Android 16",
+        "Android 16-qpr2",
+        "Android 17"
+      ],
+      "patchedVersions": [
+        "2026-10-01"
+      ],
+      "sourceIds": [
+        "android-bulletin"
+      ],
+      "publishedAt": "2026-10-01",
+      "modifiedAt": "2026-10-01",
+      "references": [
+        "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+      ]
+    }
+  ],
+  "patches": [
+    {
+      "id": "android-2026-10-01",
+      "platform": "android",
+      "title": "Android Security Bulletin 2026-10-01",
+      "patchLevel": "2026-10-01",
+      "publishedAt": "2026-10-01",
+      "fixedCves": [
+        "CVE-2026-58865",
+        "CVE-2026-55270",
+        "CVE-2026-58815",
+        "CVE-2026-58841",
+        "CVE-2026-58854",
+        "CVE-2026-58856",
+        "CVE-2026-58834",
+        "CVE-2026-55269",
+        "CVE-2026-55280",
+        "CVE-2026-58835",
+        "CVE-2026-58880",
+        "CVE-2026-49933",
+        "CVE-2026-55265",
+        "CVE-2026-49878",
+        "CVE-2026-45513",
+        "CVE-2026-49880",
+        "CVE-2026-49885",
+        "CVE-2026-55286",
+        "CVE-2026-28667",
+        "CVE-2026-45516",
+        "CVE-2026-45524",
+        "CVE-2026-49937",
+        "CVE-2026-55266",
+        "CVE-2026-55279",
+        "CVE-2026-58859"
+      ],
+      "sourceId": "android-bulletin",
+      "url": "https://source.android.com/docs/security/bulletin/2026/2026-10-01"
+    },
+    {
+      "id": "android-2026-09-01",
+      "platform": "android",
+      "title": "Android Security Bulletin 2026-09-01",
+      "patchLevel": "2026-09-01",
+      "publishedAt": "2026-09-01",
+      "fixedCves": [
+        "CVE-2026-28664",
+        "CVE-2026-55273",
+        "CVE-2026-49932",
+        "CVE-2026-28609",
+        "CVE-2025-48564",
+        "CVE-2025-48566",
+        "CVE-2026-0010",
+        "CVE-2026-0065",
+        "CVE-2026-28572",
+        "CVE-2026-28594",
+        "CVE-2026-28599",
+        "CVE-2026-28607",
+        "CVE-2026-28612",
+        "CVE-2026-28614",
+        "CVE-2026-28620",
+        "CVE-2026-28631",
+        "CVE-2026-28642",
+        "CVE-2026-28644",
+        "CVE-2026-28650",
+        "CVE-2026-28655",
+        "CVE-2026-28656",
+        "CVE-2026-28657",
+        "CVE-2026-28658",
+        "CVE-2026-28663",
+        "CVE-2026-45518",
+        "CVE-2026-45528",
+        "CVE-2026-49887",
+        "CVE-2026-58874",
+        "CVE-2026-0054",
+        "CVE-2026-28602",
+        "CVE-2026-28660",
+        "CVE-2026-45521",
+        "CVE-2026-55290",
+        "CVE-2026-28584",
+        "CVE-2026-28596",
+        "CVE-2026-28633",
+        "CVE-2026-45527",
+        "CVE-2026-28604",
+        "CVE-2026-28618",
+        "CVE-2026-28639",
+        "CVE-2026-28662",
+        "CVE-2026-49882",
+        "CVE-2026-49884",
+        "CVE-2026-49919",
+        "CVE-2026-49921",
+        "CVE-2026-27280",
+        "CVE-2026-28590",
+        "CVE-2026-33636",
+        "CVE-2026-45515",
+        "CVE-2026-45531",
+        "CVE-2026-49879",
+        "CVE-2026-49918",
+        "CVE-2026-49927",
+        "CVE-2026-55277",
+        "CVE-2026-55285",
+        "CVE-2026-58823",
+        "CVE-2026-28653",
+        "CVE-2026-49926",
+        "CVE-2026-55256",
+        "CVE-2026-58822",
+        "CVE-2025-48565",
+        "CVE-2026-0008",
+        "CVE-2026-0084",
+        "CVE-2026-28583",
+        "CVE-2026-28600",
+        "CVE-2026-28603",
+        "CVE-2026-28606",
+        "CVE-2026-28611",
+        "CVE-2026-28624",
+        "CVE-2026-28634",
+        "CVE-2026-28636",
+        "CVE-2026-28668",
+        "CVE-2026-45520",
+        "CVE-2026-45529",
+        "CVE-2026-49881",
+        "CVE-2026-49913",
+        "CVE-2026-55294",
+        "CVE-2026-58839",
+        "CVE-2026-28581",
+        "CVE-2026-28582",
+        "CVE-2026-28622",
+        "CVE-2026-28623",
+        "CVE-2026-28627",
+        "CVE-2026-28630",
+        "CVE-2026-28638",
+        "CVE-2026-28652",
+        "CVE-2026-28671",
+        "CVE-2026-45517",
+        "CVE-2026-45519",
+        "CVE-2026-45525",
+        "CVE-2026-49895",
+        "CVE-2026-28617",
+        "CVE-2026-28616"
+      ],
+      "sourceId": "android-bulletin",
+      "url": "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+    },
+    {
+      "id": "android-2026-09-05",
+      "platform": "android",
+      "title": "Android Security Bulletin 2026-09-05",
+      "patchLevel": "2026-09-05",
+      "publishedAt": "2026-09-01",
+      "fixedCves": [
+        "CVE-2026-28593",
+        "CVE-2026-28613",
+        "CVE-2026-28626"
+      ],
+      "sourceId": "android-bulletin",
+      "url": "https://source.android.com/docs/security/bulletin/2026/2026-09-01"
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "nvd",
+      "role": "CVE records and affected-product context",
+      "url": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+      "recordCount": 0,
+      "status": "unavailable",
+      "error": "Not included in bundled Android reference; refresh requires network and source configuration"
+    },
+    {
+      "sourceId": "cisa-kev",
+      "role": "known exploited vulnerability prioritization",
+      "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+      "recordCount": 0,
+      "status": "unavailable",
+      "error": "Not included in bundled Android reference; refresh requires network and source configuration"
+    },
+    {
+      "sourceId": "osv",
+      "role": "open-source package and ecosystem matching",
+      "url": "https://api.osv.dev/v1/querybatch",
+      "recordCount": 0,
+      "status": "unavailable",
+      "error": "Not included in bundled Android reference; refresh requires network and source configuration"
+    },
+    {
+      "sourceId": "android-bulletin",
+      "role": "Android patch-level and platform bulletin coverage",
+      "url": "https://source.android.com/docs/security/bulletin",
+      "recordCount": 121,
+      "status": "unverified",
+      "fetchedAt": "2026-10-21T19:00:00.000Z",
+      "modifiedAt": "2026-10-21T19:00:00.000Z"
+    }
+  ],
+  "integrity": {
+    "transport": "https",
+    "signatureStatus": "not-configured"
+  },
+  "provenance": {
+    "kind": "bundled-android-reference",
+    "capturedAt": "2026-10-21T19:00:00.000Z",
+    "coverage": "October 2026 and September 2026 Android Security Bulletin CVE tables only",
+    "completeInventory": false,
+    "sourceDocuments": [
+      {
+        "filename": "android-bulletin-2026-10-01.html",
+        "url": "https://source.android.com/docs/security/bulletin/2026/2026-10-01",
+        "excerptSha256": "2135c95506c4c5de0f115b7bfed3df6073b54b05748307de9743b101c26908f3"
+      },
+      {
+        "filename": "android-bulletin-2026-09-split-excerpt.html",
+        "url": "https://source.android.com/docs/security/bulletin/2026/2026-09-01",
+        "excerptSha256": "7d53590dcaa45e3d6cd5e13ce633c38e0531b71bd5bc22a98e4cfe0a369163db"
+      }
+    ]
+  }
+}

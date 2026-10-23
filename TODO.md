@@ -9,12 +9,19 @@
 
 ## Local assessment and policy analysis are explicit and evidence-based
 
-- [x] The user can start a local assessment that presents device-security and vulnerability indicators with clear status and limitations.
-- [x] Security-policy analysis identifies risky or noncompliant settings without claiming unrestricted inspection of other apps or the operating system.
-- [x] Assessment rows distinguish findings that are observable from checks that are unavailable on a standard non-rooted device.
+- [ ] The user can start a local assessment that presents device-security and vulnerability indicators with clear status and limitations.
+- [ ] Security-policy analysis identifies risky or noncompliant settings without claiming unrestricted inspection of other apps or the operating system.
+- [ ] Assessment rows distinguish findings that are observable from checks that are unavailable on a standard non-rooted device.
+- [ ] Replace the fixed 72/78 dashboard score and seeded findings with actual local Android readings; display model, Android version, SDK, patch date, USB debugging, developer settings, secure-screen-lock state, USB Host capability, attached USB count, and scoped app install-request state. Missing or denied readings remain unknown, never false or clean.
+- [ ] Command and Assess use the same latest host assessment, disclose source and collection timestamp, and preserve actual read-only assessment reports locally; Sessions does not present sample handsets or fabricated consent as real activity.
+- [ ] A new native Android build includes the collector and is physically verified on the Galaxy A15. Previously downloaded APKs do not acquire new code automatically.
+- [ ] The vulnerability page cross-references the actual host Android version, firmware identity and reported patch date against cached vulnerability/patch references, distinguishes potential matches from reported fix coverage and insufficient evidence, and shows source age, signature state and coverage limitations without claiming an exploit has been executed or proven applicable.
+
+Source evidence (October 21, 2026): native local collector and USB inventory library Kotlin compile passed; 317 unit tests passed, one native-bound test skipped; TypeScript, lint and scoped regression checks passed. Actual reports/history, local-host/peer dispatcher, host CVE correlation and 121 dated offline Android references are implemented in source. The ARM64 sandbox cannot execute the x86-64 Hermes/AAPT2 tools for a full native release/instrumentation build. CI APK assembly, signing and physical Galaxy A15 verification remain distinct pending gates; no old installed APK has been updated by these source edits.
 
 ## Active exercises require scope and authorization
 
+- [ ] This device (host) and connected-device scopes share the same reviewed operation definitions. The dispatcher binds each request to its exact selected device, never falls back to the other device, and applies the same consent/provider checks to privileged operations. Missing device capabilities explain their actual limits rather than appearing successful.
 - [x] Every active exercise requires an explicit target scope and authorization record.
 - [ ] The authorization context is visible in the training flow and associated with the resulting session.
 - [x] The prototype provides a safe, educational exercise path without real exploit payloads or arbitrary remote code execution.
@@ -89,6 +96,7 @@
 ## USB Link connection-management screen
 
 - [x] A dedicated React Native screen provides USB Host readiness, discovery, device cards, permission state, connection lifecycle, transport event status, and safe-operation boundary messaging.
+- [ ] USB Link distinguishes actual host-feature status, unfiltered attached-device inventory, configured approved-profile matches and authenticated command readiness; module presence is never presented as hardware or session validation.
 - [x] The screen calls the local Expo USB Host module for discovery, Android permission requests, bounded connection, close/teardown, and native transport-event updates.
 - [x] The bridge degrades safely to an explicit custom-build-required state when the native module is unavailable on web, Expo Go, or another unsupported platform.
 - [x] The screen is wired to live native-module events.

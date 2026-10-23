@@ -2,7 +2,9 @@ import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { ScreenContainer } from "@/components/screen-container";
-import { assessments, palette, statusLabel, type AssessmentStatus } from "@/constants/commander";
+import { HostInformation } from "@/components/host-information";
+import { palette, statusLabel, type AssessmentStatus } from "@/constants/commander";
+import { useLocalAssessment } from "@/hooks/use-local-assessment";
 
 const statusColors: Record<AssessmentStatus, { text: string; fill: string }> = {
   critical: { text: palette.red, fill: "#FCECEB" },
@@ -12,9 +14,10 @@ const statusColors: Record<AssessmentStatus, { text: string; fill: string }> = {
 };
 
 export default function AssessmentsScreen() {
-  const [running, setRunning] = useState(false);
-  const [completed, setCompleted] = useState(false);
-  const [selected, setSelected] = useState("security-patch");
+  const { report, phase, error, storageWarning, cached, runAssessment } = useLocalAssessment();
+  const running = phase === "running";
+  const assessments = report?.checks ?? [];
+  const [selected, setSelected] = useState("securityPatch");
 
   return (
     <ScreenContainer containerClassName="bg-[#F5F3EE]" safeAreaClassName="bg-[#F5F3EE]">
@@ -29,37 +32,35 @@ export default function AssessmentsScreen() {
           <View style={styles.modeTop}>
             <View>
               <Text style={styles.modeLabel}>ASSESSMENT MODE</Text>
-              <Text style={styles.modeTitle}>{completed ? "Verification complete" : "Standard device / non-rooted"}</Text>
+              <Text style={styles.modeTitle}>{running ? "Reading this device" : report ? cached ? "Saved host evidence" : "Host readings collected" : "Host not assessed"}</Text>
             </View>
-            <View style={styles.modeBadge}><Text style={styles.modeBadgeText}>LOCAL</Text></View>
+            <View style={styles.modeBadge}><Text style={styles.modeBadgeText}>THIS DEVICE</Text></View>
           </View>
           <Text style={styles.modeDetail}>
-            {completed
-              ? "The demo loop updated one signal. Native adapters will replace these representative observations."
-              : "No backend, root access, or device-owner privileges are assumed in this mode."}
+            {report
+              ? `Source: Android native APIs. Collected ${report.collectedAt}. No connected target was assessed.`
+              : "Read device identity, firmware and observable settings directly from this Android host. No backend, root grant, ADB or target is required."}
           </Text>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={running ? "Reading local signals" : completed ? "Run assessment again" : "Run local assessment"}
+            accessibilityLabel={running ? "Reading local signals" : "Run actual local host assessment"}
             accessibilityState={{ disabled: running }}
             disabled={running}
-            onPress={() => {
-              setRunning(true);
-              setTimeout(() => {
-                setRunning(false);
-                setCompleted(true);
-              }, 550);
-            }}
+            onPress={() => void runAssessment()}
             style={({ pressed }) => [styles.runButton, pressed && styles.pressed, running && styles.runningButton]}
           >
-            <Text style={styles.runButtonText}>{running ? "Reading local signals…" : completed ? "Run again" : "Run assessment"}</Text>
+            <Text style={styles.runButtonText}>{running ? "Reading local signals…" : report ? "Refresh host readings" : "Run host assessment"}</Text>
             <Text style={styles.runButtonArrow}>→</Text>
           </Pressable>
         </View>
 
+        {error ? <Text accessibilityRole="alert" style={styles.detail}>{error}</Text> : null}
+        {storageWarning ? <Text accessibilityRole="alert" style={styles.detail}>{storageWarning}</Text> : null}
+        <HostInformation report={report} />
+
         <View style={styles.headerRow}>
           <Text style={styles.sectionTitle}>Check manifest</Text>
-          <Text style={styles.sectionMeta}>4 OBSERVATIONS</Text>
+          <Text style={styles.sectionMeta}>{assessments.length} CHECKS</Text>
         </View>
 
         {assessments.map((item, index) => {
@@ -82,8 +83,8 @@ export default function AssessmentsScreen() {
                   <Text style={styles.checkTitle}>{item.label}</Text>
                   <View style={[styles.status, { backgroundColor: colors.fill }]}><Text style={[styles.statusText, { color: colors.text }]}>{statusLabel(item.status)}</Text></View>
                 </View>
-                {expanded ? <Text style={styles.detail}>{item.detail}</Text> : <Text style={styles.collapsed}>{item.category.toUpperCase()} SIGNAL</Text>}
-                {expanded ? <Text style={styles.action}>{item.action} →</Text> : null}
+                {expanded ? <Text selectable style={styles.detail}>Value: {item.value}{`\n`}{item.detail}{`\n`}Evidence: {item.source}{`\n`}Limitation: {item.limitation}</Text> : <Text style={styles.collapsed}>{item.value}</Text>}
+                {expanded ? <Text style={styles.action}>{item.action}</Text> : null}
               </View>
               <Text style={styles.chevron}>{expanded ? "⌃" : "⌄"}</Text>
             </Pressable>

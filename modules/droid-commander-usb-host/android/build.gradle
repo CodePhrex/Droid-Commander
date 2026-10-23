@@ -3,7 +3,7 @@ apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
   namespace 'com.droidcommander.usb'
-  compileSdkVersion project.ext.has('compileSdkVersion') ? project.ext.compileSdkVersion : 35
+  compileSdkVersion rootProject.ext.has('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 36
 
   defaultConfig {
     minSdkVersion 24

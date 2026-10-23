@@ -45,6 +45,11 @@ class DroidCommanderUsbHostModule : Module() {
       }
     }
 
+    AsyncFunction("getUsbDiagnostics") {
+      val context = appContext.reactContext ?: return@AsyncFunction null
+      UsbInventoryCollector(context).collect()
+    }
+
     AsyncFunction("requestPermission") { deviceName: String ->
       adapter?.requestPermission(deviceName) ?: false
     }
@@ -107,6 +112,11 @@ class DroidCommanderUsbHostModule : Module() {
     AsyncFunction("collectBootState") {
       val context = appContext.reactContext ?: error("React context unavailable")
       BootStateCollector(context).collect()
+    }
+
+    AsyncFunction("collectLocalDeviceState") {
+      val context = appContext.reactContext ?: return@AsyncFunction null
+      LocalDeviceCollector(context).collect()
     }
 
     AsyncFunction("collectDebugState") {
