@@ -1,0 +1,61 @@
+{
+  "expo": {
+    "name": "Droid Commander",
+    "slug": "droid-commander",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon-circular-dc-emblem.png",
+    "scheme": "droidcommander",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0D1117",
+    "primaryColor": "#388BFD",
+    "splash": {
+      "image": "./assets/splash-circuit-dc-emblem.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0D1117"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.codephrex.droidcommander"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon-dc-cp.png",
+        "backgroundColor": "#0D1117"
+      },
+      "package": "com.codephrex.droidcommander",
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.HARDWARE_TEST",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT",
+        "android.permission.MANAGE_USB"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon-dc-cp.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0D1117",
+          "image": "./assets/splash-circuit-dc-emblem.png",
+          "imageWidth": 200
+        }
+      ],
+      "expo-local-authentication"
+    ],
+    "extra": {
+      "brandIdentity": {
+        "developer": "CodePhrex",
+        "appTitle": "Droid Commander",
+        "theme": "Brushed Carbon & Cybernetic Metallic"
+      }
+    }
+  }
+}

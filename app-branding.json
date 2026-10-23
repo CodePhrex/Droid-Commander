@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "Droid Commander",
+    "slug": "droid-commander",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon-circular-192x192.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash-hero-banner.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0D1117"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.codephrex.droidcommander"
+    },
+    "android": {
+      "package": "com.codephrex.droidcommander",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon-dc-cp.png",
+        "backgroundColor": "#0D1117"
+      },
+      "permissions": [
+        "android.permission.USB_PERMISSION",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT",
+        "android.permission.MANAGE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon-dc-48x48.png",
+      "themeColor": "#0D1117",
+      "backgroundColor": "#0D1117"
+    },
+    "extra": {
+      "developer": "CodePhrex",
+      "branding": {
+        "logoSymbol": "DC Metallic Circuit Emblem",
+        "subBadge": "CP",
+        "theme": "Dark Brushed Carbon & Cyber Steel"
+      }
+    }
+  }
+}

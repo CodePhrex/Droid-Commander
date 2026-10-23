@@ -1,76 +1,79 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+# ==============================================================================
+# DROID COMMANDER - GITIGNORE & SENSITIVE FILE EXCLUSION RULES
+# ==============================================================================
 
-# dependencies
-node_modules/
-.pnpm-store/
-*.manus-starter-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]
-
-# Expo
-.expo/
-dist/
-web-build/
-expo-env.d.ts
-
-# Native
-.kotlin/
-**/.gradle/
-**/.cxx/
-**/build/
-**/local.properties
-*.apk
-*.aab
-*.orig.*
-*.jks
-*.keystore
-*.p8
-*.p12
-*.key
-*.mobileprovision
-
-# Metro
-.metro-health-check*
-
-# debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
-
-# macOS
-.DS_Store
-*.pem
-
-# local env files
+# ------------------------------------------------------------------------------
+# 1. Environment Configurations & Secrets
+# ------------------------------------------------------------------------------
 .env
 .env.*
-!.env.example
-.env*.local
+env-config.env
+*.env
+*.pem
+*.key
+*.pk8
+*.keystore
+*.jks
+*.p12
+*.crt
+*_private_key.*
 
-# typescript
-*.tsbuildinfo
+# ------------------------------------------------------------------------------
+# 2. Release Bundles, Archives & Binaries
+# ------------------------------------------------------------------------------
+*.zip
+*.tar.gz
+*.tgz
+*.rar
+*.apk
+*.aab
+*.jar
+*.so
+droid-commander-v1.0.0-release.zip
+droid-commander-v1.0.0-src.zip
 
-app-example
-
-# generated native folders
-/ios
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Logs
-logs
+# ------------------------------------------------------------------------------
+# 3. Local SQLite Databases, Vault Archives & Forensic Logs
+# ------------------------------------------------------------------------------
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+knowledge_vault.db
+offline_vault/
+telemetry_archives/
 *.log
 
-# OS
+# ------------------------------------------------------------------------------
+# 4. Build Outputs, Dependencies & Caches
+# ------------------------------------------------------------------------------
+node_modules/
+.expo/
+.expo-shared/
+dist/
+build/
+bin/
+out/
+.gradle/
+build/
+app/build/
+ios/Pods/
+ios/build/
+*.pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ------------------------------------------------------------------------------
+# 5. OS & IDE Metadata
+# ------------------------------------------------------------------------------
+.DS_Store
 Thumbs.db
-
-# Build files
-*.tgz
-*.tar.gz
-.cache/
-
-# Webdev artifacts (checkpoint zips, migrations, etc.)
-.webdev/
+.idea/
+.vscode/
+*.swp
+*.swo
+.project
+.classpath
+.settings/
