@@ -1,6 +1,8 @@
 name: Droid Commander Production Android Build, Signing & Security Scanning
 
 on:
+  pull_request:
+    types: [opened, synchronize, reopened]
   push:
     tags:
       - 'v*.*.*'
