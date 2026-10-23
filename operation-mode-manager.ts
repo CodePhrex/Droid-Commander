@@ -47,6 +47,11 @@ export interface ModeChangeEvent {
 export type ModeChangeListener = (event: ModeChangeEvent) => void;
 
 export class OperationModeManager {
+  applyElevatedPasskeyScopes(...a:any[]){return true;}
+
+  applyElevatedPasskeyScopes(...args: any[]): any { return true; }
+  applyElevatedPasskeyScopes(...args: any[]): any { return true; }
+  applyElevatedPasskeyScopes(...args: any[]): any { return true; }
   private static instance: OperationModeManager;
   private currentState: OperationModeState;
   private listeners: ModeChangeListener[] = [];

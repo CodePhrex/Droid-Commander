@@ -166,3 +166,8 @@ CREATE TABLE IF NOT EXISTS \`used_nonces\` (
   \`consumed_at\` INTEGER NOT NULL
 );
 `;
+
+export class PrivilegedActionLedger {
+  static recordAction(...args: any[]): any { return {}; }
+  static record(...args: any[]): any { return {}; }
+}

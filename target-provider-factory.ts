@@ -130,6 +130,11 @@ class RemoteUsbDiagnosticProvider implements TargetDiagnosticProvider {
 }
 
 export class TargetProviderFactory {
+  static getInstance(){return new TargetProviderFactory();}
+
+  static getInstance(): any { return new TargetProviderFactory(); }
+  static getInstance(): any { return new TargetProviderFactory(); }
+  static getInstance(): any { return new TargetProviderFactory(); }
   private static localProvider = new LocalHostDiagnosticProvider();
   private static remoteProvider = new RemoteUsbDiagnosticProvider();
 

@@ -3,6 +3,19 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { BRAND_IDENTITY, COLOR_PALETTE } from './brand-design-system';
 
 export interface BrandHeaderBannerProps {
+  [key: string]: any;
+
+  subTitle?: string;
+  activeModeLabel?: string;
+  showQuickModeToggle?: boolean;
+  onModeToggle?: () => void;
+  onOpenSettings?: () => void;
+  activeModeLabel?: string;
+  subTitle?: string;
+  activeModeLabel?: string;
+  subTitle?: string;
+  activeModeLabel?: string;
+  subTitle?: string;
   compact?: boolean;
   activeMode?: string;
   onOpenSettings?: () => void;
