@@ -9,6 +9,7 @@ LOOPBACK_IPS.addSubnet("::ffff:127.0.0.0", 104, "ipv6");
 function configuredOrigin(name: "EXPO_PACKAGER_PROXY_URL" | "EXPO_WEB_PREVIEW_URL"): string | null {
   const value = process.env[name];
   if (!value) return null;
+
   try {
     const url = new URL(value);
     return (url.protocol === "https:" || url.protocol === "http:") && url.origin === value
@@ -27,35 +28,21 @@ function pairedPreviewOrigin(packagerOrigin: string): string | null {
   return url.origin;
 }
 
-export function trustedExpoWebOrigins(): Set<string> {
-  const origins = new Set<string>();
-  const packager = configuredOrigin("EXPO_PACKAGER_PROXY_URL");
-  const preview = configuredOrigin("EXPO_WEB_PREVIEW_URL");
-  // Loopback origins are request-local below. Never put one in this process-wide set: the
-  // same starter can also be reached through a remote API host.
-  for (const configured of [packager, preview]) {
-    if (configured && !originHasLoopbackHostname(configured)) origins.add(configured);
-  }
-  // Backward-compatible production fallback while every runtime starts injecting the explicit
-  // 8328 origin. Localhost cannot use hostname prefix derivation and is handled only by exact env.
-  if (packager && !originHasLoopbackHostname(packager)) {
-    const paired = pairedPreviewOrigin(packager);
-    if (paired) origins.add(paired);
-  }
-  return origins;
+function normalizeHostname(hostname: string): string {
+  return hostname.trim().toLowerCase().replace(/^\[|\]$/g, "").replace(/\.+$/, "");
 }
 
 export function isLoopbackApiHost(hostname: string): boolean {
-  const normalized = hostname
-    .trim()
-    .toLowerCase()
-    .replace(/^\[|\]$/g, "")
-    .replace(/\.+$/, "");
+  const normalized = normalizeHostname(hostname);
+  if (!normalized) return false;
+
   if (normalized === "localhost" || normalized.endsWith(".localhost")) {
     return true;
   }
+
   const family = isIP(normalized);
   if (family === 0) return false;
+
   return LOOPBACK_IPS.check(normalized, family === 4 ? "ipv4" : "ipv6");
 }
 
@@ -67,13 +54,36 @@ function originHasLoopbackHostname(origin: string): boolean {
   }
 }
 
+export function trustedExpoWebOrigins(): Set<string> {
+  const origins = new Set<string>();
+  const packager = configuredOrigin("EXPO_PACKAGER_PROXY_URL");
+  const preview = configuredOrigin("EXPO_WEB_PREVIEW_URL");
+
+  // Never let loopback or localhost-like origins into the shared allowlist.
+  for (const configured of [packager, preview]) {
+    if (configured && !originHasLoopbackHostname(configured)) {
+      origins.add(configured);
+    }
+  }
+
+  if (packager && !originHasLoopbackHostname(packager)) {
+    const paired = pairedPreviewOrigin(packager);
+    if (paired) origins.add(paired);
+  }
+
+  return origins;
+}
+
 function configuredLocalExpoWebOrigins(): Set<string> {
   const origins = new Set<string>();
   for (const name of ["EXPO_PACKAGER_PROXY_URL", "EXPO_WEB_PREVIEW_URL"] as const) {
     const origin = configuredOrigin(name);
     if (!origin) continue;
+
     const url = new URL(origin);
-    if (url.protocol === "http:" && isLoopbackApiHost(url.hostname)) origins.add(origin);
+    if (url.protocol === "http:" && isLoopbackApiHost(url.hostname)) {
+      origins.add(origin);
+    }
   }
   return origins;
 }
@@ -86,36 +96,45 @@ export function createCorsMiddleware(
     const origin = req.headers.origin;
     res.vary("Origin");
 
-    // Native Expo requests do not carry Origin and authenticate with a Bearer token.
+    // Native requests do not carry Origin; they must remain separate from web CORS.
     if (!origin) {
       next();
       return;
     }
+
+    let parsedOrigin: URL | null = null;
+    try {
+      parsedOrigin = new URL(origin);
+    } catch {
+      res.status(403).json({ error: "origin_not_allowed" });
+      return;
+    }
+
     const loopbackOrigin = originHasLoopbackHostname(origin);
     const allowedLocalOrigin =
-      localApiRequest(req.hostname) && configuredLocalExpoWebOrigins().has(origin);
+      !loopbackOrigin &&
+      localApiRequest(req.hostname) &&
+      configuredLocalExpoWebOrigins().has(origin);
+
     const allowedConfiguredOrigin =
-      !loopbackOrigin && allowedOrigins.has(origin);
+      !loopbackOrigin &&
+      allowedOrigins.has(origin);
+
     if (!allowedConfiguredOrigin && !allowedLocalOrigin) {
       res.status(403).json({ error: "origin_not_allowed" });
       return;
     }
 
-    // nosemgrep
-res.header("Access-Control-Allow-Origin", origin); // nosemgrep: javascript.express.security.cors-misconfiguration.cors-misconfiguration
-    res.header(
-      "Access-Control-Allow-Methods",
-      "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-    );
-    res.header(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Accept, Authorization, X-Requested-With",
-    );
+    res.header("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Accept, Authorization, X-Requested-With");
     res.header("Access-Control-Allow-Credentials", "true");
+
     if (req.method === "OPTIONS") {
       res.sendStatus(204);
       return;
     }
+
     next();
   };
 }
