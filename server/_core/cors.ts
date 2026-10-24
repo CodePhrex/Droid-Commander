@@ -99,20 +99,26 @@ export function createCorsMiddleware(
       return;
     }
 
-    const loopbackOrigin = originHasLoopbackHostname(origin);
+    const normalizedOrigin = parsedOrigin.origin;
+    if (normalizedOrigin === "null" || origin !== normalizedOrigin) {
+      res.status(403).json({ error: "origin_not_allowed" });
+      return;
+    }
+
+    const loopbackOrigin = originHasLoopbackHostname(normalizedOrigin);
     const allowedLocalOrigin =
       localApiRequest(req.hostname) &&
-      configuredLocalExpoWebOrigins().has(origin);
+      configuredLocalExpoWebOrigins().has(normalizedOrigin);
     const allowedConfiguredOrigin =
       !loopbackOrigin &&
-      allowedOrigins.has(origin);
+      allowedOrigins.has(normalizedOrigin);
 
     if (!allowedConfiguredOrigin && !allowedLocalOrigin) {
       res.status(403).json({ error: "origin_not_allowed" });
       return;
     }
 
-    res.header("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Origin", normalizedOrigin);
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type, Accept, Authorization, X-Requested-With");
     res.header("Access-Control-Allow-Credentials", "true");
