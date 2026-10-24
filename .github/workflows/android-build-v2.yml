@@ -135,9 +135,9 @@ jobs:
       - name: Execute Gradle Release Build
         env:
           ANDROID_KEYSTORE_PATH: /tmp/production_release.keystore
-          KEYSTORE_PASSWORD: ${{ secrets.PROD_KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.PROD_KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.PROD_KEY_PASSWORD }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.PROD_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.PROD_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.PROD_KEY_PASSWORD }}
         run: |
           cd android
           ./gradlew assembleRelease bundleRelease --stacktrace
