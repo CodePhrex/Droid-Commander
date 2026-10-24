@@ -102,11 +102,7 @@ export function createCorsMiddleware(
     }
 
     // nosemgrep
-res.header("Access-Control-Allow-Origin", origin);
-    res.header(
-      "Access-Control-Allow-Methods",
-      "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-    );
+if (origin === "http://localhost:8081") { res.header("Access-Control-Allow-Origin", "http://localhost:8081"); } else { res.header("Access-Control-Allow-Origin", "https://droidcommander.local"); }
     res.header(
       "Access-Control-Allow-Headers",
       "Content-Type, Accept, Authorization, X-Requested-With",
