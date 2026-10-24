@@ -1,11 +1,9 @@
 /**
- * Droid Commander - Cellular Radio & Dual-SIM Telemetry Engine
+ * Droid Commander - Cellular Telemetry & Carrier Provisioning Engine
  * File: lib/cellular-telemetry-engine.ts
  */
 
 import { PrivilegedActionLedger } from './privileged-action-ledger-schema';
-
-export type SimSlotIndex = 0 | 1;
 
 export type SimSlotState =
   | 'ABSENT'
@@ -15,292 +13,193 @@ export type SimSlotState =
   | 'CARRIER_LOCKED'
   | 'PERM_DISABLED';
 
-export type CarrierEntitlementType =
-  | 'UNLOCKED'
-  | 'NETWORK_SUBSIDY'
-  | 'NETWORK_SUBSET'
-  | 'SERVICE_PROVIDER'
-  | 'CORPORATE'
-  | 'SIM_PIN'
-  | 'SIM_PUK'
-  | 'UNKNOWN';
-
-export type CellularNetworkGeneration =
-  | '5G_SA'
-  | '5G_NSA'
-  | 'LTE'
-  | '3G'
-  | '2G'
-  | 'NO_SERVICE';
-
-export interface SignalMetrics {
-  rsrpDbm: number;
-  rsrqDb: number;
-  rssiDbm: number;
-  sinrDb: number;
-  signalBars: number;
-}
-
-export interface CarrierProfile {
-  carrierId: number;
-  carrierName: string;
-  mccMnc: string;
-  countryIso: string;
-}
-
-export interface ApnSettings {
-  apnName: string;
-  apnType: string;
-  protocol: 'IPv4' | 'IPv6' | 'IPv4v6';
-  isEditable: boolean;
+export interface CarrierLockInfo {
+  isLocked: boolean;
+  lockType: 'NCK' | 'NSCK' | 'SPCK' | 'CCK' | 'NONE';
+  lockingMccMnc: string; // e.g., "310-410"
+  lockingOperatorName: string;
+  attemptsRemaining: number;
 }
 
 export interface SimSlotTelemetry {
-  slotIndex: SimSlotIndex;
+  slotId: number;
   slotState: SimSlotState;
-  carrierEntitlementType: CarrierEntitlementType;
-  cardIdentifierMasked: string;
-  carrier?: CarrierProfile;
-  networkGeneration: CellularNetworkGeneration;
-  signalMetrics: SignalMetrics;
-  attemptsRemaining: number;
-  isCounterExhausted: boolean;
-  activeApu?: ApnSettings;
-  statusMessage?: string;
+  iccidMasked: string;
+  carrierName: string;
+  mccMnc: string;
+  networkGeneration: '5G_SA' | '5G_NSA' | 'LTE' | '3G' | 'NONE';
+  signalQuality: {
+    rsrpDbm: number;
+    rsrqDb: number;
+    rssiDbm: number;
+    signalLevelBars: number; // 0-4
+  };
+  carrierLockInfo?: CarrierLockInfo;
 }
 
-export interface SubsidyValidationResult {
-  success: boolean;
-  slotIndex: SimSlotIndex;
-  attemptsRemaining: number;
-  newSlotState: SimSlotState;
-  newEntitlementType: CarrierEntitlementType;
-  statusMessage: string;
-{
+export interface HostCellularTelemetry {
+  deviceId: string;
+  isRadioOn: boolean;
+  slots: SimSlotTelemetry[];
+  activeDataSlotId: number;
+  timestamp: number;
+}
+
+export interface ApnConfiguration {
+  apnName: string;
+  apnAddress: string;
+  mcc: string;
+  mnc: string;
+  protocol: 'IPv4' | 'IPv6' | 'IPv4v6';
+}
 
 export class CellularTelemetryEngine {
-  private slots: SimSlotTelemetry[] = [];
+  private telemetryState: HostCellularTelemetry;
 
-  constructor(initialSlots?: SimSlotTelemetry[]) {
-    this.slots = initialSlots && initialSlots.length > 0
-      ? initialSlots
-      : this.getDefaultSimSlotTelemetry();
-  }
-
-  public getSlotTelemetry(slotIndex: SimSlotIndex): SimSlotTelemetry | undefined {
-    return this.slots.find((s) => s.slotIndex === slotIndex);
-  }
-
-  public getAllSlotsTelemetry(): SimSlotTelemetry[] {
-    return [...this.slots];
-  }
-
-  public async executeDiagnostics(): Promise<SimSlotTelemetry[]> {
-    for (const slot of this.slots) {
-      if (slot.slotState === 'CARRIER_LOCKED' && slot.attemptsRemaining <= 0) {
-        slot.isCounterExhausted = true;
-      }
-    }
-
-    try {
-      await PrivilegedActionLedger.recordAction('CELLULAR_DIAGNOSTIC_PERFORMED', {
-        slotCount: this.slots.length,
-        slot0State: this.slots[0]?.slotState,
-        slot1State: this.slots[1]?.slotState,
-        timestamp: Date.now(),
-      });
-    } catch (e) {}
-
-    return this.getAllSlotsTelemetry();
-  }
-
-  public async submitCarrierToken(
-    slotIndex: SimSlotIndex,
-    validationKey: string
-  ): Promise<SubsidyValidationResult> {
-    const slot = this.getSlotTelemetry(slotIndex);
-
-    if (!slot) {
-      return {
-        success: false,
-        slotIndex,
-        attemptsRemaining: 0,
-        newSlotState: 'ABSENT',
-        newEntitlementType: 'UNKNOWN',
-        statusMessage: 'Specified SIM slot not found.',
-      };
-    }
-
-    if (slot.slotState !== 'CARRIER_LOCKED' && slot.carrierEntitlementType === 'UNLOCKED') {
-      return {
-        success: true,
-        slotIndex,
-        attemptsRemaining: slot.attemptsRemaining,
-        newSlotState: slot.slotState,
-        newEntitlementType: 'UNLOCKED',
-        statusMessage: 'SIM slot is already active and unlocked.',
-      };
-    }
-
-    if (slot.isCounterExhausted || slot.attemptsRemaining <= 0) {
-      return {
-        success: false,
-        slotIndex,
-        attemptsRemaining: 0,
-        newSlotState: slot.slotState,
-        newEntitlementType: slot.carrierEntitlementType,
-        statusMessage: 'Modem key counter exhausted. Contact network provider.',
-      };
-    }
-
-    const trimmedKey = validationKey.trim();
-    const isValidFormat = /^[0-9]{8,16}$/.test(trimmedKey);
-
-    if (!isValidFormat) {
-      return {
-        success: false,
-        slotIndex,
-        attemptsRemaining: slot.attemptsRemaining,
-        newSlotState: slot.slotState,
-        newEntitlementType: slot.carrierEntitlementType,
-        statusMessage: 'Invalid key format. Tokens must be 8 to 16 numeric digits.',
-      };
-    }
-
-    const isValidToken = trimmedKey.length >= 8 && trimmedKey.endsWith('87654321');
-
-    if (isValidToken) {
-      slot.slotState = 'READY';
-      slot.carrierEntitlementType = 'UNLOCKED';
-      slot.statusMessage = 'Subsidy code accepted by modem. Carrier restriction removed.';
-
-      try {
-        await PrivilegedActionLedger.recordAction('SUBSIDY_KEY_ACCEPTED', {
-          slotIndex,
-          timestamp: Date.now(),
-        });
-      } catch (e) {}
-
-      return {
-        success: true,
-        slotIndex,
-        attemptsRemaining: slot.attemptsRemaining,
-        newSlotState: 'READY',
-        newEntitlementType: 'UNLOCKED',
-        statusMessage: 'Subsidy validation successful. Device open for compatible networks.',
-      };
-    } else {
-      slot.attemptsRemaining -= 1;
-      if (slot.attemptsRemaining <= 0) {
-        slot.isCounterExhausted = true;
-      }
-
-      try {
-        await PrivilegedActionLedger.recordAction('SUBSIDY_KEY_REJECTED', {
-          slotIndex,
-          attemptsRemaining: slot.attemptsRemaining,
-          timestamp: Date.now(),
-        });
-      } catch (e) {}
-
-      return {
-        success: false,
-        slotIndex,
-        attemptsRemaining: slot.attemptsRemaining,
-        newE6lotState: slot.slotState,
-        newEntitlementType: slot.carrierEntitlementType,
-        statusMessage: `Incorrect key. ${slot.attemptsRemaining} attempt(s) remaining.`,
-      };
-    }
-  }
-
-  public async provisionApn(
-    slotIndex: SimSlotIndex,
-    apn: ApnSettings
-  ): Promise<{success: boolean; message: string}> {
-    const slot = this.getSlotTelemetry(slotIndex);
-
-    if (!slot || slot.slotState === 'ABSENT') {
-      return { success: false, message: 'SIM slot absent or invalid.' };
-    }
-
-    if (slot.slotState === 'CARRIER_LOCKED') {
-      return {
-        success: false,
-        message: 'Cannot provision APN while slot is carrier locked.',
-      };
-    }
-
-    slot.activeApn = apn;
-
-    try {
-      await PrivilegedActionLedger.recordAction('APN_PROVISIONED', {
-        slotIndex,
-        apnName: apn.apnName,
-        apnType: apn.apnDype,
-        protocol: apn.protocol,
-        timestamp: Date.now(),
-      });
-    } catch (e) {}
-
-    return {
-      success: true,
-      message: `Successfully provisioned APN (${apn.apnName}) for SIM Slot ${slotIndex + 1}.`,
+  constructor() {
+    this.telemetryState = {
+      deviceId: 'HOST_CELLULAR_01',
+      isRadioOn: true,
+      activeDataSlotId: 1,
+      slots: [
+        {
+          slotId: 1,
+          slotState: 'CARRIER_LOCKED',
+          iccidMasked: '8901410321******1234',
+          carrierName: 'Verizon Wireless (Locked)',
+          mccMnc: '310-410',
+          networkGeneration: '5G_NSA',
+          signalQuality: {
+            rsrpDbm: -92,
+            rsrqDb: -11,
+            rssiDbm: -75,
+            signalLevelBars: 3,
+          },
+          carrierLockInfo: {
+            isLocked: true,
+            lockType: 'NCK',
+            lockingMccMnc: '310-410',
+            lockingOperatorName: 'Verizon Wireless',
+            attemptsRemaining: 5,
+          },
+        },
+        {
+          slotId: 2,
+          slotState: 'READY',
+          iccidMasked: '8901260456******5678',
+          carrierName: 'T-Mobile US',
+          mccMnc: '310-260',
+          networkGeneration: '5G_SA',
+          signalQuality: {
+            rsrpDbm: -84,
+            rsrqDb: -8,
+            rssiDbm: -68,
+            signalLevelBars: 4,
+          },
+          carrierLockInfo: {
+            isLocked: false,
+            lockType: 'NONE',
+            lockingMccMnc: '',
+            lockingOperatorName: '',
+            attemptsRemaining: 10,
+          },
+        },
+      ],
+      timestamp: Date.now(),
     };
   }
 
-  private getDefaultSimSlotTelemetry(): SimSlotTelemetry[] {
-    return [
-      {
-        slotIndex: 0,
-        slotState: 'READY',
-        carrierEntitlementType: 'UNLOCKED',
-        cardIdentifierMasked: 'SIM_CARD_MASKED_001',
-        carrier: {
-          carrierId: 1,
-          carrierName: 'T-Mobile USA',
-          mccMnc: '310260',
-          countryIso: 'us',
-        },
-        networkGeneration: '5G_SA',
-        signalMetrics: {
-          rsrpDbm: -85,
-          rsrqDb: -10,
-          rssiDbm: -65,
-          sinrDb: 18,
-          signalBars: 4,
-        },
+  public async getTelemetry(): Promise<HostCellularTelemetry> {
+    return { ...this.telemetryState, timestamp: Date.now() };
+  }
+
+  public async submitCarrierToken(
+    slotId: number,
+    unlockToken: string
+  ): Promise<{ success: boolean; attemptsRemaining: number; newSlotState: SimSlotState; message: string }> {
+    const slot = this.telemetryState.slots.find((s) => s.slotId === slotId);
+    if (!slot || !slot.carrierLockInfo) {
+      return { success: false, attemptsRemaining: 0, newSlotState: 'ABSENT', message: 'Slot not found' };
+    }
+
+    if (!slot.carrierLockInfo.isLocked) {
+      return {
+        success: true,
+        attemptsRemaining: slot.carrierLockInfo.attemptsRemaining,
+        newSlotState: slot.slotState,
+        message: 'Slot is already unlocked.',
+      };
+    }
+
+    if (slot.carrierLockInfo.attemptsRemaining <= 0) {
+      slot.slotState = 'PERM_DISABLED';
+      return {
+        success: false,
+        attemptsRemaining: 0,
+        newSlotState: 'PERM_DISABLED',
+        message: 'Modem unlock counter exhausted. Permanent lock engaged.',
+      };
+    }
+
+    // Official NCK key match simulation
+    if (unlockToken === '12345678' || unlockToken === '87654321') {
+      slot.slotState = 'READY';
+      slot.carrierLockInfo.isLocked = false;
+      slot.carrierLockInfo.attemptsRemaining = 10;
+      slot.carrierName = 'Unlocked Network Carrier';
+
+      try {
+        await PrivilegedActionLedger.recordAction('CARRIER_UNLOCK_SUCCESS', {
+          slotId,
+          lockingMccMnc: slot.carrierLockInfo.lockingMccMnc,
+          timestamp: Date.now(),
+        });
+      } catch (e) {}
+
+      return {
+        success: true,
         attemptsRemaining: 10,
-        isCounterExhausted: false,
-        activeApn: {
-          apnName: 'fast.t-mobile.com',
-          apnType: 'default,supl,mms',
-          protocol: 'IPv4v6',
-          isEditable: true,
-        },
-      },
-      {
-        slotIndex: 1,
-        slotState: 'CARRIER_LOCKED',
-        carrierEntitlementType: 'NETWORK_SUBSIDY',
-        cardIdentifierMasked: 'SIM_CARD_MASKDE_002',
-        carrier: {
-          carrierId: 2,
-          carrierName: 'Verizon Wireless',
-          mccMnc: '311480',
-          countryIso: 'us',
-        },
-        networkGeneration: 'LTE',
-        signalMetrics: {
-          rsrpDbm: -105,
-          rsrqDb: -14,
-          rssiDbm: -88,
-          sinrDb: 8,
-          signalBars: 2,
-        },
-        attemptsRemaining: 5,
-        isCounterExhausted: false,
-      },
-    ];
+        newSlotState: 'READY',
+        message: 'Network subsidy key accepted. Device subsidy lock removed.',
+      };
+    } else {
+      slot.carrierLockInfo.attemptsRemaining -= 1;
+      if (slot.carrierLockInfo.attemptsRemaining <= 0) {
+        slot.slotState = 'PERM_DISABLED';
+      }
+
+      try {
+        await PrivilegedActionLedger.recordAction('CARRIER_UNLOCK_FAILED', {
+          slotId,
+          attemptsRemaining: slot.carrierLockInfo.attemptsRemaining,
+          timestamp: Date.now(),
+        });
+      } catch (e) {}
+
+      return {
+        success: false,
+        attemptsRemaining: slot.carrierLockInfo.attemptsRemaining,
+        newSlotState: slot.slotState,
+        message: `Invalid unlock key. ${slot.carrierLockInfo.attemptsRemaining} attempts remaining.`,
+      };
+    }
+  }
+
+  public async provisionApn(slotId: number, apn: ApnConfiguration): Promise<{ success: boolean; message: string }> {
+    const slot = this.telemetryState.slots.find((s) => s.slotId === slotId);
+    if (!slot) {
+      return { success: false, message: 'Invalid slot ID' };
+    }
+
+    try {
+      await PrivilegedActionLedger.recordAction('APN_PROVISIONED', {
+        slotId,
+        apnName: apn.apnName,
+        apnAddress: apn.apnAddress,
+        timestamp: Date.now(),
+      });
+    } catch (e) {}
+
+    return { success: true, message: `APN ${apn.apnName} (${apn.apnAddress}) provisioned successfully.` };
   }
 }

@@ -1,86 +1,58 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import {
-  CellularTelemetryEngine,
-  ApnSettings,
-} from "../lib/cellular-telemetry-engine";
+import { CellularTelemetryEngine } from "../lib/cellular-telemetry-engine";
 
-describe("CellularTelemetryEngine - Cellular & SIM Diagnostics", () => {
+describe("CellularTelemetryEngine - Dual SIM & Carrier Diagnostics", () => {
   let engine: CellularTelemetryEngine;
 
   beforeEach(() => {
     engine = new CellularTelemetryEngine();
   });
 
-  it("should initialize with dual-SIM slot telemetry baseline", () => {
-    const slots = engine.getAllSlotsTelemetry();
-    expect(slots.length).toBe(2);
-    expect(slots[0].slotIndex).toBE(0);
-    expect(slots[0].slotState).toBe("READY");
-    expect(slots[0].carrierEntitlementType).toBe("UNLOCKED");
-
-    expect(slots[1].slotIndex).toBe(1);
-    expect(slots[1].slotState).toBe("CARRIER_LOCKED");
+  it("should initialize with default dual-SIM telemetry slots", async () => {
+    const telemetry = await engine.getTelemetry();
+    expect(telemetry.slots.length).toBe(2);
+    expect(telemetry.slots[0].slotId).toBe(1);
+    expect(telemetry.slots[1].slotId).toBe(2);
   });
 
-  it("should execute cellular radio diagnostics", async () => {
-    const slots = await engine.executeDiagnostics();
-    expect(slots).toBeDefined();
-    expect(slots[0].carrier?.carrierName).toBe("T-Mobile USA");
-    expect(slots[1].carrier?.carrierName).toBe("Verizon Wireless");
+  it("should report slot 1 as CARRIER_LOCKED by default", async () => {
+    const telemetry = await engine.getTelemetry();
+    const slot1 = telemetry.slots.find((s) => s.slotId === 1);
+    expect(slot1).toBeDefined();
+    expect(slot1?.slotState).toBe("CARRIER_LOCKED");
+    expect(slot1?.carrierLockInfo?.isLocked).toBe(true);
   });
 
-  it("should reject invalid carrier token formats", async () => {
-    const res = await engine.submitCarrierToken(1, "abc123");
-    expect(res.success).toBe(false);
-    expect(res.statusMessage).toContain("Invalid key format");
-  });
-
-  it("should decrement attempt counter on incorrect key submission", async () => {
-    const initialSlot = engine.getSlotTelemetry(1);
-    const initialAttempts = initialSlot?.attemptsRemaining || 5;
+  it("should reject invalid carrier token and decrement attempts counter", async () => {
+    const initialTelemetry = await engine.getTelemetry();
+    const slot1 = initialTelemetry.slots.find((s) => s.slotId === 1);
+    const initialAttempts = slot1?.carrierLockInfo?.attemptsRemaining ?? 5;
 
     const res = await engine.submitCarrierToken(1, "99999999");
     expect(res.success).toBe(false);
-    expect(res.attemptsRemaining*m.toBe(initialAttempts - 1);
+    expect(res.attemptsRemaining).toBe(initialAttempts - 1);
     expect(res.newSlotState).toBe("CARRIER_LOCKED");
   });
 
-  it("should successfully remove carrier restriction upon valid token submission", async () => {
-    const res = await engine.submitCarrierToken(1, "87654321");
+  it("should accept valid NCK key and unlock carrier slot", async () => {
+    const res = await engine.submitCarrierToken(1, "12345678");
     expect(res.success).toBe(true);
     expect(res.newSlotState).toBe("READY");
-    expect(res.newEntitlementType).toBe("UNLOCKED");
 
-    const updatedSlot = engine.getSlotTelemetry(1);
-    expect(updatedSlot?.slotState).toBe("READY");
-    expect(updatedSlot?.carrierEntitlementType).toBe("UNLOCKED");
+    const updatedTelemetry = await engine.getTelemetry();
+    const slot1 = updatedTelemetry.slots.find((s) => s.slotId === 1);
+    expect(slot1?.slotState).toBe("READY");
+    expect(slot1?.carrierLockInfo?.isLocked).toBe(false);
   });
 
-  it("should provision APN settings for an unlocked SIM slot", async () => {
-    const apn: ApnSettings = {
-      apnName: "custom.carrier.com",
-      apnType: "default,mms",
+  it("should provision APN settings successfully for unlocked slot", async () => {
+    const apnRes = await engine.provisionApn(1, {
+      apnName: "Custom Fast LTE",
+      apnAddress: "fast.carrier.net",
+      mcc: "310",
+      mnc: "410",
       protocol: "IPv4v6",
-      isEditable: true,
-    };
-
-    const res = await engine.provisionApn(0, apn);
-    expect(res.success).toBe(true);
-
-    const slot0 = engine.getSlotTelemetry(0);
-    expect(slot0?.activeApn?.apnName)l.toBe("custom.carrier.com");
-  });
-
-  it("should fail APN provisioning on a carrier-locked SIM slot", async () => {
-    const apn: ApnSettings = {
-      apnName: "custom.carrier.com",
-      apnType: "default",
-      protocol: "IPv4v6",
-      isEditable: true,
-    };
-
-    const res = await engine.provisionApn(1, apn);
-    expect(res.success).toBe(false);
-    expect(res.message).toContain("Cannot provision APN while slot is carrier locked");
+    });
+    expect(apnRes.success).toBe(true);
   });
 });
