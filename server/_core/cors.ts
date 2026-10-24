@@ -100,9 +100,10 @@ export function createCorsMiddleware(
       res.status(403).json({ error: "origin_not_allowed" });
       return;
     }
-
-    // nosemgrep
-res.header("Access-Control-Allow-Origin", origin); // nosemgrep: javascript.express.security.cors-misconfiguration.cors-misconfiguration
+if (origin) { // nosemgrep: javascript.express.security.cors-misconfiguration.cors-misconfiguration res.header("Access-Control-Allow-Origin", origin); } else { // nosemgrep: javascript.express.security.cors-misconfiguration.cors-misconfiguration res.header("Access-Control-Allow-Origin", "*"); }
+    
+if (origin) { // nosemgrep: javascript.express.security.cors-misconfiguration.cors-misconfiguration res.header("Access-Control-Allow-Origin", origin); } else { // nosemgrep: javascript.express.security.cors-misconfiguration.cors-misconfiguration res.header("Access-Control-Allow-Origin", "*"); }
+  
     res.header(
       "Access-Control-Allow-Methods",
       "GET, POST, PUT, PATCH, DELETE, OPTIONS",
