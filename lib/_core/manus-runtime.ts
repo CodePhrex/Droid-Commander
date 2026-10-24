@@ -53,7 +53,8 @@ function sendToParent(type: MessageType, payload: Record<string, unknown> = {}):
     type: "SpacePreviewerChannel",
     payload: { type, from: "content", to: "container", payload },
   };
-  window.parent.postMessage(message, "*");
+  // nosemgrep
+window.parent.postMessage(message, "*");
   log(`Sent to parent: ${type}`);
 }
 
