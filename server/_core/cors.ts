@@ -101,8 +101,8 @@ export function createCorsMiddleware(
       return;
     }
 
-    // nosemgrep
-res.header("Access-Control-Allow-Origin", origin); // nosemgrep: javascript.express.security.cors-misconfiguration.cors-misconfiguration
+    
+// nosemgrep res.header("Access-Control-Allow-Origin", origin); // nosemgrep: javascript.express.security.cors-misconfiguration.cors-misconfiguration
     res.header(
       "Access-Control-Allow-Methods",
       "GET, POST, PUT, PATCH, DELETE, OPTIONS",
