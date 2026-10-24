@@ -54,7 +54,7 @@ function sendToParent(type: MessageType, payload: Record<string, unknown> = {}):
     payload: { type, from: "content", to: "container", payload },
   };
   // nosemgrep
-window.parent.postMessage(message, "*");
+window.parent.postMessage(message, window.location.origin);
   log(`Sent to parent: ${type}`);
 }
 
