@@ -115,7 +115,7 @@ res.header("Access-Control-Allow-Origin", origin); // nosemgrep: javascript.expr
     if (req.method === "OPTIONS") {
       res.sendStatus(204);
       return;
-    }
+    
     next();
-  };
+  
 }
