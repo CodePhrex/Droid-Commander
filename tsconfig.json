@@ -9,7 +9,11 @@
     "skipLibCheck": true,
     "noImplicitAny": false,
     "strict": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": [
     "/*.ts",
