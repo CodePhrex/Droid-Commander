@@ -48,17 +48,17 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="tools"
+        options={{
+          title: "Tools",
+          tabBarIcon: ({ color }) => <IconSymbol size={24} name="square.grid.2x2.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="sessions"
         options={{
           title: "Sessions",
           tabBarIcon: ({ color }) => <IconSymbol size={24} name="clock.arrow.circlepath" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="catalog"
-        options={{
-          title: "Threat Intel",
-          tabBarIcon: ({ color }) => <IconSymbol size={24} name="book.closed.fill" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -68,6 +68,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={24} name="cable.connector" color={color} />,
         }}
       />
+      <Tabs.Screen name="catalog" options={{ href: null }} />
+      <Tabs.Screen name="wireless-diagnostics-screen" options={{ href: null }} />
     </Tabs>
   );
 }
