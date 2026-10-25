@@ -167,7 +167,4 @@ CREATE TABLE IF NOT EXISTS \`used_nonces\` (
 );
 `;
 
-export class PrivilegedActionLedger {
-  static recordAction(...args: any[]): any { return {}; }
-  static record(...args: any[]): any { return {}; }
-}
+

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import android.util.Base64
+import java.util.zip.CRC32
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
@@ -155,5 +156,4 @@ class DroidCommanderUsbHostModule : Module() {
   }
 }
 
-import java.util.zip.CRC32
 // FAIL_CLOSED ENFORCE_EXECUTION_GATES
