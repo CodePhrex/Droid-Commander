@@ -66,19 +66,6 @@ export default function WirelessDiagnosticsScreen() {
           <View key={idx} style={styles.listItem}>
             <View>
               <Text style={styles.itemTitle}>{net.ssid} {net.isConnected ? "(Connected)" : ""}</Text>
-             4Text style={styles.itemSub}>BSSID: {net.bssid} | {net.security}</Text>
-            </View>
-            <Text style={styles.rssiText}>{net.rssi} dBm</Text>
-          </View>
-        ))}
-      </View>
-
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Wi-Fi Networks ({wifiNetworks.length})</Text>
-        {wifiNetworks.map((net, idx) => (
-          <View key={idx} style={styles.listItem}>
-            <View>
-              <Text style={styles.itemTitle}>{net.ssid} {net.isConnected ? "(Connected)" : ""}</Text>
               <Text style={styles.itemSub}>BSSID: {net.bssid} | {net.security}</Text>
             </View>
             <Text style={styles.rssiText}>{net.rssi} dBm</Text>
