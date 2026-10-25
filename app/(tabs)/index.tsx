@@ -13,6 +13,7 @@ import { ScreenContainer } from "@/components/screen-container";
 import { HostInformation } from "@/components/host-information";
 import { palette, statusLabel, type AssessmentStatus } from "@/constants/commander";
 import { useLocalAssessment } from "@/hooks/use-local-assessment";
+import { useThemeContext } from "@/lib/theme-provider";
 
 const statusColors: Record<AssessmentStatus, { text: string; fill: string }> = {
   critical: { text: palette.red, fill: "#FCECEB" },
@@ -27,8 +28,8 @@ export default function CommandCenterScreen() {
   const checks = report?.checks ?? [];
   const summary = report?.summary;
 
-  const [themeMode, setThemeMode] = useState<"dark" | "modern">("dark");
-  const modern = themeMode === "modern";
+  const { colorScheme, setColorScheme } = useThemeContext();
+  const modern = colorScheme === "light";
   const [expandedFinding, setExpandedFinding] = useState<string | null>(null);
   const [usbExpanded, setUsbExpanded] = useState(false);
   const [scopeOpen, setScopeOpen] = useState(false);
@@ -52,7 +53,7 @@ export default function CommandCenterScreen() {
             <Text style={styles.kicker}>DROID COMMANDER // FIELD CONSOLE</Text>
             <Text style={[styles.wordmark, modern && styles.modernText]}>Droid Commander</Text>
           </View>
-          <Pressable accessibilityRole="button" accessibilityLabel={`Switch to ${modern ? "Dark Tactical Premium" : "Modern Professional"} theme`} onPress={() => setThemeMode(modern ? "dark" : "modern")} style={[styles.themeToggle, modern && styles.themeToggleModern]}>
+          <Pressable accessibilityRole="button" accessibilityLabel={`Switch to ${modern ? "Dark Tactical Premium" : "Modern Professional"} theme`} onPress={() => setColorScheme(modern ? "dark" : "light")} style={[styles.themeToggle, modern && styles.themeToggleModern]}>
             <Text style={[styles.themeToggleText, modern && styles.themeToggleTextModern]}>{modern ? "◐ MODERN" : "◑ TACTICAL"}</Text>
           </Pressable>
         </View>
@@ -64,7 +65,7 @@ export default function CommandCenterScreen() {
               A consent-first field instrument for learning how device posture can be measured and improved.
             </Text>
           </View>
-          <Text style={styles.buildTag}>FIELD BUILD{"\n"}0.1</Text>
+          <Text style={styles.buildTag}>TEST BUILD{"\n"}UI-FIX-01</Text>
         </View>
 
         <View style={[styles.postureCard, modern && styles.postureCardModern]}>
