@@ -7,6 +7,9 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import { Platform } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
+
+// Keep the native splash visible until the in-app launch overlay has mounted.
+void SplashScreen.preventAutoHideAsync().catch(() => {});
 import "@/lib/_core/nativewind-pressable";
 import { ThemeProvider } from "@/lib/theme-provider";
 import { AnimatedLaunchScreen } from "@/components/animated-launch-screen";
@@ -34,13 +37,6 @@ export default function RootLayout() {
 
   const [insets, setInsets] = useState<EdgeInsets>(initialInsets);
   const [frame, setFrame] = useState<Rect>(initialFrame);
-
-  // Explicitly dismiss the native splash once the React root has mounted.
-  useEffect(() => {
-    void SplashScreen.hideAsync().catch(() => {
-      // Expo may already have dismissed the splash screen.
-    });
-  }, []);
 
   // Initialize Manus runtime for cookie injection from parent container.
   useEffect(() => {
