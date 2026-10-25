@@ -1,10 +1,10 @@
 import { Tabs } from "expo-router";
+import { Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { HapticTab } from "../../components/haptic-tab";
 import { IconSymbol } from "@/components/ui/icon-symbol";
-import { palette } from "@/constants/commander";
-import { Platform } from "react-native";
+import { design } from "@/constants/design-system";
 import { useColors } from "@/hooks/use-colors";
 
 export default function TabLayout() {
@@ -20,14 +20,14 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarHideOnKeyboard: true,
-        tabBarLabelStyle: { fontSize: 10, fontWeight: "800", letterSpacing: 0.2 },
-        tabBarItemStyle: { borderRadius: 12, marginHorizontal: 2, marginVertical: 4 },
-        tabBarActiveBackgroundColor: palette.orangeSoft,
+        tabBarLabelStyle: { fontSize: design.type.eyebrow, fontWeight: "800", letterSpacing: 0.2 },
+        tabBarItemStyle: { borderRadius: design.radius.md, marginHorizontal: 2, marginVertical: 4 },
+        tabBarActiveBackgroundColor: design.color.orangeSoft,
         tabBarStyle: {
           paddingTop: 6,
           paddingBottom: bottomPadding,
           height: tabBarHeight,
-          backgroundColor: palette.paper,
+          backgroundColor: design.color.surface,
           borderTopColor: colors.border,
           borderTopWidth: 1,
         },
