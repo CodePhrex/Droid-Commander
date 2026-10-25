@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 
+import * as SplashScreen from "expo-splash-screen";
 import { design } from "@/constants/design-system";
 
 /**
@@ -21,6 +22,9 @@ export function AnimatedLaunchScreen() {
   const progress = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    // Reveal this overlay only after it has mounted over the native splash.
+    void SplashScreen.hideAsync().catch(() => {});
+
     const pulse = Animated.loop(
       Animated.sequence([
         Animated.timing(ring, {
