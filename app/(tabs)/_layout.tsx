@@ -68,6 +68,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={24} name="cable.connector" color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="wireless-diagnostics-screen"
+        options={{
+          title: "Wireless",
+          tabBarIcon: ({ color }) => <IconSymbol size={24} name="wifi" color={color} />,
+        }}
+      />
     </Tabs>
   );
 }
