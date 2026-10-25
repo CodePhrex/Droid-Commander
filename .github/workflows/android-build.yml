@@ -127,6 +127,7 @@ jobs:
     needs: sast-static-analysis
     if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - name: Checkout Codebase
         uses: actions/checkout@v4
