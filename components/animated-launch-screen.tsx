@@ -48,7 +48,7 @@ export function AnimatedLaunchScreen() {
       }),
       Animated.timing(progress, {
         toValue: 1,
-        duration: 1650,
+        duration: 2700,
         easing: Easing.out(Easing.cubic),
         useNativeDriver: false,
       }),
@@ -66,7 +66,7 @@ export function AnimatedLaunchScreen() {
       }).start(({ finished }) => {
         if (finished) setVisible(false);
       });
-    }, 1850);
+    }, 3200);
 
     return () => {
       clearTimeout(finish);
