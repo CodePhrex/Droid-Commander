@@ -9,6 +9,7 @@ import { Platform } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import "@/lib/_core/nativewind-pressable";
 import { ThemeProvider } from "@/lib/theme-provider";
+import { AnimatedLaunchScreen } from "@/components/animated-launch-screen";
 import {
   SafeAreaFrameContext,
   SafeAreaInsetsContext,
@@ -93,6 +94,7 @@ export default function RootLayout() {
             <Stack.Screen name="oauth/callback" />
           </Stack>
           <StatusBar style="auto" />
+          <AnimatedLaunchScreen />
         </QueryClientProvider>
       </trpc.Provider>
     </GestureHandlerRootView>
