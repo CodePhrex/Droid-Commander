@@ -32,7 +32,9 @@ react {
     //   The list of variants to that are debuggable. For those we're going to
     //   skip the bundling of the JS bundle and the assets. By default is just 'debug'.
     //   If you add flavors like lite, prod, etc. you'll have to list your debuggableVariants.
-    // debuggableVariants = ["liteDebug", "prodDebug"]
+    // Package the JavaScript bundle in BOTH debug and release APKs. This makes the CI debug APK installable without Metro.
+    // Keep this empty: the default ["debug"] skips JS bundling for debug builds.
+    debuggableVariants = []
 
     /* Bundling */
     //   A list containing the node command and its flags. Default is just 'node'.
