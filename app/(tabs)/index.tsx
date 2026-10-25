@@ -27,6 +27,8 @@ export default function CommandCenterScreen() {
   const checks = report?.checks ?? [];
   const summary = report?.summary;
 
+  const [themeMode, setThemeMode] = useState<"dark" | "modern">("dark");
+  const modern = themeMode === "modern";
   const [expandedFinding, setExpandedFinding] = useState<string | null>(null);
   const [usbExpanded, setUsbExpanded] = useState(false);
   const [scopeOpen, setScopeOpen] = useState(false);
@@ -40,25 +42,24 @@ export default function CommandCenterScreen() {
   const coveragePct = Math.round((observed / totalChecks) * 100);
 
   return (
-    <ScreenContainer containerClassName="bg-[#F5F3EE]" safeAreaClassName="bg-[#F5F3EE]">
+    <ScreenContainer containerClassName={modern ? "bg-[#F4F7FB]" : "bg-[#07131F]"} safeAreaClassName={modern ? "bg-[#F4F7FB]" : "bg-[#07131F]"}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.headerRow}>
           <View>
-            <Text style={styles.kicker}>DROID COMMANDER // LOCAL MODE</Text>
-            <Text style={styles.wordmark}>Droid Commander</Text>
+            <Text style={styles.kicker}>DROID COMMANDER // FIELD CONSOLE</Text>
+            <Text style={[styles.wordmark, modern && styles.modernText]}>Droid Commander</Text>
           </View>
-          <View style={styles.offlinePill}>
-            <View style={styles.greenDot} />
-            <Text style={styles.offlineText}>OFFLINE READY</Text>
-          </View>
+          <Pressable accessibilityRole="button" accessibilityLabel={`Switch to ${modern ? "Dark Tactical Premium" : "Modern Professional"} theme`} onPress={() => setThemeMode(modern ? "dark" : "modern")} style={[styles.themeToggle, modern && styles.themeToggleModern]}>
+            <Text style={[styles.themeToggleText, modern && styles.themeToggleTextModern]}>{modern ? "◐ MODERN" : "◑ TACTICAL"}</Text>
+          </Pressable>
         </View>
 
         <View style={styles.introRow}>
           <View style={styles.introCopy}>
-            <Text style={styles.title}>Evidence before action.</Text>
+            <Text style={styles.title}>Know the device.\nOwn the evidence.</Text>
             <Text style={styles.subtitle}>
               A consent-first field instrument for learning how device posture can be measured and improved.
             </Text>
@@ -66,9 +67,9 @@ export default function CommandCenterScreen() {
           <Text style={styles.buildTag}>FIELD BUILD{"\n"}0.1</Text>
         </View>
 
-        <View style={styles.postureCard}>
+        <View style={[styles.postureCard, modern && styles.postureCardModern]}>
           <View style={styles.postureTopRow}>
-            <Text style={styles.postureLabel}>HOST COVERAGE</Text>
+            <Text style={styles.postureLabel}>DEVICE POSTURE</Text>
             <Text style={styles.postureStamp}>
               {running ? "READING…" : report ? (cached ? "CACHED" : "LIVE") : "NOT ASSESSED"}
             </Text>
@@ -107,7 +108,7 @@ export default function CommandCenterScreen() {
           accessibilityState={{ disabled: running }}
           disabled={running}
           onPress={() => void runAssessment()}
-          style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed, running && styles.runningButton]}
+          style={({ pressed }) => [styles.primaryButton, modern && styles.primaryButtonModern, pressed && styles.pressed, running && styles.runningButton]}
         >
           <View style={styles.primaryButtonIcon}>
             <Text style={styles.primaryButtonIconText}>+</Text>
@@ -137,7 +138,7 @@ export default function CommandCenterScreen() {
         <HostInformation report={report} />
 
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Signal review</Text>
+          <Text style={styles.sectionTitle}>Live signal review</Text>
           <Text style={styles.sectionMeta}>{checks.length ? `${checks.length} CHECKS` : "—"}</Text>
         </View>
 
@@ -151,7 +152,7 @@ export default function CommandCenterScreen() {
               accessibilityLabel={`${item.label}, ${statusLabel(item.status)}. ${expanded ? "Collapse" : "Expand"} evidence`}
               accessibilityState={{ expanded }}
               onPress={() => setExpandedFinding(expanded ? null : item.id)}
-              style={({ pressed }) => [styles.findingCard, pressed && styles.pressed]}
+              style={({ pressed }) => [styles.findingCard, modern && styles.findingCardModern, pressed && styles.pressed]}
             >
               <View style={styles.findingIndex}>
                 <Text style={styles.findingIndexText}>0{index + 1}</Text>
@@ -185,7 +186,7 @@ export default function CommandCenterScreen() {
         })}
 
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Transport readiness</Text>
+          <Text style={styles.sectionTitle}>Connection readiness</Text>
           <Text style={styles.sectionMeta}>USB / ADB</Text>
         </View>
 
@@ -194,7 +195,7 @@ export default function CommandCenterScreen() {
           accessibilityLabel="Transport readiness details"
           accessibilityState={{ expanded: usbExpanded }}
           onPress={() => setUsbExpanded(!usbExpanded)}
-          style={({ pressed }) => [styles.transportCard, pressed && styles.pressed]}
+          style={({ pressed }) => [styles.transportCard, modern && styles.transportCardModern, pressed && styles.pressed]}
         >
           <View style={styles.transportIcon}>
             <Text style={styles.transportIconText}>↕</Text>
@@ -229,7 +230,7 @@ export default function CommandCenterScreen() {
           <Text style={styles.findingChevron}>{usbExpanded ? "⌃" : "⌄"}</Text>
         </Pressable>
 
-        <View style={styles.scopeCard}>
+        <View style={[styles.scopeCard, modern && styles.scopeCardModern]}>
           <View style={styles.scopeTopRow}>
             <View style={styles.scopeMark}>
               <Text style={styles.scopeMarkText}>{sessionAuthorized ? "✓" : "!"}</Text>
@@ -313,14 +314,24 @@ export default function CommandCenterScreen() {
 
 const styles = StyleSheet.create({
   scrollContent: { paddingHorizontal: 20, paddingTop: 18, paddingBottom: 34 },
+  themeToggle: { borderWidth: 1, borderColor: "#385064", backgroundColor: "#102333", borderRadius: 20, paddingHorizontal: 10, paddingVertical: 9, alignSelf: "flex-start" },
+  themeToggleModern: { borderColor: "#B9CBE0", backgroundColor: "#FFFFFF" },
+  themeToggleText: { color: "#FF8A45", fontSize: 10, fontWeight: "900", letterSpacing: 0.5 },
+  themeToggleTextModern: { color: "#1762B3" },
+  modernText: { color: "#172B4D" },
+  postureCardModern: { backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#DCE5EF" },
+  primaryButtonModern: { backgroundColor: "#1762B3" },
+  findingCardModern: { backgroundColor: "#FFFFFF", borderColor: "#DCE5EF" },
+  transportCardModern: { backgroundColor: "#EAF1F8" },
+  scopeCardModern: { backgroundColor: "#FFFFFF", borderColor: "#DCE5EF" },
   headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
   kicker: { color: palette.orange, fontSize: 10, fontWeight: "800", letterSpacing: 1.2 },
-  wordmark: { color: palette.ink, fontSize: 21, fontWeight: "800", letterSpacing: -0.5, marginTop: 4 },
+  wordmark: { color: "#F2F6FA", fontSize: 21, fontWeight: "800", letterSpacing: -0.5, marginTop: 4 },
   offlinePill: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: palette.line,
+    borderColor: "#263B4C",
     borderRadius: 20,
     paddingHorizontal: 9,
     paddingVertical: 7,
@@ -335,17 +346,17 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   introCopy: { flex: 1, paddingRight: 18 },
-  title: { color: palette.ink, fontSize: 30, fontWeight: "800", letterSpacing: -1.1, lineHeight: 34 },
-  subtitle: { color: palette.muted, fontSize: 14, lineHeight: 20, marginTop: 8 },
+  title: { color: "#F2F6FA", fontSize: 30, fontWeight: "800", letterSpacing: -1.1, lineHeight: 34 },
+  subtitle: { color: "#9BAFBE", fontSize: 14, lineHeight: 20, marginTop: 8 },
   buildTag: {
-    color: palette.muted,
+    color: "#9BAFBE",
     fontSize: 9,
     lineHeight: 13,
     fontWeight: "800",
     letterSpacing: 1,
     textAlign: "right",
   },
-  postureCard: { backgroundColor: palette.navy, borderRadius: 22, padding: 20, marginBottom: 12 },
+  postureCard: { backgroundColor: "#0D1B29", borderRadius: 22, padding: 20, marginBottom: 12 },
   postureTopRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
   postureLabel: { color: palette.navyMuted, fontSize: 10, fontWeight: "800", letterSpacing: 1.1 },
   postureStamp: { color: palette.orange, fontSize: 9, fontWeight: "800", letterSpacing: 0.8 },
@@ -356,7 +367,7 @@ const styles = StyleSheet.create({
   scoreCopy: { flex: 1, paddingBottom: 5 },
   scoreTitle: { color: "#FFFFFF", fontSize: 16, fontWeight: "800" },
   scoreDetail: { color: palette.navyMuted, fontSize: 12, lineHeight: 17, marginTop: 4 },
-  scoreBarTrack: { height: 6, borderRadius: 4, backgroundColor: "#274556", marginTop: 18, overflow: "hidden" },
+  scoreBarTrack: { height: 6, borderRadius: 4, backgroundColor: "#263B4C", marginTop: 18, overflow: "hidden" },
   scoreBarFill: { height: 6, backgroundColor: palette.orange, borderRadius: 4 },
   scoreMetaRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 10 },
   scoreMeta: { color: palette.navyMuted, fontSize: 10, fontWeight: "700" },
@@ -381,7 +392,7 @@ const styles = StyleSheet.create({
   primaryButtonIconText: { color: "#FFFFFF", fontSize: 22, fontWeight: "500", lineHeight: 24 },
   primaryButtonCopy: { flex: 1, marginLeft: 11 },
   primaryButtonTitle: { color: "#FFFFFF", fontSize: 15, fontWeight: "800" },
-  primaryButtonDetail: { color: "#FFE6D9", fontSize: 11, marginTop: 3 },
+  primaryButtonDetail: { color: "#FFF0E8", fontSize: 11, marginTop: 3 },
   primaryArrow: { color: "#FFFFFF", fontSize: 27, fontWeight: "300", paddingHorizontal: 4 },
   pressed: { opacity: 0.82 },
   alertText: { color: palette.red, fontSize: 12, lineHeight: 17, marginBottom: 10 },
@@ -392,13 +403,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 12,
   },
-  sectionTitle: { color: palette.ink, fontSize: 17, fontWeight: "800" },
-  sectionMeta: { color: palette.muted, fontSize: 9, fontWeight: "800", letterSpacing: 1 },
+  sectionTitle: { color: "#F2F6FA", fontSize: 17, fontWeight: "800" },
+  sectionMeta: { color: "#9BAFBE", fontSize: 9, fontWeight: "800", letterSpacing: 1 },
   findingCard: {
     flexDirection: "row",
-    backgroundColor: palette.paper,
+    backgroundColor: "#101F2D",
     borderWidth: 1,
-    borderColor: palette.line,
+    borderColor: "#263B4C",
     borderRadius: 15,
     padding: 13,
     marginBottom: 9,
@@ -407,7 +418,7 @@ const styles = StyleSheet.create({
     width: 27,
     height: 27,
     borderRadius: 9,
-    backgroundColor: palette.orangeSoft,
+    backgroundColor: "#3B281E",
     alignItems: "center",
     justifyContent: "center",
     marginRight: 10,
@@ -415,16 +426,16 @@ const styles = StyleSheet.create({
   findingIndexText: { color: palette.orange, fontSize: 10, fontWeight: "900" },
   findingBody: { flex: 1 },
   findingTopRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  findingTitle: { color: palette.ink, fontSize: 14, fontWeight: "800", flex: 1, paddingRight: 7 },
+  findingTitle: { color: "#F2F6FA", fontSize: 14, fontWeight: "800", flex: 1, paddingRight: 7 },
   statusPill: { borderRadius: 5, paddingHorizontal: 6, paddingVertical: 4 },
   statusText: { fontSize: 8, fontWeight: "900", letterSpacing: 0.7 },
-  findingDetail: { color: palette.muted, fontSize: 12, lineHeight: 17, marginTop: 8 },
-  collapsedValue: { color: palette.muted, fontSize: 9, fontWeight: "900", letterSpacing: 0.7, marginTop: 7 },
+  findingDetail: { color: "#9BAFBE", fontSize: 12, lineHeight: 17, marginTop: 8 },
+  collapsedValue: { color: "#9BAFBE", fontSize: 9, fontWeight: "900", letterSpacing: 0.7, marginTop: 7 },
   findingAction: { color: palette.orange, fontSize: 11, fontWeight: "800", marginTop: 8 },
-  findingChevron: { color: palette.muted, fontSize: 17, marginLeft: 7, marginTop: 1 },
+  findingChevron: { color: "#9BAFBE", fontSize: 17, marginLeft: 7, marginTop: 1 },
   transportCard: {
     flexDirection: "row",
-    backgroundColor: "#EAF0F0",
+    backgroundColor: "#101F2D",
     borderRadius: 16,
     padding: 14,
     marginBottom: 18,
@@ -433,29 +444,29 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: 11,
-    backgroundColor: palette.navy,
+    backgroundColor: "#0D1B29",
     alignItems: "center",
     justifyContent: "center",
     marginRight: 10,
   },
   transportIconText: { color: "#FFFFFF", fontSize: 21, fontWeight: "700" },
   transportBody: { flex: 1 },
-  neutralPill: { borderRadius: 5, backgroundColor: "#DCE6E6", paddingHorizontal: 6, paddingVertical: 4 },
-  neutralPillText: { color: palette.muted, fontSize: 8, fontWeight: "900", letterSpacing: 0.6 },
-  transportDetail: { color: palette.muted, fontSize: 12, lineHeight: 17, marginTop: 8 },
+  neutralPill: { borderRadius: 5, backgroundColor: "#1B3041", paddingHorizontal: 6, paddingVertical: 4 },
+  neutralPillText: { color: "#9BAFBE", fontSize: 8, fontWeight: "900", letterSpacing: 0.6 },
+  transportDetail: { color: "#9BAFBE", fontSize: 12, lineHeight: 17, marginTop: 8 },
   transportChecklist: {
     borderTopWidth: 1,
-    borderTopColor: "#D4DFDE",
+    borderTopColor: "#263B4C",
     marginTop: 10,
     paddingTop: 8,
     gap: 6,
   },
-  checklistLine: { color: palette.ink, fontSize: 11, lineHeight: 15 },
+  checklistLine: { color: "#F2F6FA", fontSize: 11, lineHeight: 15 },
   checklistMark: { color: palette.orange, fontWeight: "900", letterSpacing: 0.6 },
   scopeCard: {
-    backgroundColor: palette.paper,
+    backgroundColor: "#101F2D",
     borderWidth: 1,
-    borderColor: palette.line,
+    borderColor: "#263B4C",
     borderRadius: 17,
     padding: 15,
     marginBottom: 14,
@@ -465,37 +476,37 @@ const styles = StyleSheet.create({
     width: 31,
     height: 31,
     borderRadius: 10,
-    backgroundColor: palette.orangeSoft,
+    backgroundColor: "#3B281E",
     alignItems: "center",
     justifyContent: "center",
     marginRight: 10,
   },
   scopeMarkText: { color: palette.orange, fontSize: 18, fontWeight: "900" },
   scopeCopy: { flex: 1 },
-  scopeTitle: { color: palette.ink, fontSize: 14, fontWeight: "800" },
-  scopeDetail: { color: palette.muted, fontSize: 11, lineHeight: 16, marginTop: 3 },
+  scopeTitle: { color: "#F2F6FA", fontSize: 14, fontWeight: "800" },
+  scopeDetail: { color: "#9BAFBE", fontSize: 11, lineHeight: 16, marginTop: 3 },
   secondaryButton: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     borderTopWidth: 1,
-    borderTopColor: palette.line,
+    borderTopColor: "#263B4C",
     marginTop: 14,
     paddingTop: 13,
   },
   secondaryButtonText: { color: palette.orange, fontSize: 12, fontWeight: "900" },
   secondaryButtonArrow: { color: palette.orange, fontSize: 18 },
   footerNote: {
-    color: palette.muted,
+    color: "#9BAFBE",
     fontSize: 10,
     lineHeight: 15,
     textAlign: "center",
     paddingHorizontal: 9,
     marginTop: 1,
   },
-  modalBackdrop: { flex: 1, backgroundColor: "rgba(16,42,59,0.5)", justifyContent: "flex-end" },
+  modalBackdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.78)", justifyContent: "flex-end" },
   modalCard: {
-    backgroundColor: palette.canvas,
+    backgroundColor: "#0B1926",
     borderTopLeftRadius: 26,
     borderTopRightRadius: 26,
     paddingHorizontal: 22,
@@ -506,15 +517,15 @@ const styles = StyleSheet.create({
     width: 42,
     height: 4,
     borderRadius: 3,
-    backgroundColor: "#C6CFCC",
+    backgroundColor: "#385064",
     alignSelf: "center",
     marginBottom: 24,
   },
   modalKicker: { color: palette.orange, fontSize: 10, fontWeight: "900", letterSpacing: 1 },
-  modalTitle: { color: palette.ink, fontSize: 25, fontWeight: "800", letterSpacing: -0.6, marginTop: 7 },
-  modalBody: { color: palette.muted, fontSize: 13, lineHeight: 18, marginTop: 8, marginBottom: 20 },
+  modalTitle: { color: "#F2F6FA", fontSize: 25, fontWeight: "800", letterSpacing: -0.6, marginTop: 7 },
+  modalBody: { color: "#9BAFBE", fontSize: 13, lineHeight: 18, marginTop: 8, marginBottom: 20 },
   inputLabel: {
-    color: palette.muted,
+    color: "#9BAFBE",
     fontSize: 9,
     fontWeight: "900",
     letterSpacing: 1,
@@ -522,18 +533,18 @@ const styles = StyleSheet.create({
     marginTop: 9,
   },
   input: {
-    backgroundColor: palette.paper,
+    backgroundColor: "#101F2D",
     borderWidth: 1,
-    borderColor: palette.line,
+    borderColor: "#263B4C",
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 12,
-    color: palette.ink,
+    color: "#F2F6FA",
     fontSize: 14,
   },
   modalActions: { flexDirection: "row", justifyContent: "flex-end", gap: 10, marginTop: 22 },
   cancelButton: { paddingHorizontal: 16, paddingVertical: 12 },
-  cancelText: { color: palette.muted, fontSize: 14, fontWeight: "700" },
+  cancelText: { color: "#9BAFBE", fontSize: 14, fontWeight: "700" },
   modalPrimary: {
     backgroundColor: palette.orange,
     borderRadius: 12,
