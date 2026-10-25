@@ -27,6 +27,8 @@ export default function CommandCenterScreen() {
   const checks = report?.checks ?? [];
   const summary = report?.summary;
 
+  const [themeMode, setThemeMode] = useState<"dark" | "modern">("dark");
+  const modern = themeMode === "modern";
   const [expandedFinding, setExpandedFinding] = useState<string | null>(null);
   const [usbExpanded, setUsbExpanded] = useState(false);
   const [scopeOpen, setScopeOpen] = useState(false);
@@ -40,7 +42,7 @@ export default function CommandCenterScreen() {
   const coveragePct = Math.round((observed / totalChecks) * 100);
 
   return (
-    <ScreenContainer containerClassName="bg-[#07131F]" safeAreaClassName="bg-[#07131F]">
+    <ScreenContainer containerClassName={modern ? "bg-[#F4F7FB]" : "bg-[#07131F]"} safeAreaClassName={modern ? "bg-[#F4F7FB]" : "bg-[#07131F]"}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -48,12 +50,11 @@ export default function CommandCenterScreen() {
         <View style={styles.headerRow}>
           <View>
             <Text style={styles.kicker}>DROID COMMANDER // FIELD CONSOLE</Text>
-            <Text style={styles.wordmark}>Droid Commander</Text>
+            <Text style={[styles.wordmark, modern && styles.modernText]}>Droid Commander</Text>
           </View>
-          <View style={styles.offlinePill}>
-            <View style={styles.greenDot} />
-            <Text style={styles.offlineText}>LOCAL MODE</Text>
-          </View>
+          <Pressable accessibilityRole="button" accessibilityLabel={`Switch to ${modern ? "Dark Tactical Premium" : "Modern Professional"} theme`} onPress={() => setThemeMode(modern ? "dark" : "modern")} style={[styles.themeToggle, modern && styles.themeToggleModern]}>
+            <Text style={[styles.themeToggleText, modern && styles.themeToggleTextModern]}>{modern ? "◐ MODERN" : "◑ TACTICAL"}</Text>
+          </Pressable>
         </View>
 
         <View style={styles.introRow}>
@@ -66,7 +67,7 @@ export default function CommandCenterScreen() {
           <Text style={styles.buildTag}>FIELD BUILD{"\n"}0.1</Text>
         </View>
 
-        <View style={styles.postureCard}>
+        <View style={[styles.postureCard, modern && styles.postureCardModern]}>
           <View style={styles.postureTopRow}>
             <Text style={styles.postureLabel}>DEVICE POSTURE</Text>
             <Text style={styles.postureStamp}>
@@ -107,7 +108,7 @@ export default function CommandCenterScreen() {
           accessibilityState={{ disabled: running }}
           disabled={running}
           onPress={() => void runAssessment()}
-          style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed, running && styles.runningButton]}
+          style={({ pressed }) => [styles.primaryButton, modern && styles.primaryButtonModern, pressed && styles.pressed, running && styles.runningButton]}
         >
           <View style={styles.primaryButtonIcon}>
             <Text style={styles.primaryButtonIconText}>+</Text>
@@ -151,7 +152,7 @@ export default function CommandCenterScreen() {
               accessibilityLabel={`${item.label}, ${statusLabel(item.status)}. ${expanded ? "Collapse" : "Expand"} evidence`}
               accessibilityState={{ expanded }}
               onPress={() => setExpandedFinding(expanded ? null : item.id)}
-              style={({ pressed }) => [styles.findingCard, pressed && styles.pressed]}
+              style={({ pressed }) => [styles.findingCard, modern && styles.findingCardModern, pressed && styles.pressed]}
             >
               <View style={styles.findingIndex}>
                 <Text style={styles.findingIndexText}>0{index + 1}</Text>
@@ -194,7 +195,7 @@ export default function CommandCenterScreen() {
           accessibilityLabel="Transport readiness details"
           accessibilityState={{ expanded: usbExpanded }}
           onPress={() => setUsbExpanded(!usbExpanded)}
-          style={({ pressed }) => [styles.transportCard, pressed && styles.pressed]}
+          style={({ pressed }) => [styles.transportCard, modern && styles.transportCardModern, pressed && styles.pressed]}
         >
           <View style={styles.transportIcon}>
             <Text style={styles.transportIconText}>↕</Text>
@@ -229,7 +230,7 @@ export default function CommandCenterScreen() {
           <Text style={styles.findingChevron}>{usbExpanded ? "⌃" : "⌄"}</Text>
         </Pressable>
 
-        <View style={styles.scopeCard}>
+        <View style={[styles.scopeCard, modern && styles.scopeCardModern]}>
           <View style={styles.scopeTopRow}>
             <View style={styles.scopeMark}>
               <Text style={styles.scopeMarkText}>{sessionAuthorized ? "✓" : "!"}</Text>
@@ -313,6 +314,16 @@ export default function CommandCenterScreen() {
 
 const styles = StyleSheet.create({
   scrollContent: { paddingHorizontal: 20, paddingTop: 18, paddingBottom: 34 },
+  themeToggle: { borderWidth: 1, borderColor: "#385064", backgroundColor: "#102333", borderRadius: 20, paddingHorizontal: 10, paddingVertical: 9, alignSelf: "flex-start" },
+  themeToggleModern: { borderColor: "#B9CBE0", backgroundColor: "#FFFFFF" },
+  themeToggleText: { color: "#FF8A45", fontSize: 10, fontWeight: "900", letterSpacing: 0.5 },
+  themeToggleTextModern: { color: "#1762B3" },
+  modernText: { color: "#172B4D" },
+  postureCardModern: { backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#DCE5EF" },
+  primaryButtonModern: { backgroundColor: "#1762B3" },
+  findingCardModern: { backgroundColor: "#FFFFFF", borderColor: "#DCE5EF" },
+  transportCardModern: { backgroundColor: "#EAF1F8" },
+  scopeCardModern: { backgroundColor: "#FFFFFF", borderColor: "#DCE5EF" },
   headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
   kicker: { color: palette.orange, fontSize: 10, fontWeight: "800", letterSpacing: 1.2 },
   wordmark: { color: "#F2F6FA", fontSize: 21, fontWeight: "800", letterSpacing: -0.5, marginTop: 4 },
