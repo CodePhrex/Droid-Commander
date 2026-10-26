@@ -109,3 +109,48 @@ The Droid Commander UI suite comprises **14 complete React Native screens**:
 | `passkey-break-glass-screen.tsx` | Passkey Break-Glass Override | Countdown timer, 1-tap passkey biometric prompt |
 | `ledger-inspector-screen-v2.tsx` | Privileged Action Ledger | Hash verification scan line, tamper simulation |
 | `reports-vault-screen-v2.tsx` | Compliance Reports Vault | Progress-tracked PDF compilation, Studio exporter |
+
+## 7. Current route and screen audit notes (2026-10-25)
+
+### 7.1 Inventory rule
+
+The specification manual documents 14 numbered screens. Four additional confirmed entries expand the working inventory to 18:
+
+15. USB OTG Hardware Inspector
+16. Cellular & Dual-SIM Diagnostics
+17. Wireless & Network Diagnostics
+18. Automated Remediation Playbooks
+
+The inventory count is not a route count. The current `app/(tabs)/_layout.tsx` registers five visible tabs: Command, Assess, Sessions, Threat Intel, and USB Link. Other Expo Router files, legacy root-level components, recovery routes, OAuth callbacks, and developer tools must be classified separately. Do not count a component as a reachable screen until route and navigation wiring are verified.
+
+### 7.2 Evidence-backed source observations
+
+- `app/(tabs)/vulnerability-scanner-screen-v3.tsx` initializes telemetry with a hard-coded Galaxy S24 example profile. Before presenting it as live, wire it to the authoritative host assessment collector and show evidence source, timestamp, and unavailable/unknown states.
+- `app/(tabs)/usb-hardware-inspector-screen.tsx` currently evaluates a hard-coded example Kingston device descriptor and sample VBUS/current readings after a timeout. Label this as simulation until connected to actual USB descriptor and power telemetry.
+- `app/(tabs)/sim-diagnostic-screen.tsx` calls `CellularTelemetryEngine` for telemetry and carrier-token submission. Confirm actual platform support and distinguish carrier-authorized workflow from a real modem/carrier state change.
+- `app/(tabs)/wireless-diagnostics-screen.tsx` calls `WirelessManager` for Wi-Fi/Bluetooth scans and wireless-debugging actions. Verify native implementation, runtime permissions, Android version behavior, and failure reporting.
+- `app/(tabs)/remediation-playbooks-screen.tsx` calls remediation-engine methods after UI delays. Verify each action's actual effect and postcondition; do not infer success from the delay, button state, or history entry alone.
+- `app/(tabs)/sessions.tsx` uses local assessment history and verifies the privileged-action ledger. Keep storage/verification errors visible rather than implying an immutable or complete history when verification fails.
+
+### 7.3 Required UI evidence language
+
+Use consistent state labels:
+- **Verified** — measured or cryptographically checked by a named, functioning collector.
+- **Reported** — supplied by an OS/API or remote service but not independently verified.
+- **Simulated** — sample, fixture, demo, or test input.
+- **Unavailable** — the platform, permission, device, or module cannot provide the reading.
+- **Unknown** — evidence is missing, stale, or inconclusive.
+
+Every live telemetry panel should show source and last-updated time when available. Never convert a denied or unavailable read into a secure/clean result. CVE matches are evidence-qualified potential matches, not proof of exploitability or successful exploitation.
+
+### 7.4 UI and device validation are separate
+
+Visual design approval does not certify implementation. The preferred validation sequence is:
+1. Static source/route audit and screen contract tests.
+2. Browser preview and type/lint/unit checks.
+3. Native Android build and signing verification.
+4. Install/launch checks on the target handset.
+5. Physical USB OTG, SIM, wireless, and other hardware checks on supported devices.
+6. Verify state-changing workflows using authorized test fixtures and safe, reversible test conditions.
+
+Do not claim a stage passed until there is a corresponding result. UI redesign remains subject to owner approval.
