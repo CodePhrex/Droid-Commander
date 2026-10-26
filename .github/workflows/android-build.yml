@@ -17,6 +17,44 @@ on:
         default: 'Production release candidate build'
 
 jobs:
+  ui-quality-gate:
+    name: UI quality gate (no APK)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - name: Cache pnpm store
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm check
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Verify browser export
+        run: pnpm exec expo export --platform web
+
   prebuild-security-gate:
     name: Prebuild Security & Air-Gap Validation
     runs-on: ubuntu-latest
