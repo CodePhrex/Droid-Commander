@@ -126,3 +126,37 @@ To ensure sensitive environments, release archives, or private signing keys are 
 ---
 
 *Droid Commander `v1.0.0-RELEASE` — CodePhrex Mobile Security Orchestration Engine*
+
+## Current UI inventory and implementation status (2026-10-25)
+
+The UI specification manual defines **14 numbered screens** and the project owner has confirmed **four additional screens** for the working inventory: USB OTG Hardware Inspector, Cellular & Dual-SIM Diagnostics, Wireless & Network Diagnostics, and Automated Remediation Playbooks. This is an inventory of intended screen entries, not a claim that exactly 18 routes are currently registered or that every described capability is production-ready.
+
+### Current primary navigation
+
+The current `app/(tabs)/_layout.tsx` declares five visible tabs:
+
+1. **Command** — operations dashboard / host assessment entry point.
+2. **Assess** — local security assessment.
+3. **Sessions** — assessment history and privileged-action ledger disclosure.
+4. **Threat Intel** — vulnerability/reference catalog.
+5. **USB Link** — USB host discovery and service handoff.
+
+Additional source files may exist outside these primary tabs. A source file's presence does not prove that a screen is reachable from navigation.
+
+### Evidence and capability boundaries
+
+The current source audit found several places where UI data must not be described as live device evidence without a verified collector:
+
+- The vulnerability scanner v3 initializes a sample Galaxy S24 telemetry profile in its screen state. Treat it as illustrative until it is populated from the current host assessment and its provenance is displayed.
+- The USB OTG hardware inspector currently passes a hard-coded example USB descriptor and power telemetry into its evaluation engine. This is simulated inspection input, not proof of live USB discovery.
+- The SIM diagnostics screen calls a cellular telemetry engine and carrier-token submission method; actual Android/carrier capability and any state-changing effect require separate platform and device verification.
+- The wireless diagnostics screen calls a wireless manager; real Wi-Fi/Bluetooth discovery and wireless-debugging control must be verified against Android permissions, OS restrictions, and native implementation.
+- The remediation screen calls an engine after a timed UI delay. The delay or success-looking UI is not evidence that a live mitigation or carrier recovery occurred.
+
+Use explicit evidence states such as **verified**, **reported**, **simulated**, **unavailable**, and **unknown**. Unknown or permission-denied readings must not be silently treated as clean. Include source and collection timestamp where available. CVE correlation indicates potential applicability, not proof that an exploit ran or that a vulnerability is present.
+
+### Screen audit and release status
+
+The exhaustive screen audit is in progress. It must distinguish: (1) the specification, (2) active Expo Router routes, (3) legacy/unrouted components, (4) implemented logic, (5) simulated or placeholder behavior, and (6) native/device verification. Several filenames listed in older screen documentation were not found at the exact `app/(tabs)/` paths checked; this is not by itself proof that the feature is absent, because legacy components and replacement implementations may live elsewhere.
+
+No UI redesign or hardware capability is implied by this documentation update. Browser preview, automated tests, Android build/signing, and physical-device/USB validation are separate gates. Do not describe the app as production-ready or hardware-verified unless the relevant checks have actually passed.
