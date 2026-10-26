@@ -86,36 +86,48 @@ export function createCorsMiddleware(
     const origin = req.headers.origin;
     res.vary("Origin");
 
-    // Native Expo requests do not carry Origin and authenticate with a Bearer token.
     if (!origin) {
       next();
       return;
     }
-    const loopbackOrigin = originHasLoopbackHostname(origin);
+
+    let parsedOrigin: URL | null = null;
+    try {
+      parsedOrigin = new URL(origin);
+    } catch {
+      res.status(403).json({ error: "origin_not_allowed" });
+      return;
+    }
+
+    const normalizedOrigin = parsedOrigin.origin;
+    if (normalizedOrigin === "null" || origin !== normalizedOrigin) {
+      res.status(403).json({ error: "origin_not_allowed" });
+      return;
+    }
+
+    const loopbackOrigin = originHasLoopbackHostname(normalizedOrigin);
     const allowedLocalOrigin =
-      localApiRequest(req.hostname) && configuredLocalExpoWebOrigins().has(origin);
+      localApiRequest(req.hostname) &&
+      configuredLocalExpoWebOrigins().has(normalizedOrigin);
     const allowedConfiguredOrigin =
-      !loopbackOrigin && allowedOrigins.has(origin);
+      !loopbackOrigin &&
+      allowedOrigins.has(normalizedOrigin);
+
     if (!allowedConfiguredOrigin && !allowedLocalOrigin) {
       res.status(403).json({ error: "origin_not_allowed" });
       return;
     }
 
-    // nosemgrep
-res.header("Access-Control-Allow-Origin", origin); // nosemgrep: javascript.express.security.cors-misconfiguration.cors-misconfiguration
-    res.header(
-      "Access-Control-Allow-Methods",
-      "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-    );
-    res.header(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Accept, Authorization, X-Requested-With",
-    );
+    res.header("Access-Control-Allow-Origin", normalizedOrigin);
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Accept, Authorization, X-Requested-With");
     res.header("Access-Control-Allow-Credentials", "true");
+
     if (req.method === "OPTIONS") {
       res.sendStatus(204);
       return;
     }
+
     next();
   };
 }
