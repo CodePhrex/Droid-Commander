@@ -262,3 +262,27 @@ Source evidence (October 21, 2026): native local collector and USB inventory lib
 - [x] Universal arbitrary shell, arbitrary code/exploit payload, silent lock-screen bypass, silent OEM unlock, unattended flashing, and credential-extraction declarations are rejected by policy.
 - [x] The contract and native-integration boundary are documented in `VENDOR_CAPABILITY_PROVIDER.md`.
 - [ ] Connect a real manufacturer/provider SDK, certificate trust-anchor rotation, UI confirmation surface, and native completion callbacks after vendor authorization and lab validation.
+
+## Exhaustive UI screen audit — documentation update (2026-10-25)
+
+### Inventory and navigation
+- [ ] Maintain a screen-by-screen audit for the 14 numbered manual entries plus the four confirmed additions: USB OTG Hardware Inspector, Cellular & Dual-SIM Diagnostics, Wireless & Network Diagnostics, and Automated Remediation Playbooks.
+- [ ] For each entry, record the specification title/purpose, source file, Expo Router route, navigation entry point, implementation status, placeholder/simulated behavior, platform limitations, and acceptance tests.
+- [ ] Distinguish active routes from legacy components and non-screen technical routes. The five visible tabs currently declared in `app/(tabs)/_layout.tsx` are Command, Assess, Sessions, Threat Intel, and USB Link.
+- [ ] Reconcile legacy filenames in the UI manual with the current source tree; a missing file at an expected path is not sufficient evidence that the feature is absent.
+
+### Evidence integrity and hardware capability
+- [ ] Replace the scanner v3 hard-coded Galaxy S24 example telemetry with the authoritative host assessment source; display source, timestamp, and unknown/unavailable states.
+- [ ] Replace or explicitly label the USB hardware inspector's hard-coded Kingston descriptor and sample power values as simulated until live USB discovery and telemetry are wired and tested.
+- [ ] Verify cellular telemetry and carrier-token workflow against supported Android APIs and authorized carrier procedures; do not claim an unlock or modem state change without observed confirmation.
+- [ ] Verify wireless scanning and wireless-debugging controls against native module implementation, Android permission requirements, and OS restrictions.
+- [ ] Verify each remediation playbook's real effect and postcondition; UI delay, action history, or a success message alone is not proof of mitigation.
+- [ ] Ensure unavailable, denied, stale, simulated, and inconclusive evidence cannot be rendered as a clean/secure state.
+
+### Validation gates
+- [ ] Complete source/route audit and update the screen matrix.
+- [ ] Run static checks, lint, unit tests, and screen-contract tests after documentation and any future implementation changes.
+- [ ] Validate browser preview separately from native build/signing.
+- [ ] Validate splash-to-home launch on the Galaxy A15 using a newly built APK before diagnosing device behavior as fixed.
+- [ ] Test USB OTG and other hardware-dependent flows on supported physical devices; do not infer hardware behavior from web previews or mocks.
+- [ ] Obtain approval for proposed visual designs before changing screen UI.
