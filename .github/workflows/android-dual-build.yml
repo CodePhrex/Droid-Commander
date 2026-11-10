@@ -1,0 +1,110 @@
+name: Android APK - GitHub and CodePhrex server
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    # Public pull requests and manually selected branches must never reach EC2.
+    if: github.repository == 'CodePhrex/Droid-Commander' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    name: Debug APK (${{ matrix.location }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - location: github
+            runner: [ubuntu-24.04]
+          - location: codephrex-server
+            runner: [self-hosted, Linux, X64, codephrex-droid]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    concurrency:
+      group: droid-debug-${{ matrix.location }}
+      cancel-in-progress: false
+    env:
+      CI: 'true'
+      EXPO_NO_TELEMETRY: '1'
+    steps:
+      - name: Check out exact build commit
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node on GitHub
+        if: matrix.location == 'github'
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24.22.2'
+
+      - name: Set up Java on GitHub
+        if: matrix.location == 'github'
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Install pinned pnpm on GitHub
+        if: matrix.location == 'github'
+        run: npm install --global pnpm@9.12.0
+
+      - name: Check build tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --version
+          pnpm --version
+          java -version
+          test -n "${ANDROID_HOME:-}"
+          test -d "$ANDROID_HOME"
+
+      - name: Install locked project dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm check
+
+      - name: Unit tests
+        run: pnpm exec vitest run --maxWorkers=2 --minWorkers=1
+
+      - name: Create debug-only signing key
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f android/app/debug.keystore ]; then
+            keytool -genkeypair -noprompt \
+              -keystore android/app/debug.keystore \
+              -storepass android -keypass android -alias androiddebugkey \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -dname 'CN=Android Debug,O=Android,C=US'
+            chmod 600 android/app/debug.keystore
+          fi
+
+      - name: Build ARM64 debug APK
+        working-directory: android
+        run: bash ./gradlew --no-daemon --max-workers=2 -PreactNativeArchitectures=arm64-v8a assembleDebug
+
+      - name: Package APK with build identity
+        shell: bash
+        env:
+          BUILD_LOCATION: ${{ matrix.location }}
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          cp android/app/build/outputs/apk/debug/app-debug.apk "artifacts/Droid-Commander-debug-arm64-${BUILD_LOCATION}.apk"
+          printf 'Commit: %s\nBuild location: %s\nRun: %s\nArchitecture: arm64-v8a\nSigning: development/debug only\n' \
+            "$GITHUB_SHA" "$BUILD_LOCATION" "$GITHUB_RUN_ID" > artifacts/BUILD-INFO.txt
+          (cd artifacts && sha256sum ./*.apk > SHA256SUMS.txt)
+          cat artifacts/BUILD-INFO.txt >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload APK to GitHub
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: droid-debug-arm64-${{ matrix.location }}-${{ github.run_number }}
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 14
