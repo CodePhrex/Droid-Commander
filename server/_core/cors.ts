@@ -112,10 +112,9 @@ res.header("Access-Control-Allow-Origin", origin); // nosemgrep: javascript.expr
       "Content-Type, Accept, Authorization, X-Requested-With",
     );
     res.header("Access-Control-Allow-Credentials", "true");
-    if (req.method === "OPTIONS") {
+        if (req.method === "OPTIONS") {
       res.sendStatus(204);
       return;
     }
+
     next();
-  };
-}
